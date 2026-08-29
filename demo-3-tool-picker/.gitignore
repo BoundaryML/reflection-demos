@@ -1,0 +1,7 @@
+node_modules/
+dist/
+backend/notes.sqlite3
+backend/notes.sqlite3-journal
+backend/notes.sqlite3-shm
+backend/notes.sqlite3-wal
+.DS_Store

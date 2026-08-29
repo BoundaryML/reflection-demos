@@ -1,0 +1,31 @@
+{
+  "name": "demo-2-form-builder",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n backend,frontend -c blue,magenta \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
+    "dev:backend": "tsx backend/src/server.ts",
+    "dev:frontend": "vite --config frontend/vite.config.ts",
+    "baml:generate": "echo 'demo-2 boots baml_src directly through the bridge, no generated client — checking baml_src instead' && ../scripts/baml-dev check",
+    "typecheck": "tsc -p backend/tsconfig.json --noEmit && tsc -p frontend/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@boundaryml/baml-bridge": "link:../vendor/baml/baml_language/sdks/typescript/bridge_typescript",
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.21.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.7.0",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "concurrently": "^9.0.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8"
+  }
+}

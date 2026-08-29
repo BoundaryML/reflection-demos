@@ -1,0 +1,7 @@
+[package]
+name = "demo-1-live-enums"
+
+[generator.ts]
+output_type = "typescript/node"
+output_dir = "backend"
+naming_convention = "preserve-case"

@@ -1,0 +1,12 @@
+{
+  "name": "reflection-demos",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "generate": "pnpm -r --if-present run baml:generate && node scripts/strip-sdk-gitignore.mjs",
+    "dev:nested": "concurrently -k -n hub,d1,d2,d3,d4,d5,d6,d7 \"pnpm --filter hub dev\" \"pnpm --filter demo-1-live-enums dev\" \"pnpm --filter demo-2-form-builder dev\" \"pnpm --filter demo-3-tool-picker dev\" \"pnpm --filter demo-4-plugin-gate dev\" \"pnpm --filter demo-5-schema-studio dev\" \"pnpm --filter demo-6-api-explorer dev\" \"pnpm --filter demo-7-notebook dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

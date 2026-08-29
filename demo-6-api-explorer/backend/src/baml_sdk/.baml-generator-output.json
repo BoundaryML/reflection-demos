@@ -1,0 +1,279 @@
+{
+  "schema_version": 2,
+  "files": [
+    {
+      "relative_path": ".gitignore",
+      "sha256": "66b47ca221280cb5ace576604a74cbc2f89d60e319cc1b85b4122ae43d003a9a"
+    },
+    {
+      "relative_path": "_inlinedbaml.ts",
+      "sha256": "24d1c0b1c464297569cc53c91aa7c8f9ed88dd1e6e91c73f773bd1e270d903fc"
+    },
+    {
+      "relative_path": "_typemap.ts",
+      "sha256": "18e18cbb8e2a20887c251edb2113fc6f62e26bd4d7ff340a6e8c5fe93a3adbad"
+    },
+    {
+      "relative_path": "ai/clients/index.ts",
+      "sha256": "8d975f3aeff878704c23e16e6254b86fea5ec7fabb1edd6072a7cf2370cb7d53"
+    },
+    {
+      "relative_path": "ai/content/index.ts",
+      "sha256": "802539cf21ee4f822122dd4a974921bf6defdc3e1c377cfb0e38f61d92126edc"
+    },
+    {
+      "relative_path": "ai/errors/index.ts",
+      "sha256": "5381cb704d427f9bd86a45e72fec8131148e75a3d5ceb904c074822b8898230a"
+    },
+    {
+      "relative_path": "ai/events/index.ts",
+      "sha256": "c456cd1a2161329255b49bbc5bbd4be726bc58e8ed6d29c64563be8fd20f3c41"
+    },
+    {
+      "relative_path": "ai/index.ts",
+      "sha256": "e2b54890ef9356ecb77ec2bbd06e8c1b361ab31bac30a16fdcbc4f52db02d042"
+    },
+    {
+      "relative_path": "ai/internal/index.ts",
+      "sha256": "c36e668a15431adeeb59c4eb4353282f7e928f79219a5c734c7ad126826512b7"
+    },
+    {
+      "relative_path": "ai/mcp/index.ts",
+      "sha256": "2b7272fc19f10143742a0bc51f4cf7279d2338c8d50f7d6e299c07e66d50cd6f"
+    },
+    {
+      "relative_path": "ai/stream/index.ts",
+      "sha256": "3576c375180cd99e6d74f51c62e7d440e05be01212cd088b4338a03060641021"
+    },
+    {
+      "relative_path": "ai/tools/index.ts",
+      "sha256": "507be6455dffaa2b2193e7c2cf5f754b6923d913914544d2f31610b10f29ebd6"
+    },
+    {
+      "relative_path": "ai/wire/index.ts",
+      "sha256": "35d45b560acc28a62fbc6ca4dd33a8029cbd62c06c6d2d0286b2fa145edd9c48"
+    },
+    {
+      "relative_path": "baml/crypto/index.ts",
+      "sha256": "d013613e90c0f6271351fd6e8dcd5377281c8b1fe0645c639ff61c699dea8d19"
+    },
+    {
+      "relative_path": "baml/csv/index.ts",
+      "sha256": "eb02faea668818c3953d73c4308332bf547cec1c0c31c7f01bf96fdfe76dcb8d"
+    },
+    {
+      "relative_path": "baml/env/index.ts",
+      "sha256": "3b447c4ca3867e3904cfc96f715c761a9bf8f6c4cc82262433f350ae0c167814"
+    },
+    {
+      "relative_path": "baml/errors/index.ts",
+      "sha256": "721af470078d8e6aee156a21a82d209f1996e5bc910ef7b121279acbbb0b7515"
+    },
+    {
+      "relative_path": "baml/fs/index.ts",
+      "sha256": "5882852b131f49211c1c6be849f73cf590472d48c6f44c1fdd4ed906a5b374d2"
+    },
+    {
+      "relative_path": "baml/future/index.ts",
+      "sha256": "c3fd61afceb89b1b1895c859d668aaadfa9f69ecb036925d18ce8dede0ce8170"
+    },
+    {
+      "relative_path": "baml/glob/index.ts",
+      "sha256": "d3826bf02cf7dbe7e005774c964dbc61cd98c288714b06f6d46ed8e70a00d451"
+    },
+    {
+      "relative_path": "baml/host/index.ts",
+      "sha256": "0dd982f9eab822c2ce625f318d01f6165df0e34ec8ffc0e3e140bf8d1e5caadd"
+    },
+    {
+      "relative_path": "baml/http/index.ts",
+      "sha256": "a882dab26eed25063adc42d6f6d882c1cc8bd24af4ec7e8e2ff953479b473206"
+    },
+    {
+      "relative_path": "baml/id/index.ts",
+      "sha256": "1a56bde6f2277c7436eb05bc5e25c75d3ee7c58b3689812addfa5613de65256c"
+    },
+    {
+      "relative_path": "baml/index.ts",
+      "sha256": "0fac05322b8d17ca0c6d368d0878984eb9daf2b14b511db22b300032a22cadf6"
+    },
+    {
+      "relative_path": "baml/io/index.ts",
+      "sha256": "96226ae64f956c7805ccd3490eb49d5500cfa4bfc36dcb399e2ca2c7e530eebd"
+    },
+    {
+      "relative_path": "baml/iter/index.ts",
+      "sha256": "9c29dc38fd792c2bc65e1d03904f664a5965e4050b45e83b110ba0dbb0f85d3b"
+    },
+    {
+      "relative_path": "baml/json/index.ts",
+      "sha256": "97685d5a47ae64b37afd8f0dc33c69596a0186968c8625e8a0d8483ee345160a"
+    },
+    {
+      "relative_path": "baml/media/index.ts",
+      "sha256": "ebb54f005d787cb57fb18b8aa5c7092f7f183a0b340d1e1461bc0f50cb681976"
+    },
+    {
+      "relative_path": "baml/net/index.ts",
+      "sha256": "1f9d42838b099da63926f4598c0f9793f207bf7db25baebe40dfaddab48ce774"
+    },
+    {
+      "relative_path": "baml/ops/index.ts",
+      "sha256": "c36ccb851115f3a0de8eb5a83413984d5b09dc9fb48b21fcacae895b8274335c"
+    },
+    {
+      "relative_path": "baml/panics/index.ts",
+      "sha256": "11376f96b8f3a1d9de4aa55f3f0710a06047415bc566f48e96e9c104b5069ae0"
+    },
+    {
+      "relative_path": "baml/random/index.ts",
+      "sha256": "e86e16346445272c5622282ead250a8a15dc9a4613027b85f6a630371170c87c"
+    },
+    {
+      "relative_path": "baml/sap/index.ts",
+      "sha256": "ffca347dd1f8ad381c529dd972d432d9d951b3462dbb910e2ba768dfa146c25b"
+    },
+    {
+      "relative_path": "baml/spawn/index.ts",
+      "sha256": "559e5cd6ee7f2319d12e2cb47f9da11f500c46b9af85b03c8d3ca36ffb4a204d"
+    },
+    {
+      "relative_path": "baml/sys/index.ts",
+      "sha256": "efd6986dac7aa63adf39d8639820ff3e89ceff86522bf53a211c9471b6d69a40"
+    },
+    {
+      "relative_path": "baml/time/index.ts",
+      "sha256": "3e0269f529714f46179c3c1c91a4156078d36ea93c91fd5d21f98a1dcb6aa40c"
+    },
+    {
+      "relative_path": "baml/toml/index.ts",
+      "sha256": "502efcb645a40f7a034f5431d9808bc45753c50cd0d2919c418f0bcb39aa3053"
+    },
+    {
+      "relative_path": "baml/ws/index.ts",
+      "sha256": "8f90f73a3a0a3b4e66a1fbd358af18dfd2311583dc74faa18d029d61d14c5722"
+    },
+    {
+      "relative_path": "baml/yaml/index.ts",
+      "sha256": "16840088df90af816d17eb733fa0e40e28acb7809b16cece3798e17bba32b54f"
+    },
+    {
+      "relative_path": "index.ts",
+      "sha256": "47f142dc84df2e3b71ce08b32ed2fdef57f86b52021435818003d2c51a704444"
+    },
+    {
+      "relative_path": "reflect/array/index.ts",
+      "sha256": "fca11f60dd1483e53f8a0bc8f0359ee1699eece7be8f907348cd81dcc60afa0e"
+    },
+    {
+      "relative_path": "reflect/class/index.ts",
+      "sha256": "ec902cb1e21fe8b9277ff5a7f1c9e3937a122feebb9304de7a86b1a075f9acdf"
+    },
+    {
+      "relative_path": "reflect/enum/index.ts",
+      "sha256": "1efd2629387382001208bbe742bf313db3ce4f1b9dda5d3554528edb361351d6"
+    },
+    {
+      "relative_path": "reflect/errors/index.ts",
+      "sha256": "cb7dea6c37b8a98ad633208e83db2b70f115ac493db7f2f1b6b6aed75cfd40f9"
+    },
+    {
+      "relative_path": "reflect/function/index.ts",
+      "sha256": "3dac2e4083e4d1c2749df92e55cd554ff0a78d8b1a2cd6e7742e40c7e7ea9dbd"
+    },
+    {
+      "relative_path": "reflect/index.ts",
+      "sha256": "29d75294088591339d016a676723adb958d5cadc2f1a3c41afb7fbf1d328ecf3"
+    },
+    {
+      "relative_path": "reflect/interface/index.ts",
+      "sha256": "10545fdb74a90a08968647695ceeb46d6daf4fa52e66b767812ad2ef3d557ec4"
+    },
+    {
+      "relative_path": "reflect/literal/index.ts",
+      "sha256": "f5252e47222dedaf35684cc1e11c343ce0d7fb957b54199ae362caea5869e5cc"
+    },
+    {
+      "relative_path": "reflect/map/index.ts",
+      "sha256": "c0567de2d848e5263c741eb0a855bf61870149c409995c6b98286e1d80f6e38a"
+    },
+    {
+      "relative_path": "reflect/primitive/index.ts",
+      "sha256": "e59b4ad10c276a25933d32f0d428f31981defe33be312e0f1f723c5815c5a431"
+    },
+    {
+      "relative_path": "reflect/union/index.ts",
+      "sha256": "736f5754a5f511e2a38e7fa757d34ca62db79db76ddf4428608d42218bd2f334"
+    },
+    {
+      "relative_path": "vendor/anthropic/index.ts",
+      "sha256": "a92217d186339b4ee45f84c80ee7bc1b2f6e2337bf0e2114aabfc8e55b30b613"
+    },
+    {
+      "relative_path": "vendor/anthropic/internal/index.ts",
+      "sha256": "7fa442b016a617e222de8b9f795be1edc37f75658346e49bc8030692ebe82810"
+    },
+    {
+      "relative_path": "vendor/assert/index.ts",
+      "sha256": "0ce08b6b1e5e6496f5b0d7bc74277c2b3c8d9ee86f78e2d2c3ffd31d62da6d61"
+    },
+    {
+      "relative_path": "vendor/aws/index.ts",
+      "sha256": "e9316a32a9189606f44e3d530c25759b24a793c04d0f69db0355429964e8c266"
+    },
+    {
+      "relative_path": "vendor/aws/internal/index.ts",
+      "sha256": "12c135d5ad7bd03a08aceb6c271853016e9f76c8f26d0820f2a217390732c526"
+    },
+    {
+      "relative_path": "vendor/boundary/id/index.ts",
+      "sha256": "f70c43f3dd19fc9a16a34805fca8e162fbc6f8476d3375d7e762bf672437e175"
+    },
+    {
+      "relative_path": "vendor/boundary/index.ts",
+      "sha256": "fbde657d4b17ee2225ab99f6650537261cb081caf887ed867ee8de0220a5d252"
+    },
+    {
+      "relative_path": "vendor/claude_code/index.ts",
+      "sha256": "a2c60639041dd8f8bed54232c6de8a3ed04b52388c689ceb846b81f1c0c049b3"
+    },
+    {
+      "relative_path": "vendor/claude_code/internal/index.ts",
+      "sha256": "46743c575a2154825f92636e9b3ad390625767a1a9d56e8df230d1ce3347e322"
+    },
+    {
+      "relative_path": "vendor/google/index.ts",
+      "sha256": "45dc8793e1d70da9c3d45e1e8d6307fadbbb7fa21981148bf2052891fb9ec293"
+    },
+    {
+      "relative_path": "vendor/google/internal/index.ts",
+      "sha256": "399086f0408fb7ba02d0d37d4e8b7116f87ae7fc225f9490026faa6a88abdecd"
+    },
+    {
+      "relative_path": "vendor/index.ts",
+      "sha256": "005eb76515bd37b9cd32088f9004db200091f2b87656e0f7d457f2988eec58a6"
+    },
+    {
+      "relative_path": "vendor/openai/index.ts",
+      "sha256": "52476c0604096f84fef8a7204ad496232a856b921a54aeed1267d3bb09f5df46"
+    },
+    {
+      "relative_path": "vendor/openai/internal/index.ts",
+      "sha256": "1959bf969ea583de57ab63cf44d8fcfb49760cb99a0280dc2933d218e34f8fad"
+    },
+    {
+      "relative_path": "vendor/testing/index.ts",
+      "sha256": "ef54c98f39f21dfd97919a04b4afeac891688cacb628695d12a2cef514367739"
+    },
+    {
+      "relative_path": "vendor/vercel/index.ts",
+      "sha256": "047e74af91ac6c63b75cf318b64876291d93a66b3c85ead3ff78057c64cf8fef"
+    },
+    {
+      "relative_path": "vendor/vercel/internal/index.ts",
+      "sha256": "625f309e2d28deee5dd29d1e0a100bc290b8c085fa5f031fbe323cdd35460136"
+    }
+  ],
+  "committed_files": [],
+  "recovery_files": []
+}

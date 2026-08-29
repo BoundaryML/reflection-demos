@@ -1,0 +1,7 @@
+[package]
+name = "demo-6-api-explorer"
+
+[generator.client1]
+output_type = "typescript/node"
+naming_convention = "preserve-case"
+output_dir = "backend/src"

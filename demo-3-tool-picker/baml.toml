@@ -1,0 +1,7 @@
+[package]
+name = "demo-3-tool-picker"
+
+[generator.node]
+output_type = "typescript/node"
+naming_convention = "preserve-case"
+output_dir = "backend"

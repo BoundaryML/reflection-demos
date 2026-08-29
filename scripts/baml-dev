@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Runs the locally built canary baml-cli from vendor/baml (see BAML_COMMIT and
+# scripts/setup-baml.sh). Demo package.json scripts call this as ../scripts/baml-dev.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BIN="$ROOT/vendor/baml/baml_language/target/debug/baml-cli"
+if [ ! -x "$BIN" ]; then
+  echo "baml-dev: $BIN not built. Run ./scripts/setup-baml.sh first." >&2
+  exit 1
+fi
+exec "$BIN" "$@"

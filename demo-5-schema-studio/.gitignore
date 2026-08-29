@@ -1,0 +1,7 @@
+# BAML runtime profiling artifacts, written next to the process cwd.
+.baml/
+
+# Vite build output.
+frontend/dist/
+
+node_modules/

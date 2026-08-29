@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+.DS_Store
+
+# BAML runtime caches/profiles (regenerated on every run)
+.baml/
+
+# The BAML toolchain checkout lives outside git — see BAML_COMMIT and
+# scripts/setup-baml.sh. vendor/baml is either a symlink to an existing
+# checkout or a clone made by the setup script.
+vendor/baml
+
+# Secrets never live in this repo (Infisical injects them), but just in case:
+.env
+.env.*
+
+# Per-demo local state. The dir itself must exist (db.ts does not mkdir),
+# hence the tracked .gitkeep.
+demo-1-live-enums/backend/data/*
+!demo-1-live-enums/backend/data/.gitkeep
+demo-2-form-builder/backend/*.sqlite3*
