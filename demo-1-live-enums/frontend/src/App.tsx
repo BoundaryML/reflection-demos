@@ -67,6 +67,22 @@ export default function App() {
     });
   }
 
+  async function addTicket(customer: string, subject: string, body: string) {
+    await withError(async () => {
+      const created = await api.addTicket(customer, subject, body);
+      setTickets((prev) => [...prev, created]);
+    });
+  }
+
+  async function resetDemo() {
+    if (!window.confirm("Reset tickets and categories back to the seed data?")) return;
+    await withError(async () => {
+      const { categories: cats, tickets: tix } = await api.resetDemo();
+      setCategories(cats);
+      setTickets(tix);
+    });
+  }
+
   async function addCategory(name: string, description: string | null) {
     await withError(async () => {
       const created = await api.addCategory(name, description);
@@ -101,6 +117,9 @@ export default function App() {
               {config.mode === "mock" ? "Mock mode" : `Live · ${config.model}`}
             </span>
           ) : null}
+          <button type="button" className="btn" onClick={() => void resetDemo()}>
+            Reset demo
+          </button>
           <button type="button" className="btn btn-primary" onClick={() => void runTriage()} disabled={runningAll}>
             {runningAll ? "Running triage…" : "Run Triage"}
           </button>
@@ -121,6 +140,7 @@ export default function App() {
             tickets={tickets}
             categories={categories}
             onClassify={classifyOne}
+            onAdd={addTicket}
             classifyingIds={classifyingIds}
           />
           <CategoryPanel

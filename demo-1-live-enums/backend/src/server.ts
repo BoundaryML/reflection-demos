@@ -2,11 +2,13 @@ import cors from "cors";
 import express from "express";
 import {
   addCategory,
+  addTicket,
   deleteCategory,
   DuplicateCategoryName,
   getTicket,
   listCategories,
   listTickets,
+  resetDemoData,
   setTicketClassification,
   updateCategory,
 } from "./db.js";
@@ -87,6 +89,25 @@ app.delete("/api/categories/:id", (req, res) => {
 
 app.get("/api/tickets", (_req, res) => {
   res.json(listTickets());
+});
+
+app.post("/api/tickets", (req, res) => {
+  const { customer, subject, body } = req.body ?? {};
+  if (typeof subject !== "string" || subject.trim().length === 0) {
+    res.status(400).json({ error: "subject is required" });
+    return;
+  }
+  if (typeof body !== "string" || body.trim().length === 0) {
+    res.status(400).json({ error: "body is required" });
+    return;
+  }
+  const from = typeof customer === "string" && customer.trim().length > 0 ? customer : "Walk-in";
+  res.status(201).json(addTicket(from, subject, body));
+});
+
+app.post("/api/reset", (_req, res) => {
+  resetDemoData();
+  res.json({ categories: listCategories(), tickets: listTickets() });
 });
 
 app.post("/api/tickets/:id/classify", async (req, res) => {

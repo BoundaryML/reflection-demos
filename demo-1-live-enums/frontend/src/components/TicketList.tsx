@@ -6,6 +6,7 @@ interface Props {
   tickets: Ticket[];
   categories: Category[];
   onClassify: (id: number) => Promise<void>;
+  onAdd: (customer: string, subject: string, body: string) => Promise<void>;
   classifyingIds: Set<number>;
 }
 
@@ -14,9 +15,27 @@ function formatReceived(iso: string): string {
   return d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
-export function TicketList({ tickets, categories, onClassify, classifyingIds }: Props) {
+export function TicketList({ tickets, categories, onClassify, onAdd, classifyingIds }: Props) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [newCustomer, setNewCustomer] = useState("");
+  const [newSubject, setNewSubject] = useState("");
+  const [newBody, setNewBody] = useState("");
+  const [adding, setAdding] = useState(false);
   const byName = new Map(categories.map((c) => [c.name, c] as const));
+
+  async function submitAdd(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newSubject.trim() || !newBody.trim()) return;
+    setAdding(true);
+    try {
+      await onAdd(newCustomer, newSubject, newBody);
+      setNewCustomer("");
+      setNewSubject("");
+      setNewBody("");
+    } finally {
+      setAdding(false);
+    }
+  }
 
   return (
     <section className="panel" aria-labelledby="tickets-heading">
@@ -80,6 +99,38 @@ export function TicketList({ tickets, categories, onClassify, classifyingIds }: 
           );
         })}
       </ul>
+
+      <form className="add-category-form" onSubmit={(e) => void submitAdd(e)}>
+        <input
+          className="text-input"
+          value={newSubject}
+          onChange={(e) => setNewSubject(e.target.value)}
+          placeholder="New ticket subject"
+          aria-label="New ticket subject"
+        />
+        <textarea
+          className="text-input textarea"
+          value={newBody}
+          onChange={(e) => setNewBody(e.target.value)}
+          placeholder="What is the customer writing in?"
+          aria-label="New ticket body"
+          rows={2}
+        />
+        <input
+          className="text-input"
+          value={newCustomer}
+          onChange={(e) => setNewCustomer(e.target.value)}
+          placeholder="Customer name (optional)"
+          aria-label="Customer name"
+        />
+        <button
+          type="submit"
+          className="btn btn-primary btn-small"
+          disabled={adding || !newSubject.trim() || !newBody.trim()}
+        >
+          Add ticket
+        </button>
+      </form>
     </section>
   );
 }

@@ -219,6 +219,20 @@ export function deleteCategory(id: number): boolean {
   return info.changes > 0;
 }
 
+export function addTicket(customer: string, subject: string, body: string): TicketRow {
+  const info = db
+    .prepare("INSERT INTO tickets (customer, subject, body, received_at) VALUES (?, ?, ?, ?)")
+    .run(customer.trim(), subject.trim(), body.trim(), new Date().toISOString());
+  return db.prepare("SELECT * FROM tickets WHERE id = ?").get(info.lastInsertRowid) as TicketRow;
+}
+
+/** Wipe both tables back to the seed data, so a presenter can restart clean. */
+export function resetDemoData(): void {
+  db.exec("DELETE FROM tickets; DELETE FROM categories;");
+  db.exec("DELETE FROM sqlite_sequence WHERE name IN ('tickets', 'categories');");
+  seedIfEmpty();
+}
+
 export function listTickets(): TicketRow[] {
   return db.prepare("SELECT * FROM tickets ORDER BY received_at ASC, id ASC").all() as TicketRow[];
 }

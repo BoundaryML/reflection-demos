@@ -30,6 +30,13 @@ export const api = {
   deleteCategory: (id: number) => request<void>(`/categories/${id}`, { method: "DELETE" }),
 
   getTickets: () => request<Ticket[]>("/tickets"),
+  addTicket: (customer: string, subject: string, body: string) =>
+    request<Ticket>("/tickets", {
+      method: "POST",
+      body: JSON.stringify({ customer, subject, body }),
+    }),
+  resetDemo: () =>
+    request<{ categories: Category[]; tickets: Ticket[] }>("/reset", { method: "POST" }),
   classifyTicket: (id: number) =>
     request<{ ticket: Ticket; mode: string }>(`/tickets/${id}/classify`, { method: "POST" }),
   classifyAll: () =>
