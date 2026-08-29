@@ -97,6 +97,10 @@ body {
   border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--panel);
+  /* it's a <button>: without these the UA default (black, system font)
+     wins over the theme, which is invisible in dark mode */
+  color: var(--text);
+  font: inherit;
   cursor: pointer;
   text-align: left;
   transition: border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
