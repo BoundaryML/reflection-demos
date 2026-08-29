@@ -145,6 +145,15 @@ deletes them afterwards (`scripts/strip-sdk-gitignore.mjs`) so the clients stay
 committed. Never regenerate with only one of the two rebuilt — that bricks the demo
 until the other catches up.
 
+**Edits don't hot-reload (HMR dead, changes only appear after a restart).**
+If the repo lives on a FUSE-mounted filesystem (NTFS/exFAT external drives
+show up as `fuseblk` in `mount`), inotify never delivers file-change events,
+so Vite's watcher sees nothing. Run with polling instead:
+
+```bash
+CHOKIDAR_USEPOLLING=1 CHOKIDAR_INTERVAL=300 pnpm dev
+```
+
 **Port already in use.** Something else on your machine is bound to one of the ports in
 the [port map](#port-map) above (a stale `pnpm dev` from a previous run is the usual
 cause). Find and stop it:
