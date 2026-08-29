@@ -44,6 +44,9 @@ export interface TicketRow {
   classified_at: string | null;
 }
 
+// Deliberately sparse: two categories and three tickets, one of which (dark
+// mode) fits neither category — the presenter's opening move is to add a
+// "Feature Request" category live and watch the enum grow.
 const DEFAULT_CATEGORIES: Array<{ name: string; description: string }> = [
   {
     name: "Billing",
@@ -52,22 +55,6 @@ const DEFAULT_CATEGORIES: Array<{ name: string; description: string }> = [
   {
     name: "Bug Report",
     description: "Something in the product is broken, crashing, or behaving incorrectly.",
-  },
-  {
-    name: "Feature Request",
-    description: "A suggestion or request for new product functionality.",
-  },
-  {
-    name: "Account Access",
-    description: "Login, password, authentication, or account-recovery issues.",
-  },
-  {
-    name: "Shipping & Delivery",
-    description: "Questions about order shipment, tracking, or delivery problems.",
-  },
-  {
-    name: "General Feedback",
-    description: "Praise, complaints, or feedback that isn't a specific request.",
   },
 ];
 
@@ -94,54 +81,6 @@ const DEFAULT_TICKETS: Array<{
     subject: "Would love a dark mode option",
     body: "Using the app late at night is rough on the eyes. Any chance dark mode is on the roadmap? Happy to help test it.",
     received_at: "2026-08-15T14:03:00Z",
-  },
-  {
-    customer: "Sam O'Rourke",
-    subject: "Locked out of my account",
-    body: "I reset my password twice but I still can't log in — it says 'invalid credentials' every time. This is blocking my whole team.",
-    received_at: "2026-08-16T08:21:00Z",
-  },
-  {
-    customer: "Grace Kim",
-    subject: "Order arrived with a broken screen",
-    body: "The monitor I ordered last week showed up with a cracked corner. Box looked fine from outside but the unit is damaged.",
-    received_at: "2026-08-16T10:05:00Z",
-  },
-  {
-    customer: "Tom Alvarez",
-    subject: "How do I export my data as CSV?",
-    body: "I need to pull all of my project data into a spreadsheet for an audit. Is there a built-in export option, or do I need the API?",
-    received_at: "2026-08-16T13:30:00Z",
-  },
-  {
-    customer: "Renee Fischer",
-    subject: "Just wanted to say thanks!",
-    body: "Your support team walked me through a tricky migration yesterday and were incredibly patient. Really appreciated the help.",
-    received_at: "2026-08-16T15:55:00Z",
-  },
-  {
-    customer: "Wei Zhang",
-    subject: "Refund for order #48213",
-    body: "I canceled my order within the return window but haven't seen the refund hit my account after 10 business days. Order number is #48213.",
-    received_at: "2026-08-17T07:40:00Z",
-  },
-  {
-    customer: "Amara Okafor",
-    subject: "API returns 500 on user creation",
-    body: "POST /v1/users has been returning a 500 error since this morning. Worked fine yesterday, no changes on our end. Here's a sample request body if it helps.",
-    received_at: "2026-08-17T08:58:00Z",
-  },
-  {
-    customer: "Jordan Lee",
-    subject: "Please cancel my subscription",
-    body: "We're consolidating tools on our team and no longer need this account. Please cancel my subscription effective immediately and confirm.",
-    received_at: "2026-08-17T09:44:00Z",
-  },
-  {
-    customer: "Isabelle Moreau",
-    subject: "Still waiting after three weeks",
-    body: "I reached out about a missing shipment three weeks ago and still don't have a resolution or my package. This is really frustrating at this point.",
-    received_at: "2026-08-17T10:16:00Z",
   },
 ];
 

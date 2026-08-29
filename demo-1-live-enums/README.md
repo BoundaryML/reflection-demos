@@ -93,11 +93,13 @@ The mode badge in the top-right corner of the UI shows which one is active.
 
 ### Resetting the demo
 
-Classifications and category edits persist in `backend/data/triage.db`
-(gitignored). To get back to the pristine inbox the presenter script
-assumes — six starter categories, eleven *unclassified* tickets — stop the
-backend, delete `backend/data/triage.db*`, and start it again; it re-seeds
-on an empty database.
+Classifications, added tickets, and category edits persist in
+`backend/data/triage.db` (gitignored). The **Reset demo** button in the UI
+header (or `POST /api/reset`) restores the pristine inbox the presenter
+script assumes: two starter categories (Billing, Bug Report) and three
+*unclassified* tickets, one of which — the dark-mode request — fits neither
+category, so the natural opening move is adding a "Feature Request"
+category live and re-running triage.
 
 ## What's in here
 
@@ -106,43 +108,50 @@ on an empty database.
   `BuildCategoryType` (the reflection call), and the two entry points the
   backend calls (`ClassifyTicket` for live, `ClassifyTicketFromCompletion`
   for mock).
-- `backend/` — Express + better-sqlite3. Seeds ~11 varied support tickets
-  and 6 starter categories (Billing, Bug Report, Feature Request, Account
-  Access, Shipping & Delivery, General Feedback) on first run.
-- `frontend/` — React + Vite. Ticket inbox (left) and category editor
-  (right); a "Run Triage" button reclassifies every ticket against the
-  current category list.
+- `backend/` — Express + better-sqlite3. Seeds 3 tickets and 2 starter
+  categories (Billing, Bug Report) on first run; the third ticket (a dark
+  mode request) deliberately fits neither category.
+- `frontend/` — React + Vite. Ticket inbox (left, with a compose form to
+  add tickets mid-demo) and category editor (right); a "Run Triage" button
+  reclassifies every ticket against the current category list, and "Reset
+  demo" restores the seed state.
 
 ## 30-second presenter script
 
-1. **Open the app.** Point at the inbox: "These are real support tickets,
-   all unclassified." Point at the category list on the right: "These six
-   categories aren't code — they're rows in a database."
-2. **Click "Run Triage."** Every ticket gets a category badge in a couple
-   seconds. "Nothing surprising yet — that's what any classifier does."
-3. **Edit a category.** Rename "Bug Report" to "Technical Issue," or add a
-   brand new category — "Compliance Request" with a one-line description.
+1. **Open the app.** Point at the inbox: "Three support tickets, all
+   unclassified." Point at the category list on the right: "Two categories
+   — and they aren't code, they're rows in a database."
+2. **Click "Run Triage."** The billing ticket and the crash ticket get the
+   right badges — and the dark-mode request gets shoehorned into the
+   nearest bucket, because the enum is exhaustive: the model *must* pick a
+   variant. "That misfit is the interesting one."
+3. **Add a category.** "Feature Request" with a one-line description.
    Don't touch any code.
-4. **Click "Run Triage" again.** The badges update immediately, using the
-   new category — including on tickets that land in the category you just
-   created. "The model has never seen this category before. Nobody
-   redeployed anything."
-5. **Land it.** Open `baml_src/triage.baml`. "This is the entire feature.
+4. **Click "Run Triage" again.** The dark-mode ticket moves to the
+   category you just created. "The model has never seen this category
+   before. Nobody redeployed anything."
+5. **Keep going.** Type a new ticket into the compose form — a GDPR data
+   request, an outage report, whatever the audience shouts out — classify
+   it, and add whatever category it deserves. Rename "Bug Report" to
+   "Technical Issue" and re-run: its tickets follow the meaning, not the
+   name.
+6. **Land it.** Open `baml_src/triage.baml`. "This is the entire feature.
    `BuildCategoryType` turns whatever rows are in the database into a real
    enum type, right now, and `Classify` is generic over it. The category
-   list is data. The type system caught up to it."
+   list is data. The type system caught up to it." (The "Reset demo"
+   button puts everything back for the next audience.)
 
-## Status (2026-08-24)
+## Status (2026-08-29)
 
-**Both modes are presenter-ready**, verified against canary `a50430fba` with
-the `baml-cli` and `@boundaryml/baml-bridge` addon rebuilt as a matching pair.
+**Both modes are presenter-ready**, verified against the pinned canary commit
+(repo-root `BAML_COMMIT`, originally verified on `a50430fba`) with the
+`baml-cli` and `@boundaryml/baml-bridge` addon rebuilt as a matching pair.
 
-- Mock mode: all 11 seed tickets classify; renaming a category and adding one
-  are both picked up on the next run.
-- Live mode (`claude-haiku-4-5`): same results. `Run Triage` classifies all 11
-  tickets in ~2s, and the model correctly places tickets into a category
-  *renamed* mid-demo ("Bug Report" → "Technical Issue") and into one *added*
-  mid-demo ("Compliance Request") — neither name exists anywhere in
+- Mock mode: all seed tickets classify; renaming a category, adding one, and
+  composing new tickets are all picked up on the next run.
+- Live mode (`claude-haiku-4-5`): same results. The model correctly places
+  tickets into a category *renamed* mid-demo ("Bug Report" → "Technical
+  Issue") and into one *added* mid-demo — names that exist nowhere in
   `baml_src/`.
 
 The two modes agree ticket for ticket on the seed data, so the story you tell
@@ -150,11 +159,11 @@ offline is the story the model tells live.
 
 ## Troubleshooting
 
-- **`baml-dev: local binary not built`** — the demo depends on the local
-  canary build at `baml_language/target/debug/baml-cli`
-  (`~/.baml/bin/baml-dev`). If it's missing, build it with `cd
-  .../baml/baml_language && cargo build -p baml_cli` — check first whether
-  another agent owns that checkout's build lock.
+- **`baml-dev: ... not built`** — the demo depends on the local canary
+  build at `vendor/baml/baml_language/target/debug/baml-cli` (via
+  `scripts/baml-dev`). If it's missing, run `./scripts/setup-baml.sh` from
+  the repo root — check first whether another agent owns that checkout's
+  build lock.
 - **Classification fails but the rest of the app works.** That's by design:
   the backend lazy-loads the generated SDK on the first classify request, so
   a broken toolchain never takes down ticket/category CRUD. `Run Triage`
