@@ -41,14 +41,9 @@ export class ToolPick$stream {
   }
 }
 
-/**
- * @throws InvalidArgument
- * @throws Timeout
- * @throws UnknownError
- * @throws Cancelled
- * @throws CompilationError
- */
-export const PickAction = defineFunction("user.PickAction", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
+export type ToolId$stream = "calculator" | "unit_converter" | "note_saver" | "weather";
+
+export type ToolId = "calculator" | "unit_converter" | "note_saver" | "weather";
 
 /**
  * @throws InvalidArgument
@@ -57,7 +52,7 @@ export const PickAction = defineFunction("user.PickAction", "sync", ["request"],
  * @throws Cancelled
  * @throws CompilationError
  */
-export const PickAction_async = defineFunction("user.PickAction", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
+export const pick_action = defineFunction("user.pick_action", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
 
 /**
  * @throws InvalidArgument
@@ -66,7 +61,7 @@ export const PickAction_async = defineFunction("user.PickAction", "async", ["req
  * @throws Cancelled
  * @throws CompilationError
  */
-export const PickAction$build_request = defineFunction("user.PickAction$build_request", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => baml.http.Request;
+export const pick_action_async = defineFunction("user.pick_action", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
 
 /**
  * @throws InvalidArgument
@@ -75,38 +70,38 @@ export const PickAction$build_request = defineFunction("user.PickAction$build_re
  * @throws Cancelled
  * @throws CompilationError
  */
-export const PickAction$build_request_async = defineFunction("user.PickAction$build_request", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<baml.http.Request>;
+export const pick_action$build_request = defineFunction("user.pick_action$build_request", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => baml.http.Request;
+
+/**
+ * @throws InvalidArgument
+ * @throws Timeout
+ * @throws UnknownError
+ * @throws Cancelled
+ * @throws CompilationError
+ */
+export const pick_action$build_request_async = defineFunction("user.pick_action$build_request", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<baml.http.Request>;
 
 /**
  * @throws LlmClient
  */
-export const PickAction$parse = defineFunction("user.PickAction$parse", "sync", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
+export const pick_action$parse = defineFunction("user.pick_action$parse", "sync", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
 
 /**
  * @throws LlmClient
  */
-export const PickAction$parse_async = defineFunction("user.PickAction$parse", "async", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
+export const pick_action$parse_async = defineFunction("user.pick_action$parse", "async", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
 
 /**
  * @throws InvalidArgument
  * @throws CompilationError
  */
-export const PickAction$render_prompt = defineFunction("user.PickAction$render_prompt", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.Prompt;
+export const pick_action$render_prompt = defineFunction("user.pick_action$render_prompt", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.Prompt;
 
 /**
  * @throws InvalidArgument
  * @throws CompilationError
  */
-export const PickAction$render_prompt_async = defineFunction("user.PickAction$render_prompt", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.Prompt>;
-
-/**
- * @throws InvalidArgument
- * @throws Timeout
- * @throws UnknownError
- * @throws Cancelled
- * @throws CompilationError
- */
-export const PickAction$stream = defineFunction("user.PickAction$stream", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.stream.Stream<T | null, T>;
+export const pick_action$render_prompt_async = defineFunction("user.pick_action$render_prompt", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.Prompt>;
 
 /**
  * @throws InvalidArgument
@@ -115,7 +110,16 @@ export const PickAction$stream = defineFunction("user.PickAction$stream", "sync"
  * @throws Cancelled
  * @throws CompilationError
  */
-export const PickAction$stream_async = defineFunction("user.PickAction$stream", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.stream.Stream<T | null, T>>;
+export const pick_action$stream = defineFunction("user.pick_action$stream", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.stream.Stream<T | null, T>;
+
+/**
+ * @throws InvalidArgument
+ * @throws Timeout
+ * @throws UnknownError
+ * @throws Cancelled
+ * @throws CompilationError
+ */
+export const pick_action$stream_async = defineFunction("user.pick_action$stream", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.stream.Stream<T | null, T>>;
 
 export class ToolPick {
   matched!: boolean;
@@ -132,6 +136,6 @@ export class ToolPick {
   }
 }
 
-export const RouteAndDispatch = defineFunction("user.RouteAndDispatch", "sync", ["calculator_on", "unit_converter_on", "note_saver_on", "weather_on", "request", "mock_json"]) as (calculator_on: boolean, unit_converter_on: boolean, note_saver_on: boolean, weather_on: boolean, request: string, mock_json: string | null, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ToolPick;
+export const route_and_dispatch = defineFunction("user.route_and_dispatch", "sync", ["enabled", "request"]) as (enabled: ToolId[], request: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ToolPick;
 
-export const RouteAndDispatch_async = defineFunction("user.RouteAndDispatch", "async", ["calculator_on", "unit_converter_on", "note_saver_on", "weather_on", "request", "mock_json"]) as (calculator_on: boolean, unit_converter_on: boolean, note_saver_on: boolean, weather_on: boolean, request: string, mock_json: string | null, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ToolPick>;
+export const route_and_dispatch_async = defineFunction("user.route_and_dispatch", "async", ["enabled", "request"]) as (enabled: ToolId[], request: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ToolPick>;

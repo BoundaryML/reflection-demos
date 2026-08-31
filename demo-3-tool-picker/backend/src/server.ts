@@ -3,17 +3,13 @@ import express from "express";
 import { BamlError } from "@boundaryml/baml-bridge";
 
 import { TOOL_IDS, TOOLS, type ToolId } from "./tools/meta.js";
-import { routeMock } from "./mockRouter.js";
 import { runCalculator } from "./tools/calculator.js";
 import { runUnitConverter, type UnitConverterArgs } from "./tools/unitConverter.js";
 import { listNotes, runNoteSaver } from "./tools/noteSaver.js";
 import { runWeatherLookup } from "./tools/weatherLookup.js";
 
 const PORT = Number(process.env.PORT ?? 4430);
-const MODEL = "claude-haiku-4-5-20251001";
-// Offline-first by default: mock unless a real Anthropic key is present, and
-// MOCK_LLM=1 always forces mock even when a key is set.
-const MOCK = process.env.MOCK_LLM === "1" || !process.env.ANTHROPIC_API_KEY;
+const MODEL = "claude-haiku-4-5";
 
 // The generated BAML client runs `initializeRuntimeFromBytecode` as a
 // top-level side effect on import, so a stale native bridge addon (see
@@ -84,7 +80,7 @@ app.get("/api/tools", (_req, res) => {
 });
 
 app.get("/api/mode", (_req, res) => {
-  res.json({ mock: MOCK, model: MOCK ? null : MODEL });
+  res.json({ mock: false, model: MODEL });
 });
 
 app.get("/api/notes", (_req, res) => {
@@ -111,9 +107,9 @@ app.post("/api/chat", async (req, res) => {
     return;
   }
 
-  let RouteAndDispatch_async: BamlSdk["RouteAndDispatch_async"];
+  let route_and_dispatch_async: BamlSdk["route_and_dispatch_async"];
   try {
-    ({ RouteAndDispatch_async } = await loadBamlSdk());
+    ({ route_and_dispatch_async } = await loadBamlSdk());
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
     res.json({
@@ -126,27 +122,7 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
-    // MOCK_LLM=1 stands in for the model: guess a tool + build its args,
-    // then hand that JSON to the SAME PickAction$parse<T> companion a real
-    // model's output would go through, against the SAME runtime union.
-    let mockJson: string | null = null;
-    if (MOCK) {
-      const guess = routeMock(message, Array.from(enabled));
-      if (!guess) {
-        res.json({ status: "no_match", reply: noToolReply(enabled) });
-        return;
-      }
-      mockJson = guess.mockJson;
-    }
-
-    const pick = await RouteAndDispatch_async(
-      enabled.has("calculator"),
-      enabled.has("unit_converter"),
-      enabled.has("note_saver"),
-      enabled.has("weather"),
-      message,
-      mockJson,
-    );
+    const pick = await route_and_dispatch_async(Array.from(enabled), message);
 
     if (!pick.matched || !isToolId(pick.tool)) {
       res.json({ status: "no_match", reply: noToolReply(enabled) });
@@ -178,8 +154,8 @@ app.post("/api/chat", async (req, res) => {
  * The runtime union is the model's entire vocabulary for a turn, so when no
  * enabled tool fits the request there is simply no value it can return. It
  * says so in prose instead, the runner spends its retry and raises
- * `ai.errors.ParseFailed`. That is this demo's `no_match` — the same beat mock
- * mode reaches when `routeMock` finds nothing — not a system fault.
+ * `ai.errors.ParseFailed`. That is this demo's `no_match` — not a system
+ * fault.
  *
  * Returns the model's own words when that's what happened, else `null`.
  *
@@ -205,5 +181,5 @@ function describeError(err: unknown): string {
 }
 
 app.listen(PORT, () => {
-  console.log(`demo-3-tool-picker backend on http://localhost:${PORT} (${MOCK ? "mock" : "live"} mode)`);
+  console.log(`demo-3-tool-picker backend on http://localhost:${PORT}`);
 });

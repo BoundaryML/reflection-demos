@@ -945,6 +945,8 @@ const _ALIAS_ENTRIES: Record<string, () => unknown> = {
   "testing.TestSetReportThunk$stream": () => (__leaf_55 as Record<string, unknown>)["TestSetReportThunk$stream"],
   "testing.TestSetRunner": () => (__leaf_55 as Record<string, unknown>)["TestSetRunner"],
   "testing.TestSetRunner$stream": () => (__leaf_55 as Record<string, unknown>)["TestSetRunner$stream"],
+  "user.ToolId": () => (__leaf_0 as Record<string, unknown>)["ToolId"],
+  "user.ToolId$stream": () => (__leaf_0 as Record<string, unknown>)["ToolId$stream"],
 };
 
 export const _TYPE_MAP = BamlTypeMap.fromLazyEntries({

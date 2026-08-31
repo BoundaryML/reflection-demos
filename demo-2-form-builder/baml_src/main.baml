@@ -22,6 +22,7 @@ class SavedField {
 // swallowed (which is what a map would do on a duplicate key).
 function form_type(saved: SavedField[]) -> reflect.class.Type {
     let class_builder = reflect.class.builder("DesignedForm");
+
     for (let field in saved) {
         let ty = match (field.kind) {
             "number" => reflect.Type.of<int>(),
@@ -39,6 +40,7 @@ function form_type(saved: SavedField[]) -> reflect.class.Type {
         };
         class_builder.field(field.name, ty.meta(description = description));
     }
+
     class_builder.build()
 }
 

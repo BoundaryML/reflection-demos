@@ -11,7 +11,7 @@ product's clothes.
 
 ## What's actually happening
 
-Every chat turn, the backend calls one BAML function, `RouteAndDispatch` (see
+Every chat turn, the backend calls one BAML function, `route_and_dispatch` (see
 `baml_src/toolbox.baml`). For each tool that's currently switched on, it mints a runtime
 class with `reflect.class.new` (field aliases via `.meta(alias = ...)`, e.g. `from_unit` on
 the wire as `"from"`). Only the *enabled* tools' classes get folded into a runtime union with
@@ -19,12 +19,11 @@ the wire as `"from"`). Only the *enabled* tools' classes get folded into a runti
 it's not merely hidden from the union, it doesn't exist yet.
 
 The model's response is parsed into that exact union type
-(`PickAction$parse<unreflect(action_t)>` in mock mode, or the full
-`PickAction<unreflect(action_t)>` call against a live model). Dispatch is then a real type
+(`pick_action<unreflect(action_t)>`). Dispatch is then a real type
 check, not a string compare on a `"tool"` field: `action is unreflect(calc_t.as_type())` asks
 "is this value's minted type identical to the Calculator class I built a moment ago?" That
 identity check is what selects the branch — see the `if / else if` chain at the bottom of
-`RouteAndDispatch`.
+`route_and_dispatch`.
 
 BAML hands back which tool matched, its parsed arguments (as JSON), and the *exact prompt*
 that was rendered for this turn. The Express backend then runs the actual tool — arithmetic
@@ -59,39 +58,9 @@ Or standalone, from this directory: `pnpm install && pnpm dev`.
 
 ### Env vars
 
-- `ANTHROPIC_API_KEY` — switches the backend into live mode (the assistant actually calls
-  Claude Haiku 4.5). Verified working; see [Live mode status](#live-mode-status).
-- `MOCK_LLM=1` — force mock mode even if a key is set.
+- `ANTHROPIC_API_KEY` — required (e.g. `infisical run -- pnpm dev`); the assistant calls
+  Claude Haiku 4.5. There is no mock mode — the code is deliberately minimal.
 - `PORT` — backend port (default `4430`).
-
-**With no key set, the backend runs in mock mode automatically** — this demo is fully
-presentable offline. Live mode is the upgrade, not the requirement.
-
-### Mock mode, honestly
-
-In mock mode, a small keyword router (`backend/src/mockRouter.ts`) stands in for the model.
-It only ever considers the tools you've switched **on** — it mirrors what a real,
-schema-constrained model actually experiences: it doesn't "see" a disabled tool and reject
-it, it never receives that tool's schema to begin with. The router's job stops at "which
-tool, with what plausible arguments"; the resulting JSON is then handed to the real
-`PickAction$parse<T>` companion, so the actual reflection/parsing machinery runs on every
-turn, mock or live.
-
-What the stand-in router understands, so you can improvise on stage:
-
-- **Calculator** — symbols (`12 * (7 + 5)`) and words alike (`12 times (7 plus 5)`,
-  `100 divided by 4`, `6 x 7`). It only proposes an expression that actually evaluates, so
-  arithmetic-looking prose doesn't produce a broken card.
-- **Unit Converter** — `convert 10 km to miles`, `70 kg in pounds`,
-  `how many pounds is 70 kg`, `20 celsius in fahrenheit`.
-- **Note Saver** — `remember to …`, `note that …`, `remind me to …`, `jot down …`.
-- **Weather** — `weather` / `forecast` / `humidity` plus a city in any casing
-  (`weather in tokyo` and `What's the weather like in New York?` both work). With no city
-  it looks up "your area".
-
-Tools are scored, not first-match: an explicit note/weather/conversion trigger outranks the
-broad calculator matcher, so "remember to buy 3 apples plus 2 pears" saves a note. Dispatch
-therefore doesn't depend on the order you happened to toggle the sidebar switches in.
 
 ## Regenerating the BAML client
 
@@ -125,10 +94,12 @@ generation step.
   sidesteps both — the dispatching BAML function only needs to identify *which* tool matched,
   not read its fields itself, so it hands the whole matched value to
   `baml.json.encode(action)` and the args get parsed back out on the TypeScript side.
-- `RouteAndDispatch` is deliberately **not generic**: the union is built from a runtime
+- `route_and_dispatch` is deliberately **not generic**: the union is built from a runtime
   argument (which tools are enabled), not a compile-time type parameter, so the function
-  TypeScript calls is a plain `(bool, bool, bool, bool, string, string | null) => ToolPick` —
-  no `$types` plumbing needed on the call site.
+  TypeScript calls is a plain `(enabled: ToolId[], request: string) => ToolPick` — no
+  `$types` plumbing needed on the call site. `ToolId` is a named union of literals
+  (`type ToolId = "calculator" | ...`), so the enabled set is data with a checked
+  vocabulary, and the backend passes its array straight through.
 
 ## Live mode status
 
@@ -151,7 +122,7 @@ When you switch a tool off, the runtime union genuinely loses that member — so
 only that tool could satisfy, there is no value the model is *able* to return. It says so in
 prose, the runner spends its retry and raises `ai.errors.ParseFailed`. That is this demo's
 `no_match` beat arriving live, and `backend/src/server.ts` (`declinedForLackOfTool`) turns it
-into the same "I don't have a tool for that right now. Enabled: …" reply mock mode gives,
+into a "I don't have a tool for that right now. Enabled: …" reply,
 logging the model's own words server-side.
 
 Deliberately narrow: a `ParseFailed` whose raw output contains a JSON object is *not*
@@ -166,14 +137,13 @@ masquerading as "no tool for that".
   Rebuild the bridge (`pnpm build:debug` in
   `baml_language/sdks/typescript/bridge_typescript`).
 - **Every live turn fails `ai.errors.ParseFailed` at
-  `<builtin>/ai/runner.baml … in ai.Agent.Runner<Out>.run`, while mock mode is fine** → the
+  `<builtin>/ai/runner.baml … in ai.Agent.Runner<Out>.run`** → the
   bridge addon is *older* than the client, from before baml
   [#4501](https://github.com/BoundaryML/baml/pull/4501) /
   [#4516](https://github.com/BoundaryML/baml/pull/4516) ("carry runtime type definitions /
   minted type identity through interface dispatch"). A live call reaches the model through
   `ai.Agent implements Runner<Out>`; on that older runtime a reflected `Out` lost its
-  definition crossing that boundary, so the runner's `_parses` check never matched. Mock
-  mode is unaffected because `PickAction$parse<T>` doesn't cross the dispatch. Tell-tale:
+  definition crossing that boundary, so the runner's `_parses` check never matched. Tell-tale:
   the `runner.baml` line numbers in the trace don't line up with the current source. Fix by
   rebuilding the bridge. (Hit and fixed on 2026-08-24.)
 - **`pnpm install` silently un-fixes the bridge.** The dependency is `link:`, not `file:` —
@@ -191,12 +161,12 @@ masquerading as "no tool for that".
   broken bridge degrades that one route to a normal `{ status: "error" }` JSON reply instead
   of crashing the process — `/api/tools`, `/api/mode`, and `/api/notes` stay up regardless.
 
-Verified end-to-end through the real bridge on 2026-08-24 — every step of the 30-second
-script below, in **both** mock and live mode, including the disabled-weather → `no_match`
-path and a persisted note:
+Verified end-to-end live on 2026-08-31 at the pinned canary commit — every step of the
+30-second script below, including the disabled-weather → `no_match` path and a persisted
+note:
 
 ```bash
-MOCK_LLM=1 pnpm run dev:backend &
+infisical run -- pnpm run dev:backend &
 curl -X POST localhost:4430/api/chat -H 'Content-Type: application/json' \
   -d '{"message":"what is 12 * (3 + 4)?","enabled":["calculator","unit_converter","note_saver","weather"]}'
 # {"status":"matched","reply":"12 * (3 + 4) = 84", ...}
@@ -207,9 +177,10 @@ The BAML side was also verified directly against the compiler, independent of th
 
 ```bash
 baml-dev run --output-format json \
-  -e 'RouteAndDispatch(true, true, true, false, "weather in Lisbon", "{\"city\": \"Lisbon\"}")'
+  -e 'route_and_dispatch(["calculator", "unit_converter", "note_saver"], "weather in Lisbon")'
 # → prompt_preview lists exactly 3 schemas (calculator / unit_converter / note_saver) —
-#   WeatherLookup is genuinely absent, not merely filtered from display, when weather_on = false
+#   WeatherLookup is genuinely absent, not merely filtered from display, when it is not
+#   in the enabled list (note: this spends a live LLM call)
 ```
 
 ## The tools
