@@ -56,6 +56,7 @@ function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick thro
             description = "city name to look up current weather for",
         ),
     });
+
     // Escape hatch, same lesson as demo-1's Unknown category: without it a
     // cornered model invents a refusal shape ({"error": ...}) and the
     // schema-aligned parser coerces it into whichever tool has one string
@@ -67,18 +68,11 @@ function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick thro
         ),
     });
 
-    // One unreflect per tool; everything below speaks in type names.
-    type Calc = unreflect(calc_t.as_type());
-    type Unit = unreflect(convert_t.as_type());
-    type Note = unreflect(note_t.as_type());
-    type Weather = unreflect(weather_t.as_type());
-    type NoTool = unreflect(no_tool_t.as_type());
-
     let member_types: reflect.Type[] = [];
-    if (enabled.includes("calculator")) { member_types.push(reflect.Type.of<Calc>()); }
-    if (enabled.includes("unit_converter")) { member_types.push(reflect.Type.of<Unit>()); }
-    if (enabled.includes("note_saver")) { member_types.push(reflect.Type.of<Note>()); }
-    if (enabled.includes("weather")) { member_types.push(reflect.Type.of<Weather>()); }
+    if (enabled.includes("calculator")) { member_types.push(calc_t.as_type()); }
+    if (enabled.includes("unit_converter")) { member_types.push(convert_t.as_type()); }
+    if (enabled.includes("note_saver")) { member_types.push(note_t.as_type()); }
+    if (enabled.includes("weather")) { member_types.push(weather_t.as_type()); }
 
     if (member_types.length() == 0) {
         return ToolPick {
@@ -89,8 +83,15 @@ function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick thro
         };
     }
 
-    member_types.push(reflect.Type.of<NoTool>());
-    type Action = unreflect(reflect.union.new(member_types).as_type());
+    member_types.push(no_tool_t.as_type());
+    let action_t = reflect.union.new(member_types).as_type();
+
+    // Bind each minted type to a name; dispatch below is by type identity.
+    type Calc = unreflect(calc_t.as_type());
+    type Unit = unreflect(convert_t.as_type());
+    type Note = unreflect(note_t.as_type());
+    type Weather = unreflect(weather_t.as_type());
+    type Action = unreflect(action_t);
 
     let prompt_preview = pick_action$render_prompt<Action>(request).text();
     let action = pick_action<Action>(request);
