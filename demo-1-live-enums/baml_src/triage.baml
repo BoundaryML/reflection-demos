@@ -1,5 +1,5 @@
 // Live Triage: the category list lives in a database, not in this file.
-// There is no `enum Category { ... }` anywhere — ClassifyTicket mints one
+// There is no `enum Category { ... }` anywhere — classify_ticket mints one
 // from the current rows on every call. Edit the list in the UI, and the
 // very next call sees the change. No redeploy.
 
@@ -11,23 +11,25 @@ class CategoryInput {
 }
 
 /// Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
-function Classify<T>(ticket_text: string) -> T {
+function classify<T>(ticket_text: string) -> T {
   client: "anthropic/claude-haiku-4-5"
-  prompt: `You are a support triage agent. Read the ticket and choose the single best category for it.
+  prompt: `
+    You are a support triage agent. Read the ticket and choose the single best category for it.
 
-Ticket:
-${ticket_text}
+    Ticket:
+    ${ticket_text}
 
-${ctx.output_format}`
+    ${ctx.output_format}
+  `
 }
 
-function ClassifyTicket(ticket_text: string, categories: CategoryInput[]) -> string {
+function classify_ticket(ticket_text: string, categories: CategoryInput[]) -> string {
   // 1. Mint a runtime enum VALUE from the rows. Variant names are `CAT_<id>`
   //    (always a valid identifier); the alias carries the display name, which
   //    is what the model actually reads and writes.
   let variants: (string | reflect.enum.Value)[] = [];
   for (let c in categories) {
-    variants.push(reflect.enum.value("CAT_" + c.id.to_string(), alias = c.name, description = c.description));
+    variants.push(reflect.enum.value(`CAT_${c.id}`, alias = c.name, description = c.description));
   }
   let category_t = reflect.enum.new("Category", variants);
 
@@ -35,6 +37,6 @@ function ClassifyTicket(ticket_text: string, categories: CategoryInput[]) -> str
   type C = unreflect(category_t.as_type());
 
   // 3. ...and make an ordinary generic LLM call over it.
-  let picked = Classify<C>(ticket_text);
+  let picked = classify<C>(ticket_text);
   reflect.enum.get_value(picked)
 }

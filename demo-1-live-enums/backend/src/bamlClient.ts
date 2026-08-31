@@ -1,4 +1,4 @@
-import { CategoryInput, ClassifyTicket_async } from "../baml_sdk/index.js";
+import { CategoryInput, classify_ticket_async } from "../baml_sdk/index.js";
 
 export interface CategoryForClassification {
   id: number;
@@ -6,7 +6,7 @@ export interface CategoryForClassification {
   description: string | null;
 }
 
-// ClassifyTicket returns the variant name (`CAT_<id>`); map it back to the
+// classify_ticket returns the variant name (`CAT_<id>`); map it back to the
 // category's display name using the rows we already have.
 export async function classifyTicket(
   ticketText: string,
@@ -15,7 +15,7 @@ export async function classifyTicket(
   const rows = categories.map(
     (c) => new CategoryInput({ id: c.id, name: c.name, description: c.description }),
   );
-  const variant = await ClassifyTicket_async(ticketText, rows);
+  const variant = await classify_ticket_async(ticketText, rows);
   const id = /^CAT_(\d+)$/.exec(variant)?.[1];
   return categories.find((c) => c.id === Number(id))?.name ?? variant;
 }

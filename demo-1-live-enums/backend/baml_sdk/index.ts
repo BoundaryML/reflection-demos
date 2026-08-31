@@ -66,7 +66,7 @@ export class CategoryInput {
  * @throws Cancelled
  * @throws CompilationError
  */
-export const Classify = defineFunction("user.Classify", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
+export const classify = defineFunction("user.classify", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
@@ -76,7 +76,7 @@ export const Classify = defineFunction("user.Classify", "sync", ["ticket_text"],
  * @throws Cancelled
  * @throws CompilationError
  */
-export const Classify_async = defineFunction("user.Classify", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
+export const classify_async = defineFunction("user.classify", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
@@ -86,7 +86,7 @@ export const Classify_async = defineFunction("user.Classify", "async", ["ticket_
  * @throws Cancelled
  * @throws CompilationError
  */
-export const Classify$build_request = defineFunction("user.Classify$build_request", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => baml.http.Request;
+export const classify$build_request = defineFunction("user.classify$build_request", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => baml.http.Request;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
@@ -96,43 +96,33 @@ export const Classify$build_request = defineFunction("user.Classify$build_reques
  * @throws Cancelled
  * @throws CompilationError
  */
-export const Classify$build_request_async = defineFunction("user.Classify$build_request", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<baml.http.Request>;
+export const classify$build_request_async = defineFunction("user.classify$build_request", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<baml.http.Request>;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws LlmClient
  */
-export const Classify$parse = defineFunction("user.Classify$parse", "sync", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
+export const classify$parse = defineFunction("user.classify$parse", "sync", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws LlmClient
  */
-export const Classify$parse_async = defineFunction("user.Classify$parse", "async", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
+export const classify$parse_async = defineFunction("user.classify$parse", "async", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws CompilationError
  */
-export const Classify$render_prompt = defineFunction("user.Classify$render_prompt", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.Prompt;
+export const classify$render_prompt = defineFunction("user.classify$render_prompt", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.Prompt;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws CompilationError
  */
-export const Classify$render_prompt_async = defineFunction("user.Classify$render_prompt", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.Prompt>;
-
-/**
- * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
- * @throws InvalidArgument
- * @throws Timeout
- * @throws UnknownError
- * @throws Cancelled
- * @throws CompilationError
- */
-export const Classify$stream = defineFunction("user.Classify$stream", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.stream.Stream<T | null, T>;
+export const classify$render_prompt_async = defineFunction("user.classify$render_prompt", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.Prompt>;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
@@ -142,7 +132,17 @@ export const Classify$stream = defineFunction("user.Classify$stream", "sync", ["
  * @throws Cancelled
  * @throws CompilationError
  */
-export const Classify$stream_async = defineFunction("user.Classify$stream", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.stream.Stream<T | null, T>>;
+export const classify$stream = defineFunction("user.classify$stream", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.stream.Stream<T | null, T>;
+
+/**
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
+ * @throws InvalidArgument
+ * @throws Timeout
+ * @throws UnknownError
+ * @throws Cancelled
+ * @throws CompilationError
+ */
+export const classify$stream_async = defineFunction("user.classify$stream", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.stream.Stream<T | null, T>>;
 
 /**
  * @throws InvalidArgument
@@ -151,7 +151,7 @@ export const Classify$stream_async = defineFunction("user.Classify$stream", "asy
  * @throws Cancelled
  * @throws CompilationError
  */
-export const ClassifyTicket = defineFunction("user.ClassifyTicket", "sync", ["ticket_text", "categories"]) as (ticket_text: string, categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
+export const classify_ticket = defineFunction("user.classify_ticket", "sync", ["ticket_text", "categories"]) as (ticket_text: string, categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
 
 /**
  * @throws InvalidArgument
@@ -160,4 +160,4 @@ export const ClassifyTicket = defineFunction("user.ClassifyTicket", "sync", ["ti
  * @throws Cancelled
  * @throws CompilationError
  */
-export const ClassifyTicket_async = defineFunction("user.ClassifyTicket", "async", ["ticket_text", "categories"]) as (ticket_text: string, categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
+export const classify_ticket_async = defineFunction("user.classify_ticket", "async", ["ticket_text", "categories"]) as (ticket_text: string, categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;

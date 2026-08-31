@@ -15,7 +15,7 @@ every visit.
 
 ## What's actually happening (`baml_src/main.baml`)
 
-`FormType(saved: SavedField[]) -> reflect.class.Type` is the reflection
+`form_type(saved: SavedField[]) -> reflect.class.Type` is the reflection
 call: it walks your saved fields and mints a runtime class —
 
 - `text` / `number` fields become `reflect.Type.of<string>()` / `reflect.Type.of<int>()`
@@ -25,14 +25,16 @@ call: it walks your saved fields and mints a runtime class —
 - every field carries its description via `.meta(description = ...)`, so the
   rendered prompt explains what the model should look for
 
-`ExtractIntoFormLive` / `ExtractIntoFormMock` then bind that runtime type
-with `unreflect(form_t.as_type())`, call `Extract<T>` (or its
-`$render_prompt` / `$parse` companions), and read every field back with
-`reflect.class.get_field<T>(note, field.name)` — typed per field kind, then
-flattened to strings so the frontend can render a plain filled form.
+`extract_into_form` then binds that runtime type
+(`type F = unreflect(form_t.as_type())`), calls `extract<F>`, and reads
+every field back with `reflect.class.get_field<T>(note, field.name)` —
+typed per field kind, then flattened to strings so the frontend can render
+a plain filled form. `SavedField.kind` is a union of literals
+(`"text" | "number" | "dropdown" | "bulleted_list"`), so the per-kind
+`match` needs no catch-all arm — the compiler proves it exhaustive.
 
 This file is meant to be read in an editor during a demo — it's short
-(under 120 lines) and the reflection calls are easy to point at. There's no
+(under 80 lines) and the reflection calls are easy to point at. There's no
 in-app code panel; that's a deliberate choice, not an oversight.
 
 ## Running it
@@ -47,30 +49,16 @@ pnpm dev
 - Backend: http://localhost:4420
 - Frontend: http://localhost:4421 (proxies `/api` to the backend)
 
-### Mock mode (no API key needed)
+### Live only
 
-The app auto-detects: no `ANTHROPIC_API_KEY` in the environment → mock mode.
-You can also force it with `MOCK_LLM=1 pnpm dev`. Mock mode still calls
-`Extract$render_prompt` (proving the runtime schema renders into a real
-prompt) and `Extract$parse` (proving it parses canned JSON into the
-runtime type and reads back through reflection) — it just skips the actual
-network call. Canned extraction JSON is keyed by field name against the two
-seed transcripts (doctor visit / real-estate listing), so the "Load
-starter" presets and "Use sample transcript" buttons produce a perfect fill
-every time; a custom field falls back to a sensible per-kind placeholder
-(0, "", [], or "(not mentioned in the text)").
-
-### Live mode
-
-Set `ANTHROPIC_API_KEY` and just run `pnpm dev` — no flag needed. Extraction
-goes through `Extract<T>` for real, using `claude-haiku-4-5`: the
-runtime-minted class renders into the prompt as a genuine schema, and the
-model's JSON is parsed straight back into it.
-
-Live answers differ from the canned ones, which is rather the point — the
-doctor transcript says "six foot even" and the model returns
-`patient_height_cm: 183`, and a field you added seconds earlier gets filled
-from the text instead of from a fixture.
+`ANTHROPIC_API_KEY` must be in the environment (e.g.
+`infisical run -- pnpm dev`) — there is no mock mode; the code is
+deliberately minimal so the whole demo fits on one screen. Extraction goes
+through `extract<T>` using `claude-haiku-4-5`: the runtime-minted class
+renders into the prompt as a genuine schema, and the model's JSON is
+parsed straight back into it. The doctor transcript says "six foot even"
+and the model returns `patient_height_cm: 183`, and a field you added
+seconds earlier gets filled from the text — that's the beat to point at.
 
 ## Environment notes
 
@@ -97,8 +85,7 @@ diagnostic.
 
 ## Seed data
 
-Two presets in `backend/src/seeds.ts` (`PRESETS`, `SEED_TRANSCRIPTS`,
-`MOCK_EXTRACTIONS`):
+Two presets in `backend/src/seeds.ts` (`PRESETS`, `SEED_TRANSCRIPTS`):
 
 - **Doctor visit** — `chief_complaint` (text), `patient_height_cm` (number),
   `symptoms` (bullet list), `visit_type` (dropdown), `follow_up_needed`
@@ -130,12 +117,12 @@ every later extraction fails inside `reflect.class.new`.
    dropdown pills — all read back out of a class that didn't exist ten
    seconds ago.
 5. Switch to the editor, open `baml_src/main.baml`, and point at
-   `FormType` — "this is the entire schema-minting logic. Text becomes
+   `form_type` — "this is the entire schema-minting logic. Text becomes
    `reflect.Type.of<string>()`, a dropdown becomes a literal union built from
    whatever options you typed into the browser, a bullet list becomes
-   `string[]`." Then `ExtractIntoFormLive` / `ExtractIntoFormMock` —
-   "`unreflect` binds that runtime type into the LLM call; `get_field`
-   reads it back out, typed." That's the whole trick.
+   `string[]`." Then `extract_into_form` —
+   "`type F = unreflect(...)` binds that runtime type into the LLM call;
+   `get_field` reads it back out, typed." That's the whole trick.
 6. Optional: switch to the **Real estate listing** preset and repeat, to
    show it's not special-cased to medical data — the same five lines of
    BAML mint whatever schema the browser sends.
@@ -145,4 +132,4 @@ every later extraction fails inside `reflect.class.new`.
 - `frontend/` — React + Vite + TypeScript, no UI kit.
 - `backend/` — Express + TypeScript (via `tsx`), better-sqlite3 for the
   saved field rows.
-- `baml_src/` — the BAML powering both extraction paths.
+- `baml_src/` — the BAML: mint, bind, extract, read back.

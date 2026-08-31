@@ -71,16 +71,6 @@ function fieldNameProblem(name: string): string | null {
   return null;
 }
 
-function isMockMode(): { mock: boolean; reason: string } {
-  if (process.env.MOCK_LLM === "1") {
-    return { mock: true, reason: "MOCK_LLM=1" };
-  }
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return { mock: true, reason: "no ANTHROPIC_API_KEY set" };
-  }
-  return { mock: false, reason: "ANTHROPIC_API_KEY present" };
-}
-
 const app = express();
 app.use(express.json());
 
@@ -89,8 +79,7 @@ app.get("/api/health", (_req: Request, res: Response) => {
 });
 
 app.get("/api/mode", (_req: Request, res: Response) => {
-  const { mock, reason } = isMockMode();
-  res.json({ mock, reason });
+  res.json({ mock: false, reason: "live only" });
 });
 
 app.get("/api/fields", (_req: Request, res: Response) => {
@@ -179,9 +168,8 @@ app.post("/api/extract", async (req: Request, res: Response) => {
     }
   }
 
-  const { mock } = isMockMode();
   try {
-    const outcome = await extractForm(fields, transcript, mock);
+    const outcome = await extractForm(fields, transcript);
     res.json(outcome);
   } catch (err) {
     console.error("extraction failed:", err);
@@ -190,7 +178,5 @@ app.post("/api/extract", async (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
-  const { mock, reason } = isMockMode();
   console.log(`demo-2-form-builder backend listening on http://localhost:${PORT}`);
-  console.log(`mode: ${mock ? "MOCK" : "LIVE"} (${reason})`);
 });

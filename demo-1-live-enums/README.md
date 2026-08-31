@@ -14,11 +14,11 @@ call — no code change, no redeploy.
 The whole trick is one function in `baml_src/triage.baml`:
 
 ```baml
-function ClassifyTicket(ticket_text: string, categories: CategoryInput[]) -> string {
+function classify_ticket(ticket_text: string, categories: CategoryInput[]) -> string {
   // 1. Mint a runtime enum VALUE from the rows.
   let variants: (string | reflect.enum.Value)[] = [];
   for (let c in categories) {
-    variants.push(reflect.enum.value("CAT_" + c.id.to_string(), alias = c.name, description = c.description));
+    variants.push(reflect.enum.value(`CAT_${c.id}`, alias = c.name, description = c.description));
   }
   let category_t = reflect.enum.new("Category", variants);
 
@@ -26,7 +26,7 @@ function ClassifyTicket(ticket_text: string, categories: CategoryInput[]) -> str
   type C = unreflect(category_t.as_type());
 
   // 3. ...and make an ordinary generic LLM call over it.
-  let picked = Classify<C>(ticket_text);
+  let picked = classify<C>(ticket_text);
   reflect.enum.get_value(picked)  // trailing expression = the return value
 }
 ```
@@ -65,7 +65,7 @@ included.
 This demo calls `claude-haiku-4-5` for real — `ANTHROPIC_API_KEY` must be
 in the environment (e.g. `infisical run -- pnpm dev`). There is no mock
 mode: the code is deliberately minimal so the whole demo fits on one
-screen. `Classify<T>` uses the inline client shorthand
+screen. `classify<T>` uses the inline client shorthand
 (`client: "anthropic/claude-haiku-4-5"`) rather than a top-level client
 declaration; it's a style choice, both work.
 
@@ -83,8 +83,8 @@ live and re-running triage.
 ## What's in here
 
 - `baml_src/triage.baml` — three declarations: `CategoryInput`
-  (`id`, `name`, `description`), the generic `Classify<T>` function (with
-  its inline client), and `ClassifyTicket` — mint, bind, call.
+  (`id`, `name`, `description`), the generic `classify<T>` function (with
+  its inline client), and `classify_ticket` — mint, bind, call.
 - `backend/` — Express + better-sqlite3. Seeds 3 tickets and 3 starter
   categories (Billing, Bug Report, Unknown) on first run; the third ticket
   (a dark mode request) deliberately fits nothing but Unknown.
@@ -115,7 +115,7 @@ live and re-running triage.
    name.
 6. **Land it.** Open `baml_src/triage.baml`. "This is the entire feature —
    one function. Mint an enum from whatever rows are in the database,
-   bind it to a type name with `unreflect`, and `Classify` is generic over
+   bind it to a type name with `unreflect`, and `classify` is generic over
    it. The category list is data. The type system caught up to it." (The
    "Reset demo" button puts everything back for the next audience.)
 
