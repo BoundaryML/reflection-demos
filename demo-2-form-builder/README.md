@@ -26,10 +26,11 @@ call: it walks your saved fields and mints a runtime class —
   rendered prompt explains what the model should look for
 
 `extract_into_form` then binds that runtime type
-(`type F = unreflect(form_t.as_type())`), calls `extract<F>`, and reads
-every field back with `reflect.class.get_field<T>(note, field.name)` —
-typed per field kind, then flattened to strings so the frontend can render
-a plain filled form. `SavedField.kind` is a union of literals
+(`type F = unreflect(form_t.as_type())`), calls `extract<F>`, narrows the
+result to `baml.AnyClass` — the read-only reflection surface every class
+instance implements, minted classes included — and reads every field back
+method-style with `note.get<T>(field.name)`, typed per field kind, then
+flattened to strings so the frontend can render a plain filled form. `SavedField.kind` is a union of literals
 (`"text" | "number" | "dropdown" | "bulleted_list"`), so the per-kind
 `match` needs no catch-all arm — the compiler proves it exhaustive.
 
@@ -122,7 +123,8 @@ every later extraction fails inside `reflect.class.new`.
    whatever options you typed into the browser, a bullet list becomes
    `string[]`." Then `extract_into_form` —
    "`type F = unreflect(...)` binds that runtime type into the LLM call;
-   `get_field` reads it back out, typed." That's the whole trick.
+   narrow the result to `baml.AnyClass` and `.get<T>` reads it back out,
+   typed." That's the whole trick.
 6. Optional: switch to the **Real estate listing** preset and repeat, to
    show it's not special-cased to medical data — the same five lines of
    BAML mint whatever schema the browser sends.

@@ -121,8 +121,7 @@ generation step.
 - **Inline `client: "anthropic/claude-haiku-4-5"` shorthand, not a top-level `client`
   declaration.** A style choice, not a workaround — it resolves lazily at call time instead
   of eagerly at module load. Both forms work.
-- `reflect.class.get_field<T>(obj, name)` isn't used here (it's the current spelling;
-  the `reflect.class.instance_from(obj)` design was superseded and removed, baml #4466). This demo
+- Field reads (`baml.AnyClass.get<T>` / `reflect.class.get_field<T>`) aren't used here. This demo
   sidesteps both — the dispatching BAML function only needs to identify *which* tool matched,
   not read its fields itself, so it hands the whole matched value to
   `baml.json.encode(action)` and the args get parsed back out on the TypeScript side.
