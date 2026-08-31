@@ -102,7 +102,11 @@ Field names become real fields on the minted class, so they have to be BAML
 identifiers: letters, digits and underscores, not starting with a digit, and
 not a BAML keyword (`test` and `type` are the two that catch people out). The
 Design tab rejects anything else inline — otherwise the bad row persists and
-every later extraction fails inside `reflect.class.new`.
+every later extraction fails inside the class builder (`Builder.field`
+throws the compiler's `CompilationError` for a bad or duplicate name —
+that validation is why `form_type` uses `reflect.class.builder` rather
+than handing `reflect.class.new` a map, where a duplicate key would
+silently replace).
 
 ## 30-second presenter script
 

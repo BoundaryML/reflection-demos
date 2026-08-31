@@ -17,8 +17,11 @@ class SavedField {
 // A dropdown becomes a literal union (one literal per option); a bulleted
 // list becomes a string array; every field carries its description as
 // metadata, so the LLM prompt explains what each field means.
+// The builder validates as it goes — a duplicate or invalid field name
+// throws the compiler's own CompilationError instead of being silently
+// swallowed (which is what a map would do on a duplicate key).
 function form_type(saved: SavedField[]) -> reflect.class.Type {
-    let fields: map<string, reflect.Type | reflect.WithMeta<reflect.Type>> = {};
+    let builder = reflect.class.builder("DesignedForm");
     for (let field in saved) {
         let ty = match (field.kind) {
             "dropdown" => {
@@ -37,21 +40,23 @@ function form_type(saved: SavedField[]) -> reflect.class.Type {
         } else {
             field.description
         };
-        fields.set(field.name, ty.meta(description = description));
+        builder = builder.field(field.name, ty.meta(description = description));
     }
-    reflect.class.new("DesignedForm", fields)
+    builder.build()
 }
 
 // The extraction call — generic over whatever runtime type T is bound to.
 function extract<T>(transcript: string) -> T {
     client: Extractor
-    prompt: `Extract the fields described below from this text. Only use
-    information that is actually present — never invent values.
+    prompt: `
+        Extract the fields described below from this text. Only use
+        information that is actually present — never invent values.
 
-    Text:
-    ${transcript}
+        Text:
+        ${transcript}
 
-    ${ctx.output_format}`
+        ${ctx.output_format}
+    `
 }
 
 // Mint the type, bind it, call the LLM through it, then read every field
