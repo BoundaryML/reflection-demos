@@ -63,19 +63,21 @@ Click *show what the model was asked*.
 
 ## Beat 5 — the kicker: the model writes the schema (40s)
 
-Hit **Let the model write it**. Describe something — take a suggestion from
-the audience, or: *"a purchase order: vendor, PO number, ship date, ordered
-items"*. The model's text lands in the editor **and compiles like anything a
-human typed**. If it made a mistake, it gets a squiggle like anyone else.
+Hit **Let the model write it** and click the **clinical visit note** chip —
+a deliberate switch of domain, so nobody thinks the invoice was special. The
+model's text lands in the editor **and compiles like anything a human
+typed**. If it made a mistake, it gets a squiggle like anyone else.
 
 > "A model writing a schema is just a model writing text. It goes through the
 > same compiler, gets the same diagnostics — and then you can extract through
 > the class it wrote."
 
-Then extract through the generated schema to close the loop. The modal's
-suggestion chips are all curated to draft schemas that extract cleanly; the
-Draft prompt itself now forces a single flat class with optionals for
-maybe-absent fields, so audience-shouted descriptions are safe too.
+Close the loop: Extract tab → click the **Clinical visit note** sample-doc
+chip (it fills only the document, never your schema) → Extract. A chart note,
+pulled apart by a schema the model wrote a moment ago. All the modal's chips
+are curated to draft schemas that extract cleanly, and the Draft prompt
+forces a single flat class with optionals — audience-shouted descriptions
+are safe too.
 
 ## The code reveal (30s, in your editor)
 

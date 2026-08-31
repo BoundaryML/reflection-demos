@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import type { ExtractResult } from '../lib/api';
+import { PRESETS } from '../lib/presets';
+
+/** Sample documents a presenter can drop in without touching the schema pane. */
+const SAMPLE_DOCS = PRESETS.filter((p) => p.id !== 'broken');
 
 export interface ExtractPanelProps {
   document: string;
@@ -30,6 +34,19 @@ export function ExtractPanel({
       <label className="field-label" htmlFor="extract-doc">
         Paste something to extract
       </label>
+      <div className="chip-row">
+        {SAMPLE_DOCS.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            className="chip"
+            title="Fills the document only — your schema stays as it is"
+            onClick={() => onDocumentChange(p.document)}
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
       <textarea
         id="extract-doc"
         className="doc-input"
