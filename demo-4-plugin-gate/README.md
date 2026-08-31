@@ -63,7 +63,7 @@ The demo is **fully presentable offline**; no key is needed.
 | --- | --- |
 | `MOCK_LLM=1` | force mock mode (default when no key is set) |
 | `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | enables live mode |
-| `PLUGIN_MODEL` | model selector, e.g. `anthropic/claude-haiku-4-5`; defaults to `openai/gpt-4o-mini` |
+| `PLUGIN_MODEL` | model selector, e.g. `openai/gpt-4o-mini`; defaults to `anthropic/claude-haiku-4-5` |
 
 In mock mode the backend renders the **real** prompt from the plugin's runtime schema through
 `Summarize$render_prompt<P>`, then feeds a canned JSON body shaped to that same schema through the

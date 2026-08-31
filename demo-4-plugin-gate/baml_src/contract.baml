@@ -23,7 +23,7 @@ function contract_fields() -> string[] {
 /// host never compiled against, and handed to this function as a runtime type.
 /// `T extends Summarizer` is the whole reason that is safe.
 function Summarize<T extends Summarizer>(document: string) -> T {
-    client: env.PLUGIN_MODEL.get() ?? "openai/gpt-4o-mini"
+    client: env.PLUGIN_MODEL.get() ?? "anthropic/claude-haiku-4-5"
     prompt: `
         Summarize the document below for a busy reader.
 

@@ -66,7 +66,7 @@ app.get("/api/health", (_req, res) => {
 app.get("/api/bootstrap", (_req, res) => {
   res.json({
     mode: MOCK ? "mock" : "live",
-    model: process.env.PLUGIN_MODEL ?? "openai/gpt-4o-mini",
+    model: process.env.PLUGIN_MODEL ?? "anthropic/claude-haiku-4-5",
     host: { status: host.status, error: host.lastError },
     contract: CONTRACT_FIELDS,
     examples: EXAMPLES,
