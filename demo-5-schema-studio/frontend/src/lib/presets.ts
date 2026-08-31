@@ -15,12 +15,7 @@ export const PRESETS: Preset[] = [
   issued_on string @description("ISO date, YYYY-MM-DD")
   currency string
   total float
-  line_items LineItem[]
-}
-
-class LineItem {
-  description string
-  amount float
+  line_items string[] @description("one item per entry: description and amount")
 }
 `,
     document: `Vendor: Northwind Freight Ltd

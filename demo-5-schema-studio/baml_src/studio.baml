@@ -111,11 +111,15 @@ function retell(found: reflect.Diagnostic[]) -> Note[] throws never {
 function RunExtraction(source: string, record: string, document: string) -> Extraction throws unknown {
     let pkg = reflect.Package.compile({ "schema.baml": source });
     let target = pkg.get_class(record) ?? throw `the package has no class named ${record}`;
-    type T = unreflect(target.as_type());
+    // NOTE: inline `unreflect(shape)` at each use site, not `type T = ...` —
+    // at this canary a named binding drops the package's sibling classes
+    // (`LineItem`), and extraction dies with "host-supplied type names
+    // unknown declaration". Same engine edge demo-7's README documents.
+    let shape = target.as_type();
 
     Extraction {
-        prompt: Extract$render_prompt<T>(document).text(),
-        response: json.encode(Extract<T>(document)),
+        prompt: Extract$render_prompt<unreflect(shape)>(document).text(),
+        response: json.encode(Extract<unreflect(shape)>(document)),
     }
 }
 

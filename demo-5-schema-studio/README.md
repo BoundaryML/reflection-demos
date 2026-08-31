@@ -68,7 +68,7 @@ is no mock mode — the code is deliberately minimal.
 
 ## The 30-second demo
 
-1. **Open it.** Freight invoice schema on the left, two classes on the right. Point at the pill in
+1. **Open it.** Freight invoice schema on the left, its class card on the right. Point at the pill in
    the top-right: `compiled in 89ms`. Say: *that is the whole BAML compiler, not a linter.*
 
 2. **Break it.** Delete the `float` from `total`. Wait a beat.
@@ -77,13 +77,14 @@ is no mock mode — the code is deliberately minimal.
    Say: *that is `E0010` from the compiler itself. Same code, same message, same span you would get
    from `baml check`.*
 
-3. **Fix it and add a field.** Type ` float` back, then add `paid bool` on a new line.
-   → It goes green, and `paid bool` appears in the class on the right the moment it compiles.
+3. **Fix it and add a field.** Type ` float` back, then add `paid bool?` on a new line.
+   → It goes green, and `paid bool?` appears in the class on the right the moment it compiles.
+   (Optional on purpose: the document never says, and the prompt forbids guessing.)
 
 4. **Extract.** Switch to the **Extract** tab (or click the `Invoice` card). The invoice text is
    already pasted. Hit **Extract into Invoice**.
-   → A table: vendor, invoice number, date, currency, total, and the line items — each one parsed
-   into a `LineItem` that did not exist a minute ago.
+   → A table: vendor, invoice number, date, currency, total, and the line items — every field
+   read through a class that did not exist a minute ago.
 
 5. **Show what the model saw.** Click *show what the model was asked*.
    → The rendered prompt, with `ctx.output_format` generated from the runtime class — including the
