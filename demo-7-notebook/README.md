@@ -149,12 +149,11 @@ scripts/
 
 ## Troubleshooting
 
-- **`version skew error` at import** → rebuild the bridge together with `baml-cli` (see the
-  root README's Troubleshooting): `pnpm build:napi-release && pnpm build:copy-native-dts` in
-  `baml_language/sdks/typescript/bridge_typescript`.
+- **`version skew error` at import** → the CLI toolchain and the npm bridge must be the
+  same version (`BAML_VERSION`): `baml toolchain use "$(cat ../BAML_VERSION)"`, `pnpm install`.
 - **`baml_src/ failed to compile`, no diagnostics** → the embedding API reports compile
   failure as a bare `Bex is outdated` / `BamlClientError` with no detail. Run
-  `baml-dev check` in `baml_src/` to see the real diagnostics.
+  `baml check` in `baml_src/` to see the real diagnostics.
 - **Cells take seconds instead of a fraction of one** → the installed native addon is
   stale. A current release-built addon (canary a50430fba) runs a cell in roughly 40–65 ms,
   a debug-built one (`pnpm build:debug`) in 120–175 ms — whatever the cell does, since the

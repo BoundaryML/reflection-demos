@@ -20,46 +20,33 @@ and shows a live up/down dot for each one's backend.
 ## Prerequisites
 
 - **Node 20+** and **pnpm 9+** (`corepack enable` or `npm i -g pnpm`).
-- **Rust** (stable toolchain) — the BAML canary toolchain is built from source.
-- **A local BAML build, at the pinned commit.** These demos run against the canary
-  language build, not the released `baml` binary. The exact
-  [BoundaryML/baml](https://github.com/BoundaryML/baml) commit they are verified
-  against is pinned in [`BAML_COMMIT`](BAML_COMMIT), and `./scripts/setup-baml.sh`
-  does the whole dance (clone or symlink into `vendor/baml`, check out the pin,
-  build, install, generate). Under the hood it builds two pieces:
-  - The **`baml-cli`** binary (`cargo build -p baml_cli` in `vendor/baml/baml_language`).
-    Client generation goes through the `scripts/baml-dev` wrapper around it.
-  - The **TypeScript bridge** native addon, built in release profile:
-    `pnpm install && pnpm build:napi-release && pnpm build:copy-native-dts` in
-    `vendor/baml/baml_language/sdks/typescript/bridge_typescript` (a debug addon works
-    but is 3–4× slower, which shows up in Schema Studio's compile pill and the
-    Notebook's cell timings). Backends depend on it directly
-    (`@boundaryml/baml-bridge`, a `link:` dependency — a symlink to that directory, so a
-    rebuild is picked up on the next restart with no reinstall).
-  - **Build both from the same commit, together.** The CLI and the addon report the same
-    version string even when built days apart, and nothing guards the skew — it surfaces
-    later as a bytecode load error or as failing live LLM calls. See
-    [Troubleshooting](#troubleshooting). After rebuilding, run `pnpm generate`.
-    The setup script enforces this by construction.
-- **Optional: an LLM key.** Set `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` in your shell if
-  you want live model calls. Every demo also runs fully offline with **no key** by
-  setting `MOCK_LLM=1` — the backend renders the real prompt and parses a canned
-  response, so the reflection behavior is identical either way. Live keys are the
-  upgrade, not the requirement.
+- **The BAML CLI**, on the pinned toolchain. Runtime reflection (BEP-066)
+  currently ships in BAML's nightly channel, so the demos pin the exact
+  nightly they are verified against — it's in [`BAML_VERSION`](BAML_VERSION):
+
+  ```bash
+  brew install baml           # or the installer at https://docs.boundaryml.com
+  baml toolchain use "$(cat BAML_VERSION)"
+  ```
+
+  The npm package `@boundaryml/baml-bridge` (the runtime the backends load) is
+  pinned to the **same version** in each demo's `package.json` and comes down
+  with `pnpm install` — prebuilt, no Rust needed. The CLI toolchain and the
+  bridge must stay the same version; that's the one rule.
+- **`ANTHROPIC_API_KEY`** in your environment — every demo makes real model
+  calls (Haiku 4.5, and Sonnet 4.5 in Schema Studio). There is no mock mode.
 
 ## Run everything
 
 ```bash
-./scripts/setup-baml.sh   # once: vendor + build the pinned BAML toolchain, pnpm install, generate
+baml toolchain use "$(cat BAML_VERSION)"   # once
+pnpm install
+export ANTHROPIC_API_KEY=sk-ant-...        # or however you manage secrets
 pnpm dev
 ```
 
-Already have a BoundaryML/baml checkout? Point the script at it instead of cloning a
-second one: `./scripts/setup-baml.sh ~/path/to/baml` (it will still check out the
-pinned commit, refusing if the tree is dirty).
-
-That's it — `pnpm dev` runs the hub and all seven demos concurrently (see the root
-`package.json` for the exact filter list). Open http://localhost:4400 and click through.
+That's it — `pnpm dev` runs the hub and all seven demos concurrently. Open
+http://localhost:4400 and click through.
 
 To only (re)generate BAML clients across every demo that has one:
 
@@ -102,48 +89,24 @@ exposes `/api/health` (the hub polls these directly to drive its status dots).
 
 ## Troubleshooting
 
-**`baml-dev: ... not built` / client generation fails.** The local canary binary
-hasn't been built yet (or `vendor/baml` doesn't exist). Run `./scripts/setup-baml.sh`,
-or just build the CLI:
+**`baml: command not found` / wrong toolchain.** Install the CLI
+(`brew install baml`, or the installer at https://docs.boundaryml.com), then
+select the pinned toolchain: `baml toolchain use "$(cat BAML_VERSION)"`.
+`baml --version` should print exactly the version in `BAML_VERSION`.
 
-```bash
-cd vendor/baml/baml_language && cargo build -p baml_cli
-```
-
-Then re-run `pnpm generate` (or a single demo's `baml:generate` script). If another
-agent/process owns that build lock, wait for it rather than running a second build in
-parallel — everything else in this repo works without it, generated clients are
-committed, and only fresh schema edits need a rebuilt CLI.
-
-**The CLI and the bridge addon disagree.** Any of these means `baml-cli` and
-`@boundaryml/baml-bridge` were built from different commits (both will still print the
-same version number):
-
-- `Failed to deserialize BAML bytecode: Unexpected variant tag: N` (or `Invalid Option
-  representation`) when a backend imports its generated `baml_sdk` — the client was
-  generated by a newer CLI than the addon can load.
-- `version skew error` / `Bex is outdated` at `initializeRuntime`. (`Bex is outdated` is
-  also what an ordinary compile error in `baml_src` looks like through the embedding API —
-  run `baml-dev check` in the demo first.)
-- Live LLM calls through a *reflected* output type fail while mock mode works:
-  `ai.errors.ParseFailed` where the model plainly ignored the schema, or a VM panic like
-  `reflected enum user.$dyn.0.Category must be loaded`. Older addons drop a runtime type's
-  definition when the call crosses `ai.Agent.Runner<Out>`.
-
-Fix: rebuild both from the same checkout, in this order, then regenerate the clients
-(this is exactly what `./scripts/setup-baml.sh` does):
-
-```bash
-cd vendor/baml/baml_language && cargo build -p baml_cli
-cd sdks/typescript/bridge_typescript && pnpm build:napi-release && pnpm build:copy-native-dts
-cd ../../../../..   # back to the repo root
-pnpm generate
-```
+**The CLI and the bridge disagree** (`version skew error`, `Bex is outdated`
+at `initializeRuntime`, or `Failed to deserialize BAML bytecode` at import).
+The CLI toolchain and the npm `@boundaryml/baml-bridge` package must be the
+same version. Check both: `baml --version` and
+`cat demo-1-live-enums/node_modules/@boundaryml/baml-bridge/package.json | grep version`.
+Fix with `baml toolchain use "$(cat BAML_VERSION)"` and a fresh `pnpm install`,
+then `pnpm generate`. (`Bex is outdated` is also what an ordinary compile error
+in `baml_src` looks like through the embedding API — run `baml check` in the
+demo first.)
 
 Generation drops a `.gitignore` containing `*` into each sdk dir; `pnpm generate`
 deletes them afterwards (`scripts/strip-sdk-gitignore.mjs`) so the clients stay
-committed. Never regenerate with only one of the two rebuilt — that bricks the demo
-until the other catches up.
+committed.
 
 **Edits don't hot-reload (HMR dead, changes only appear after a restart).**
 If the repo lives on a FUSE-mounted filesystem (NTFS/exFAT external drives

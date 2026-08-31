@@ -104,9 +104,9 @@ to start from the diagnostics beat.
 
 ## If something goes wrong
 
-- **The pill reads ~95 ms instead of ~20 ms** — the bridge addon was built in
-  debug profile; the loop still feels identical (both sit inside the editor's
-  220 ms debounce). Seconds instead of milliseconds is a stale addon — rebuild.
+- **The pill reads higher than ~20 ms** — machine-dependent, and fine: anything
+  inside the editor's 220 ms debounce feels identical. Seconds instead of
+  milliseconds means a version-skewed bridge — match versions via `BAML_VERSION`.
 - **Extract fails with `host-supplied type names unknown declaration`** — the
   extraction target references another class from the compiled schema (e.g.
   `line_items LineItem[]`). At the pinned canary a compiled sibling class

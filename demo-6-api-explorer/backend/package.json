@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@boundaryml/baml-bridge": "file:../../vendor/baml/baml_language/sdks/typescript/bridge_typescript",
+    "@boundaryml/baml-bridge": "0.17.1-nightly.20260823.a",
     "express": "^4.21.2"
   },
   "devDependencies": {

@@ -21,8 +21,15 @@ const procs = [
   { name: "d4-web", cwd: "demo-4-plugin-gate", cmd: bin("demo-4-plugin-gate", "vite"), args: ["frontend"] },
   { name: "d5-api", cwd: "demo-5-schema-studio", cmd: bin("demo-5-schema-studio", "tsx"), args: ["backend/src/index.ts"] },
   { name: "d5-web", cwd: "demo-5-schema-studio", cmd: bin("demo-5-schema-studio", "vite"), args: ["--config", "frontend/vite.config.ts"] },
-  // demo-6 is npm-managed internally; its deps live in its own subdirs, so use its local bins
-  { name: "d6-api", cwd: "demo-6-api-explorer/backend", cmd: path.join(root, "demo-6-api-explorer/backend/node_modules/.bin/tsx"), args: ["src/server.ts"] },
+  // demo-6 is npm-managed internally; its deps live in its own subdirs, so use its local bins.
+  // Its generated client embeds bytecode at generate time, so regenerate before every
+  // start — otherwise an edit to functions.baml silently doesn't appear (learned on stage).
+  {
+    name: "d6-api",
+    cwd: "demo-6-api-explorer/backend",
+    cmd: "bash",
+    args: ["-c", `baml generate --directory .. && exec ${path.join(root, "demo-6-api-explorer/backend/node_modules/.bin/tsx")} src/server.ts`],
+  },
   { name: "d6-web", cwd: "demo-6-api-explorer/frontend", cmd: path.join(root, "demo-6-api-explorer/frontend/node_modules/.bin/vite"), args: ["--port", "4461", "--strictPort"] },
   { name: "d7-api", cwd: "demo-7-notebook", cmd: bin("demo-7-notebook", "tsx"), args: ["backend/src/server.ts"] },
   { name: "d7-web", cwd: "demo-7-notebook", cmd: bin("demo-7-notebook", "vite"), args: ["--config", "frontend/vite.config.ts"] },

@@ -9,8 +9,8 @@
     "dev:web": "vite frontend",
     "build": "tsc -p tsconfig.json --noEmit && vite build frontend",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p frontend/tsconfig.json --noEmit",
-    "baml:check": "../scripts/baml-dev check",
-    "baml:generate": "echo 'demo-4 drives BAML through the CLI host, not a generated client — checking baml_src instead' && ../scripts/baml-dev check"
+    "baml:check": "baml check",
+    "baml:generate": "echo 'demo-4 drives BAML through the CLI host, not a generated client — checking baml_src instead' && baml check"
   },
   "dependencies": {
     "express": "^4.21.2",

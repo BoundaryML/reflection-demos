@@ -7,12 +7,7 @@ dist/
 # BAML runtime caches/profiles (regenerated on every run)
 .baml/
 
-# The BAML toolchain checkout lives outside git — see BAML_COMMIT and
-# scripts/setup-baml.sh. vendor/baml is either a symlink to an existing
-# checkout or a clone made by the setup script.
-vendor/baml
-
-# Secrets never live in this repo (Infisical injects them), but just in case:
+# Secrets never live in this repo, but just in case:
 .env
 .env.*
 

@@ -71,17 +71,17 @@ so there is **no generated client and no build step**: this demo has no
 `backend/baml_client/` directory and does not need one.
 
 Consequently `pnpm baml:generate` is wired but unused — there is nothing for
-it to generate. Use `baml-dev check` from this directory to validate
+it to generate. Use `baml check` from this directory to validate
 `baml_src` instead.
 
-The bridge is a `link:` dependency, so `node_modules/@boundaryml/baml-bridge`
-is a symlink straight to `sdks/typescript/bridge_typescript`. Rebuilding the
-bridge is picked up on the next backend restart, with no reinstall.
+The CLI toolchain and the npm `@boundaryml/baml-bridge` package must be the
+same version — `BAML_VERSION` at the repo root pins both. On a skew error, run
+`baml toolchain use "$(cat ../BAML_VERSION)"`, `pnpm install`, and regenerate.
 
 `BamlClientError: Bex is outdated` at `initializeRuntime` does **not** only
 mean the addon is stale — the bridge reports *any* `baml_src` compile error
 that way, and it also appears when the installed bridge is missing its
-`dist/`. Run `baml-dev check` from this directory first; it prints the real
+`dist/`. Run `baml check` from this directory first; it prints the real
 diagnostic.
 
 ## Seed data

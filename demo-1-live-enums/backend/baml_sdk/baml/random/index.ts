@@ -178,6 +178,3 @@ export class ChaCha20 {
   static _new = defineFunction("baml.random.ChaCha20._new", "sync", ["seed"]) as (seed: Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ChaCha20;
   static _new_async = defineFunction("baml.random.ChaCha20._new", "async", ["seed"]) as (seed: Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ChaCha20>;
 }
-
-/** Erased runtime token for BAML interface `baml.random.Rng`. */
-export const Rng = Object.freeze({ __baml_interface_fqn__: "baml.random.Rng" } as const);

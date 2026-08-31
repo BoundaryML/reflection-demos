@@ -74,8 +74,8 @@ it afterwards, or the generated client can't be committed. Regenerate whenever `
 changes — and whenever `baml-cli` is rebuilt, since client and bridge addon have to stay a
 matched pair ([Live mode status](#live-mode-status)).
 
-Runs `baml-dev generate` (the locally built canary `baml-cli`, per repo convention — see
-`~/.baml/bin/baml-dev`) against `baml_src/`, per the `[generator.node]` block in `baml.toml`.
+Runs `baml generate` (the published CLI on the pinned toolchain) against `baml_src/`,
+per the `[generator.node]` block in `baml.toml`.
 The generated client lands at `backend/baml_sdk/` and is committed so the demo runs without a
 generation step.
 
@@ -138,9 +138,8 @@ couldn't read it, a toolchain regression that stays loud as `status: "error"`.
 ## Troubleshooting
 
 - **`Failed to deserialize BAML bytecode: Unexpected variant tag: N` at import** → the
-  generated client in `backend/baml_sdk/` is *newer* than the installed bridge addon.
-  Rebuild the bridge (`pnpm build:debug` in
-  `baml_language/sdks/typescript/bridge_typescript`).
+  generated client and the installed bridge are different versions:
+  `baml toolchain use "$(cat ../BAML_VERSION)"`, `pnpm install`, regenerate.
 - **Every live turn fails `ai.errors.ParseFailed` at
   `<builtin>/ai/runner.baml … in ai.Agent.Runner<Out>.run`** → the
   bridge addon is *older* than the client, from before baml
@@ -151,16 +150,9 @@ couldn't read it, a toolchain regression that stays loud as `status: "error"`.
   definition crossing that boundary, so the runner's `_parses` check never matched. Tell-tale:
   the `runner.baml` line numbers in the trace don't line up with the current source. Fix by
   rebuilding the bridge. (Hit and fixed on 2026-08-24.)
-- **`pnpm install` silently un-fixes the bridge.** The dependency is `link:`, not `file:` —
-  `file:` makes pnpm *copy* the native addon into its store, where it then goes stale
-  invisibly no matter how often you rebuild the bridge directory. Keep it `link:` so
-  `node_modules/@boundaryml/baml-bridge` stays a symlink.
 - **`version skew error` at import** (`baml_sdk was generated using BAML toolchain X, but
-  @boundaryml/baml-bridge is installed at Y`) → rebuild the bridge: `pnpm build:debug` in
-  `baml_language/sdks/typescript/bridge_typescript`.
-- If `~/.baml/bin/baml-dev` reports its binary is missing, build it with
-  `cd vendor/baml/baml_language && cargo build -p baml_cli`
-  — only if no one else is already mid-build.
+  @boundaryml/baml-bridge is installed at Y`) → same fix: match the versions via
+  `BAML_VERSION`, reinstall, regenerate.
 - `/api/chat` is resilient to either of the above: `backend/src/server.ts` lazy-loads
   `../baml_sdk/index.js` only inside the `/api/chat` handler (not at module top level), so a
   broken bridge degrades that one route to a normal `{ status: "error" }` JSON reply instead
@@ -178,10 +170,10 @@ curl -X POST localhost:4430/api/chat -H 'Content-Type: application/json' \
 ```
 
 The BAML side was also verified directly against the compiler, independent of the bridge
-(`baml-dev check` passes):
+(`baml check` passes):
 
 ```bash
-baml-dev run --output-format json \
+baml run --output-format json \
   -e 'route_and_dispatch(["calculator", "unit_converter", "note_saver"], "weather in Lisbon")'
 # → prompt_preview lists exactly 3 schemas (calculator / unit_converter / note_saver) —
 #   WeatherLookup is genuinely absent, not merely filtered from display, when it is not

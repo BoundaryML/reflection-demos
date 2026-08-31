@@ -63,12 +63,9 @@ export type Request =
 
 /** Where the locally built BAML toolchain lives. */
 function resolveCli(): string {
-  // Repo root is three levels up from this file (demo-4-plugin-gate/backend/src/host.ts).
-  const repoRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../../..");
   const candidates = [
     process.env.BAML_CLI,
-    path.join(repoRoot, "vendor/baml/baml_language/target/debug/baml-cli"),
-    path.join(homedir(), ".baml/bin/baml-dev"),
+    path.join(homedir(), ".baml/bin/baml"),
   ].filter((c): c is string => Boolean(c));
   for (const candidate of candidates) {
     if (existsSync(candidate)) return candidate;

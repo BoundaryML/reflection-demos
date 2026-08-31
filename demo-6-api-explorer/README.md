@@ -71,7 +71,7 @@ npm run dev          # runs backend + frontend together (needs `concurrently`: n
 ```
 
 `backend/src/baml_sdk` is committed and ready to run, so no generate step is
-needed to start the demo. Only re-run `baml-dev generate` after editing
+needed to start the demo. Only re-run `baml generate` after editing
 `baml_src/` — see [Regenerating the client](#regenerating-the-client).
 
 Backend on `http://localhost:4460`, frontend on `http://localhost:4461`
@@ -94,7 +94,7 @@ ANTHROPIC_API_KEY=...` first.
      n
    }
    ```
-3. `baml-dev generate` — the bytecode is embedded at generate time, so this
+3. `baml generate` — the bytecode is embedded at generate time, so this
    step is required for a `baml_src` edit to have any effect. See
    [Regenerating the client](#regenerating-the-client).
 4. Restart `npm --prefix backend run dev`, refresh the frontend.
@@ -124,7 +124,7 @@ ANTHROPIC_API_KEY=...` first.
 section if you edit `baml_src/`. Then:
 
 ```bash
-baml-dev generate
+baml generate
 rm -f backend/src/baml_sdk/.gitignore   # the generator drops an ignore-all file
 ```
 
@@ -136,19 +136,10 @@ The bytecode is embedded at generate time, so restart the backend afterwards.
 Verify with `curl localhost:4460/api/health` — `"bridge": true` means the
 addon loaded the new bytecode.
 
-**The one rule: `baml-cli` and the bridge addon must be built from the same
-revision.** They are two halves of one toolchain — the CLI writes the bytecode,
-the `@boundaryml/baml-bridge` native addon reads it — and the serialization
-format moves with canary. Build them as a pair:
-
-```bash
-cd vendor/baml/baml_language
-cargo build -p baml_cli
-cd sdks/typescript/bridge_typescript && pnpm build:debug
-```
-
-`backend/node_modules/@boundaryml/baml-bridge` is an npm symlink straight to
-that directory, so a rebuilt addon is picked up with no reinstall.
+**The one rule: the CLI toolchain and the npm `@boundaryml/baml-bridge`
+package must be the same version** — the repo-root `BAML_VERSION` pins both
+(`baml toolchain use "$(cat ../BAML_VERSION)"`). The CLI writes the bytecode,
+the bridge reads it, and the serialization format moves between versions.
 
 ## Troubleshooting
 
@@ -166,16 +157,14 @@ that directory, so a rebuilt addon is picked up with no reinstall.
 
   Rebuild both halves together (see
   [Regenerating the client](#regenerating-the-client)) and re-run
-  `baml-dev generate`. Nothing about this is specific to this demo — a
+  `baml generate`. Nothing about this is specific to this demo — a
   four-line BAML package fails identically, and the repo-root `pnpm generate`
   hits every demo at once. The backend lazy-loads `baml_sdk`
   (`backend/src/bamlClient.ts`) specifically so this degrades to a `503` on
   `/api/functions` and `/api/invoke` instead of crashing the whole process —
   `/api/health` still responds and reports `"bridge": false`.
-- **`baml-dev: local binary not built`**: `cd
-  vendor/baml/baml_language && cargo build -p
-  baml_cli` (owned by another agent's build lock during active development —
-  check before running).
+- **`baml: command not found`**: install the published CLI and run
+  `baml toolchain use "$(cat ../BAML_VERSION)"`.
 - `SummarizeText` uses the inline `client: "anthropic/claude-haiku-4-5"`
   shorthand, which resolves lazily at call time and reads
   `ANTHROPIC_API_KEY` from the environment. (Earlier in development a
@@ -195,7 +184,7 @@ backend/
   src/server.ts        two routes: GET /api/functions, POST /api/invoke
   src/invoke.ts         the one MOCK_LLM branch (SummarizeText -> $parse companion)
   src/bamlClient.ts     lazy-loads the generated client so a stale bridge degrades, not crashes
-  src/baml_sdk/         generated TypeScript client (committed; regenerate via baml-dev generate)
+  src/baml_sdk/         generated TypeScript client (committed; regenerate via baml generate)
 frontend/
   src/App.tsx                     fetches /api/functions, renders the grid
   src/components/FunctionCard.tsx  one card: docstring, badges, form, result

@@ -11,7 +11,7 @@
     "baml:generate": "node scripts/check-baml.mjs"
   },
   "dependencies": {
-    "@boundaryml/baml-bridge": "link:../vendor/baml/baml_language/sdks/typescript/bridge_typescript",
+    "@boundaryml/baml-bridge": "0.17.1-nightly.20260823.a",
     "express": "^4.21.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

@@ -6,11 +6,11 @@
     "dev": "concurrently -k -n backend,frontend -c blue,magenta \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
     "dev:backend": "tsx backend/src/server.ts",
     "dev:frontend": "vite --config frontend/vite.config.ts",
-    "baml:generate": "echo 'demo-2 boots baml_src directly through the bridge, no generated client — checking baml_src instead' && ../scripts/baml-dev check",
+    "baml:generate": "echo 'demo-2 boots baml_src directly through the bridge, no generated client — checking baml_src instead' && baml check",
     "typecheck": "tsc -p backend/tsconfig.json --noEmit && tsc -p frontend/tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@boundaryml/baml-bridge": "link:../vendor/baml/baml_language/sdks/typescript/bridge_typescript",
+    "@boundaryml/baml-bridge": "0.17.1-nightly.20260823.a",
     "better-sqlite3": "^11.3.0",
     "express": "^4.21.0",
     "react": "^18.3.1",

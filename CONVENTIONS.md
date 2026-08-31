@@ -16,35 +16,31 @@ reflection enables in an ENGAGING product-shaped way, then reveal the BAML code 
 - Ports: hub 4400; demo N backend 44N0, frontend 44N1 (e.g. demo 3: backend 4430, frontend 4431).
   Frontend proxies `/api` to its backend (vite proxy).
 
-## Local BAML (NOT the released binary)
-- CLI: `scripts/baml-dev` runs the locally built canary binary
-  (vendor/baml/baml_language/target/debug/baml-cli).
-- TS SDK (backend runtime): depend on the LOCAL bridge via a **`link:`** dependency (a symlink):
-  `"@boundaryml/baml-bridge": "link:../vendor/baml/baml_language/sdks/typescript/bridge_typescript"`
-  (`file:` makes pnpm COPY the addon into its store at install time, so a rebuilt bridge is
-  invisible until reinstall — that bit us on 2026-08-24.)
-- The CLI and the bridge addon are ONE toolchain: rebuild them together, from the same commit
-  (`cargo build -p baml_cli`, then `pnpm build:debug` in `bridge_typescript`), then regenerate
-  every demo that has a client. Both report the same version string even when built days apart,
-  so nothing guards the skew — see the root README's Troubleshooting for the symptoms.
-  The coordinator owns that rebuild; demo agents do not run cargo.
-- Client generation: `baml-dev generate` from the demo's `baml_src` (see `baml-dev generate --help`;
-  wire it as the `baml:generate` script). Commit generated client code so demos run without a
-  pre-step where feasible. Delete the `.gitignore` (`*`) that generation drops into the sdk dir.
+## The published toolchain (pinned nightly)
+- Everything runs on PUBLISHED artifacts: the `baml` CLI wrapper selects the
+  pinned nightly toolchain (`baml toolchain use "$(cat BAML_VERSION)"` — the
+  root `BAML_VERSION` file is the single source of truth), and backends depend
+  on the npm package `@boundaryml/baml-bridge` pinned to that same exact
+  version in each demo's package.json. No Rust, no vendored checkout.
+- The CLI toolchain and the bridge package are ONE toolchain: keep the versions
+  identical, and after bumping BAML_VERSION update every bridge pin, run
+  `pnpm install`, and `pnpm generate`. Skew symptoms are in the root README's
+  Troubleshooting.
+- Client generation: `baml generate` from the demo's directory (wire it as the
+  `baml:generate` script). Commit generated client code so demos run without a
+  pre-step where feasible; `pnpm generate` at the root also strips the
+  `.gitignore` (`*`) that generation drops into each sdk dir. A demo whose
+  presenter beat edits `baml_src` mid-demo must regenerate on every dev start
+  (see demo-6 in scripts/dev.mjs) — restarting alone does not re-embed bytecode.
 
 ## BAML API ground truth (the language moved fast — trust these, not memory)
 - Since canary #4543 (2026-08-21) `reflect` is a root package: `reflect.Type.of<T>()` (not
   `type.of<T>()`), a runtime type value is annotated `reflect.Type` (not bare `type`), and every
   `baml.reflect.*` name is `reflect.*` (`reflect.errors.CompilationError`, `reflect.Diagnostic`,
   `reflect.WithMeta<reflect.Type>`). All demos were migrated on 2026-08-24.
-- The stdlib source is the API reference:
-  vendor/baml/baml_language/crates/baml_builtins2/baml_std/reflect/
-  (`type.baml`, `reflect.baml`, `ns_class/class.baml`, …). `thoughts/antonio/bep066_demo.baml`
-  predates #4543 — do not copy its spellings.
-- Scenario test files (authoritative behavior):
-  vendor/baml/baml_language/crates/baml_tests/tests/
-  (reflect_call_any.rs, runtime_classes_and_composites.rs, runtime_package_compile.rs,
-  runtime_session.rs, runtime_type_bindings.rs, runtime_interface_witnesses.rs).
+- The CLI is the API reference: `baml describe <name>` prints the full source
+  of any stdlib function (`baml describe reflect`, `baml describe baml.AnyClass`,
+  …) — never guess the stdlib.
 - Client decl: `client C = openai.ResponsesClient.new(model=..., api_key=..., base_url=...);`
   LLM companions are $-spelled: `Fn$render_prompt<...>(...)`, `Fn$parse<...>(...)`.
 - Field reads: narrow to `baml.AnyClass` (baml #4491 — every class instance implements

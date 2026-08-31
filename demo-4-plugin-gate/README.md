@@ -92,12 +92,12 @@ Two reasons:
    long-lived BAML process models that directly, and is the honest shape for a plugin host.
 2. It pins the demo to the locally built canary toolchain, which is where BEP-066 lives.
 
-The CLI is resolved as `$BAML_CLI` → `~/.baml/bin/baml-dev` → the debug binary in the baml checkout.
-If none exists, build it with `cargo build -p baml_cli` in `baml_language`.
+The CLI is resolved as `$BAML_CLI` → `~/.baml/bin/baml` (the published wrapper). Make sure
+the pinned toolchain is selected: `baml toolchain use "$(cat ../BAML_VERSION)"`.
 
 Troubleshooting for the other demos, kept here for parity: a *version skew error at import* from a
-generated SDK means the native addon is stale — rebuild it with `pnpm build:debug` in
-`sdks/typescript/bridge_typescript`.
+generated SDK means the CLI toolchain and the npm `@boundaryml/baml-bridge` package are different
+versions — `baml toolchain use "$(cat ../BAML_VERSION)"`, `pnpm install`, regenerate.
 
 ## 30-second demo script
 

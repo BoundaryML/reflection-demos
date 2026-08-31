@@ -168,8 +168,9 @@ export class MapKeyNotFound$stream {
 }
 
 /**
- * The right operand of a shift (`<<` / `>>`) was negative.
- * The type system can't rule this out because the shift count is a runtime value.
+ * The right operand of a bigint shift (`<<` / `>>`) was negative.
+ * The type system can't rule this out because the shift count is a
+ * runtime `bigint` value.
  */
 export class NegativeBitShift$stream {
   message!: string | null;
@@ -392,8 +393,9 @@ export class HostUnavailable {
 }
 
 /**
- * The right operand of a shift (`<<` / `>>`) was negative.
- * The type system can't rule this out because the shift count is a runtime value.
+ * The right operand of a bigint shift (`<<` / `>>`) was negative.
+ * The type system can't rule this out because the shift count is a
+ * runtime `bigint` value.
  */
 export class NegativeBitShift {
   message!: string;

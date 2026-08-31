@@ -105,14 +105,11 @@ The headline is that a full compile is cheap enough to sit inside a keystroke lo
 machine, steady state:
 
 ```
-~22 ms per compile   (first call ~50 ms)    release-built addon — the current setup
-~95 ms per compile   (first call ~130 ms)   debug-built addon (pnpm build:debug)
+~20-50 ms per compile   (published toolchain, this machine)
 ```
 
-Which one you see depends on how the bridge was built; the root README's recipe
-(`pnpm build:napi-release && pnpm build:copy-native-dts`) gives you the first row. Either way it
-stays inside the editor's 220 ms debounce, so the loop feels the same; the release build is just
-a better number to say out loud.
+Either way it stays inside the editor's 220 ms debounce, so the loop feels
+instant regardless of the exact number on your machine.
 
 That is `reflect.Package.compile` alone, timed inside the BAML program with `baml.time.Instant`
 (`Compilation.micros`), not the HTTP round trip. The chart at the bottom-left plots every compile of
@@ -172,8 +169,8 @@ since the authority on this document is a compiler on the other side of an HTTP 
 
 | Symptom | Fix |
 | --- | --- |
-| `version skew error` / `Bex is outdated` at import | Rebuild the bridge together with `baml-cli` (root README, Troubleshooting): `pnpm build:napi-release && pnpm build:copy-native-dts` in `baml_language/sdks/typescript/bridge_typescript`. |
+| `version skew error` / `Bex is outdated` at import | The CLI toolchain and the npm bridge must be the same version (`BAML_VERSION`): `baml toolchain use "$(cat ../BAML_VERSION)"`, `pnpm install`. |
 | **Extract** fails live with `ai.errors.ParseFailed` | Recognise it by the *shape* of the failure, not the code: the model's reply is well-formed JSON, but its keys are the **document's own labels** (`vendor`, `total`) rather than your schema's field names. That means `ctx.output_format` never reached the model, so the answer had nothing to match. It is a **stale bridge addon** — one built before the `baml-cli` you are running drops the output format when the output type is a runtime-minted class. Rebuild the bridge (row above); compiling and the class list are never affected. Confirm the diagnosis without spending a token: `Fn@spec<unreflect(t)>(...).build_request()` under a current bridge shows your field names in the request body, and a stale one refuses to load the program at all with `Bex is outdated`. |
 | Red banner *"The BAML runtime failed to load"* | Same as above. The app degrades gracefully and tells you the error; it does not silently fake results. |
-| Compiles report ~95 ms rather than ~22 ms | Expected on a debug-built addon — see [the latency story](#the-latency-story). The release recipe in the root README gets you the faster number. Seconds rather than milliseconds is a different problem: that is a stale addon, rebuild it. |
+| Compiles report seconds rather than milliseconds | Version-skewed bridge — match versions via `BAML_VERSION` and `pnpm install`. |
 | *Let the model write it* / Extract fail with a key error | No `ANTHROPIC_API_KEY` in the environment — run via `infisical run -- pnpm dev`. Compiling is unaffected. |
