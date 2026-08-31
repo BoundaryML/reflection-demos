@@ -105,38 +105,28 @@ function retell(found: reflect.Diagnostic[]) -> Note[] throws never {
 
 // ── extract ─────────────────────────────────────────────────────────────────
 
-/// Extract a document into one of the classes the editor just defined.
-///
-/// `reply` short-circuits the network so the studio works with no API key: the
-/// prompt is still rendered from the runtime type and the answer still goes
-/// through the real schema-aligned parser.
-function RunExtraction(
-    source: string,
-    record: string,
-    document: string,
-    reply: string?,
-) -> Extraction throws unknown {
-    let pkg = reflect.Package.compile({ "schema.baml": source })
-    let target = pkg.get_class(record) ?? throw "the package has no class named " + record
-    let shape = target.as_type()
+/// Extract a document into one of the classes the editor just defined:
+/// compile the editor's text, bind the chosen class as a type, and make a
+/// generic LLM call over it.
+function RunExtraction(source: string, record: string, document: string) -> Extraction throws unknown {
+    let pkg = reflect.Package.compile({ "schema.baml": source });
+    let target = pkg.get_class(record) ?? throw `the package has no class named ${record}`;
+    type T = unreflect(target.as_type());
 
-    let prompt = Extract$render_prompt<unreflect(shape)>(document).text()
-    if let canned: string = reply {
-        Extraction { prompt: prompt, response: json.encode(Extract$parse<unreflect(shape)>(canned)) }
-    } else {
-        Extraction { prompt: prompt, response: json.encode(Extract<unreflect(shape)>(document)) }
+    Extraction {
+        prompt: Extract$render_prompt<T>(document).text(),
+        response: json.encode(Extract<T>(document)),
     }
 }
 
 // ── draft ───────────────────────────────────────────────────────────────────
 
-/// Ask the model for a schema. Same offline seam as `RunExtraction`.
-function DraftSchema(description: string, reply: string?) -> SchemaDraft throws unknown {
-    let prompt = Draft$render_prompt(description).text()
-    if let canned: string = reply {
-        SchemaDraft { prompt: prompt, schema: Draft$parse(canned) }
-    } else {
-        SchemaDraft { prompt: prompt, schema: Draft(description) }
+/// Ask the model for a schema. Its text lands in the editor and compiles
+/// like anything a human typed.
+function DraftSchema(description: string) -> SchemaDraft throws unknown {
+    SchemaDraft {
+        prompt: Draft$render_prompt(description).text(),
+        schema: Draft(description),
     }
 }
 

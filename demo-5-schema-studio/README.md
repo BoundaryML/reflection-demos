@@ -51,21 +51,18 @@ No code-generation step. The backend boots the BAML runtime straight from `baml_
 
 | Variable | Effect |
 | --- | --- |
-| *(none)* | **Offline mode.** Everything works except live model calls. |
-| `ANTHROPIC_API_KEY` | Extraction and *Let the model write it* call `claude-sonnet-4-5` for real. |
+| `ANTHROPIC_API_KEY` | Extraction and *Let the model write it* call `claude-sonnet-4-5` (required — e.g. `infisical run -- pnpm dev`). |
 | `OPENAI_API_KEY` | Same, via `gpt-4o-mini`, when no Anthropic key is set. |
-| `MOCK_LLM=1` | Force offline mode even when a key is present. |
 | `PORT` | Backend port (default `4450`). |
 
 The provider is chosen inside BAML, per call, by the `client:` selector in `baml_src/model.baml` —
 `env.NAME` is a late-bound reference, so nothing reads the environment until the request happens.
 
-**Offline mode is a first-class path, not a stub.** Compiling is local, so the entire left pane —
-diagnostics, spans, squiggles, the class list — is fully real with no key at all. For the model's
-half, the backend renders the *actual* prompt from the runtime type, supplies a sample JSON reply,
-and feeds it through the *actual* schema-aligned parser (`Fn$render_prompt` + `Fn$parse` — the same
-seam the BAML test suite uses). Coercion into the runtime class, optional-field handling and parse
-errors all behave exactly as they do live. The reply is labelled `SAMPLE RESPONSE` in the UI.
+**Compiling never needs a key.** The entire left pane — diagnostics, spans,
+squiggles, the class list — is local: the compiler runs in-process on every
+pause. Only **Extract into …** and **Let the model write it** call the model,
+so a lost network mid-demo costs you two buttons, not the editor loop. There
+is no mock mode — the code is deliberately minimal.
 
 ---
 
@@ -145,7 +142,6 @@ backend/src/
   index.ts        express routes
   baml.ts         runtime boot + single-flight compile queue
   spans.ts        BAML byte-offset spans → editor line/column
-  mock.ts         offline mode: sample responses and canned schema drafts
 frontend/src/
   App.tsx         the debounced compile loop
   components/     Editor (CodeMirror 6), DiagnosticsRail, PackagePanel, ExtractPanel, LatencyStrip
@@ -176,7 +172,7 @@ since the authority on this document is a compiler on the other side of an HTTP 
 | Symptom | Fix |
 | --- | --- |
 | `version skew error` / `Bex is outdated` at import | Rebuild the bridge together with `baml-cli` (root README, Troubleshooting): `pnpm build:napi-release && pnpm build:copy-native-dts` in `baml_language/sdks/typescript/bridge_typescript`. |
-| **Extract** fails live with `ai.errors.ParseFailed` | Recognise it by the *shape* of the failure, not the code: the model's reply is well-formed JSON, but its keys are the **document's own labels** (`vendor`, `total`) rather than your schema's field names. That means `ctx.output_format` never reached the model, so the answer had nothing to match. It is a **stale bridge addon** — one built before the `baml-cli` you are running drops the output format when the output type is a runtime-minted class. Rebuild the bridge (row above); compiling, the class list and offline mode are never affected. Confirm the diagnosis without spending a token: `Fn@spec<unreflect(t)>(...).build_request()` under a current bridge shows your field names in the request body, and a stale one refuses to load the program at all with `Bex is outdated`. |
+| **Extract** fails live with `ai.errors.ParseFailed` | Recognise it by the *shape* of the failure, not the code: the model's reply is well-formed JSON, but its keys are the **document's own labels** (`vendor`, `total`) rather than your schema's field names. That means `ctx.output_format` never reached the model, so the answer had nothing to match. It is a **stale bridge addon** — one built before the `baml-cli` you are running drops the output format when the output type is a runtime-minted class. Rebuild the bridge (row above); compiling and the class list are never affected. Confirm the diagnosis without spending a token: `Fn@spec<unreflect(t)>(...).build_request()` under a current bridge shows your field names in the request body, and a stale one refuses to load the program at all with `Bex is outdated`. |
 | Red banner *"The BAML runtime failed to load"* | Same as above. The app degrades gracefully and tells you the error; it does not silently fake results. |
 | Compiles report ~95 ms rather than ~22 ms | Expected on a debug-built addon — see [the latency story](#the-latency-story). The release recipe in the root README gets you the faster number. Seconds rather than milliseconds is a different problem: that is a stale addon, rebuild it. |
-| *Let the model write it* returns a canned schema | No `ANTHROPIC_API_KEY`. Expected — the modal says so. |
+| *Let the model write it* / Extract fail with a key error | No `ANTHROPIC_API_KEY` in the environment — run via `infisical run -- pnpm dev`. Compiling is unaffected. |

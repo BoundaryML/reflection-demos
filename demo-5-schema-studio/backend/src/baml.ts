@@ -125,11 +125,10 @@ export function runExtraction<T>(args: {
   source: string;
   record: string;
   document: string;
-  reply: string | null;
 }): Promise<T> {
   return call<T>('RunExtraction', args);
 }
 
-export function draftSchema<T>(args: { description: string; reply: string | null }): Promise<T> {
+export function draftSchema<T>(args: { description: string }): Promise<T> {
   return call<T>('DraftSchema', args);
 }

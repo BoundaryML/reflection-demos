@@ -1,9 +1,7 @@
 // The two places Schema Studio talks to a model.
 //
 // The client is chosen per call from whichever key is in the environment;
-// `env.NAME` is a late-bound reference, so nothing is read until then. With no
-// key at all, `studio.baml` takes the offline branch instead — it still renders
-// these prompts and still parses the reply, it just supplies the reply itself.
+// `env.NAME` is a late-bound reference, so nothing is read until then.
 
 /// Pull a record out of a document. `T` is supplied at the call site — usually
 /// a class the user typed thirty seconds ago and the compiler minted just now.
