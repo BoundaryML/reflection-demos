@@ -15,22 +15,6 @@ import { SEED_CELLS } from './seed.js';
 const PORT = Number(process.env.PORT ?? 4470);
 const MAX_CELL_BYTES = 64 * 1024;
 
-// No key ⇒ the one LLM function answers through the `$parse` seam instead of
-// the network, so the notebook is fully presentable offline.
-if (!process.env.ANTHROPIC_API_KEY && process.env.MOCK_LLM === undefined) {
-  process.env.MOCK_LLM = '1';
-}
-
-/**
- * Which way `app.Assess` will answer. This is the same test the BAML function
- * makes (`baml.env.get("MOCK_LLM") == "1"`), so `/api/health` cannot disagree
- * with what a cell actually does — a key being present is not the deciding
- * factor, `MOCK_LLM` is.
- */
-function llmMode(): 'mock' | 'live' {
-  return process.env.MOCK_LLM === '1' ? 'mock' : 'live';
-}
-
 const boot = await initBaml();
 startSweeper();
 
@@ -58,7 +42,7 @@ app.get('/api/health', (_req, res) => {
       ? { bridgeVersion: status.version, bamlFiles: status.files }
       : { error: status.error }),
     liveNotebooks: liveCount(),
-    llm: llmMode(),
+    llm: 'live',
   });
 });
 
@@ -160,15 +144,10 @@ app.listen(PORT, () => {
   } else {
     console.error(`[demo-7-notebook] BAML IS DOWN\n${boot.error}`);
   }
-  if (llmMode() === 'mock') {
-    console.log('[demo-7-notebook] LLM: mock (set ANTHROPIC_API_KEY for live)');
-  } else if (process.env.ANTHROPIC_API_KEY) {
+  if (process.env.ANTHROPIC_API_KEY) {
     console.log('[demo-7-notebook] LLM: live (app.Assess calls the model)');
   } else {
-    console.warn(
-      '[demo-7-notebook] LLM: live, but ANTHROPIC_API_KEY is unset — app.Assess will fail.\n' +
-        '                  Unset MOCK_LLM=0 to fall back to the offline $parse seam.',
-    );
+    console.warn('[demo-7-notebook] ANTHROPIC_API_KEY is unset — app.Assess will fail.');
   }
   console.log(`[demo-7-notebook] api on http://localhost:${PORT}`);
 });

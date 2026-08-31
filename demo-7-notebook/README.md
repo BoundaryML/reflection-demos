@@ -32,14 +32,13 @@ pnpm dev              # or: pnpm --filter demo-7-notebook dev
 - frontend → <http://localhost:4471>
 - backend  → <http://localhost:4470> (`/api/health` reports the bridge version)
 
-No API key is needed. Nothing here talks to the network.
+Only `app.Assess` talks to the network (one LLM call); every other cell is pure.
 
 ### Env vars
 
 | Variable | Effect |
 | --- | --- |
-| `ANTHROPIC_API_KEY` | Makes the one LLM function (`app.Assess`) call the real model. |
-| `MOCK_LLM` | Defaults to `1` when no key is present: `app.Assess` renders the real prompt and parses a canned reply through the `$render_prompt` / `$parse` seam. Set to `0` to force live. This variable — not the presence of a key — is what decides, and it is what `/api/health` reports as `llm`. |
+| `ANTHROPIC_API_KEY` | Required for the one LLM function, `app.Assess` (e.g. `infisical run -- pnpm dev`); every other cell is pure and needs nothing. `app.AssessPrompt` renders the prompt without calling. |
 | `PORT` | Backend port (default `4470`). |
 
 ---
@@ -119,7 +118,7 @@ name they typed.
 ```
 baml_src/
   app.baml        the production package — tickets, urgency rules, formatting
-  assess.baml     the one LLM function, with its offline $parse seam
+  assess.baml     the one LLM function, plus AssessPrompt (renders without calling)
   notebook.baml   the notebook: two functions, seven lines
 backend/src/
   baml.ts         bridge boundary: compile at boot, two calls, error taxonomy

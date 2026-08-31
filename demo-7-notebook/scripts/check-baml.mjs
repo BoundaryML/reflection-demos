@@ -26,8 +26,6 @@ try {
   process.exit(1);
 }
 
-process.env.MOCK_LLM ??= '1';
-
 let runtime;
 try {
   runtime = bridge.BamlRuntime.initializeRuntime(BAML_SRC, files);
