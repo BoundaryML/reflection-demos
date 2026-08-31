@@ -61,18 +61,24 @@ export type Request =
       document: string;
     };
 
-/** Where the locally built BAML toolchain lives. */
+/**
+ * The published `baml` CLI. `BAML_CLI` overrides; otherwise use whatever is
+ * on PATH (brew prefix, curl-installed wrapper, …) and fall back to the curl
+ * installer's fixed location for processes launched without a login PATH.
+ */
 function resolveCli(): string {
-  const candidates = [
-    process.env.BAML_CLI,
-    path.join(homedir(), ".baml/bin/baml"),
-  ].filter((c): c is string => Boolean(c));
-  for (const candidate of candidates) {
-    if (existsSync(candidate)) return candidate;
-  }
+  if (process.env.BAML_CLI) return process.env.BAML_CLI;
+  const curlInstall = path.join(homedir(), ".baml/bin/baml");
+  // `spawn("baml", ...)` resolves through PATH; prefer that so any standard
+  // install works. Only pin the absolute path when PATH clearly lacks it.
+  const onPath = (process.env.PATH ?? "")
+    .split(path.delimiter)
+    .some((dir) => dir && existsSync(path.join(dir, "baml")));
+  if (onPath) return "baml";
+  if (existsSync(curlInstall)) return curlInstall;
   throw new Error(
-    "no BAML CLI found. Build it with `cargo build -p baml_cli` in baml_language, " +
-      "or point BAML_CLI at a binary.",
+    "no `baml` CLI found on PATH. Install it (https://docs.boundaryml.com), " +
+      "or point BAML_CLI at the binary.",
   );
 }
 
