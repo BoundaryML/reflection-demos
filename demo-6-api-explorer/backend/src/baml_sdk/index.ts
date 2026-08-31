@@ -23,6 +23,7 @@ setTypeMap(_TYPE_MAP);
 
 export * as ai from "./ai/index.js";
 export * as baml from "./baml/index.js";
+export * as internal from "./internal/index.js";
 export * as reflect from "./reflect/index.js";
 export * as vendor from "./vendor/index.js";
 
@@ -160,20 +161,6 @@ export const BuildContact = defineFunction("user.BuildContact", "sync", ["name",
  * @throws InvalidEmailError
  */
 export const BuildContact_async = defineFunction("user.BuildContact", "async", ["name", "email"], ["phone", "tags"]) as (name: string, email: string, $opts?: { phone?: string | null | undefined; tags?: string[] | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<Contact>;
-
-/**
- * Whichever provider the user has a key for; OpenAI wins when both are set.
- * @throws Io
- * @throws ParseError
- */
-export const default_client = defineFunction("user.default_client", "sync", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
-
-/**
- * Whichever provider the user has a key for; OpenAI wins when both are set.
- * @throws Io
- * @throws ParseError
- */
-export const default_client_async = defineFunction("user.default_client", "async", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 
 export enum Tone {
   Neutral = "Neutral",
@@ -433,15 +420,19 @@ export const _param_info_async = defineFunction("user._param_info", "async", ["n
 
 /**
  * True for functions that are part of the reflection plumbing itself (this
- * file, by its `_`-prefixed local names) or compiler-synthesized companions
- * ($parse, $render_prompt, $spec, $stream) — neither belongs in the console.
+ * file, by its `_`-prefixed local names), compiler-synthesized companions
+ * ($parse, $render_prompt, $spec, $stream), or anything living in a nested
+ * namespace (`ns_*/` dirs, e.g. root.internal.*) — the console describes the
+ * package's public root namespace. All structural rules; no function named.
  */
 export const _is_internal = defineFunction("user._is_internal", "sync", ["name"]) as (name: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => boolean;
 
 /**
  * True for functions that are part of the reflection plumbing itself (this
- * file, by its `_`-prefixed local names) or compiler-synthesized companions
- * ($parse, $render_prompt, $spec, $stream) — neither belongs in the console.
+ * file, by its `_`-prefixed local names), compiler-synthesized companions
+ * ($parse, $render_prompt, $spec, $stream), or anything living in a nested
+ * namespace (`ns_*/` dirs, e.g. root.internal.*) — the console describes the
+ * package's public root namespace. All structural rules; no function named.
  */
 export const _is_internal_async = defineFunction("user._is_internal", "async", ["name"]) as (name: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<boolean>;
 

@@ -85,22 +85,13 @@ function BuildContact(name: string, email: string, phone: string? = null, tags: 
 
 // ── LLM function ────────────────────────────────────────────────────────
 //
-// Inline client shorthand (`client: default_client()`) resolves
+// Inline client shorthand (`client: root.internal.default_client()`) resolves
 // the provider lazily at call time and reads ANTHROPIC_API_KEY from the
 // environment. A style choice, not a workaround: a top-level
 // `client X = anthropic.AnthropicClient.new(...)` declaration works fine
 // too (a stale-bridge version-skew build made it fail earlier in
 // development; rebuilding the bridge fixed that).
 //
-// With no key (MOCK_LLM=1), the backend never calls this function directly:
-// it invokes the compiler-synthesized `SummarizeText$parse` companion with a
-// canned JSON response — through the exact same reflective dispatcher used
-// for every other function. See backend/src/invoke.ts.
-
-/// Whichever provider the user has a key for; OpenAI wins when both are set.
-function default_client() -> string {
-  if (env.OPENAI_API_KEY.get() != null) { "openai/gpt-4o-mini" } else { "anthropic/claude-haiku-4-5" }
-}
 
 enum Tone {
   Neutral
@@ -115,7 +106,7 @@ class Summary {
 
 /// Summarizes `text` into a headline and a few bullets, in the requested tone.
 function SummarizeText(text: string, tone: Tone) -> Summary {
-  client: default_client()
+  client: root.internal.default_client()
   prompt: `Summarize the following text with the tone ${tone}. Respond with a punchy headline and up to three bullets.
 
 ${text}
