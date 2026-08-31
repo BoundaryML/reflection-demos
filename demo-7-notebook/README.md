@@ -170,7 +170,7 @@ as the first binding.
 - **Reading a field off a bound instance.** `let t = app.GetTicket("SUP-1041")` then
   `t.subject` panics with `VM internal error: type error: expected map, got instance`.
   Use `reflect.class.get_field<string>(t, "subject")`, which works.
-  <!-- TODO(instance_from): `reflect.class.instance_from(t).subject` once the wrapper lands. -->
+  <!-- The `reflect.class.instance_from` wrapper was superseded and removed (baml #4466); the free function is the lasting spelling. -->
 - **Reading a field off an instance inline.** `app.GetTicket("SUP-1041").subject` fails
   earlier still, as `internal compiler error: MIR failed to resolve field access .subject
   against class definition 'Ticket'`. Same workaround.
