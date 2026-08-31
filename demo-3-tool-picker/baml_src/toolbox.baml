@@ -2,10 +2,11 @@
 // time with `reflect.class.new`, and only the tools the user has switched
 // ON are folded into the runtime union. A disabled tool's class is never
 // constructed into the union in the first place, so the model has no way
-// to pick it. Dispatch is the same trick in reverse: `action is
-// unreflect(calc_t.as_type())` asks "is this value's minted type identical
-// to the class I built a moment ago?" — a real type check, not a string
-// compare on a `"tool"` field.
+// to pick it. Dispatch is the same trick in reverse: bind each minted
+// type to a name and `match (action) { Calc => ... }` — the patterns are
+// matched by type IDENTITY, not structure (Calculator and NoTool are both
+// single-string classes and never confuse), and not by a string compare
+// on a `"tool"` field.
 
 type ToolId = "calculator" | "unit_converter" | "note_saver" | "weather"
 
@@ -85,19 +86,22 @@ function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick thro
     member_types.push(no_tool_t.as_type());
     let action_t = reflect.union.new(member_types).as_type();
 
-    let prompt_preview = pick_action$render_prompt<unreflect(action_t)>(request).text();
-    let action = pick_action<unreflect(action_t)>(request);
+    // Bind each minted type to a name; dispatch below is by type identity.
+    type Calc = unreflect(calc_t.as_type());
+    type Unit = unreflect(convert_t.as_type());
+    type Note = unreflect(note_t.as_type());
+    type Weather = unreflect(weather_t.as_type());
+    type Action = unreflect(action_t);
 
-    let tool = if (action is unreflect(calc_t.as_type())) {
-        "calculator"
-    } else if (action is unreflect(convert_t.as_type())) {
-        "unit_converter"
-    } else if (action is unreflect(note_t.as_type())) {
-        "note_saver"
-    } else if (action is unreflect(weather_t.as_type())) {
-        "weather"
-    } else {
-        ""
+    let prompt_preview = pick_action$render_prompt<Action>(request).text();
+    let action = pick_action<Action>(request);
+
+    let tool = match (action) {
+        Calc => "calculator",
+        Unit => "unit_converter",
+        Note => "note_saver",
+        Weather => "weather",
+        _ => "",
     };
 
     ToolPick {

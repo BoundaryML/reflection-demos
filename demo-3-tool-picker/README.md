@@ -20,10 +20,11 @@ it's not merely hidden from the union, it doesn't exist yet.
 
 The model's response is parsed into that exact union type
 (`pick_action<unreflect(action_t)>`). Dispatch is then a real type
-check, not a string compare on a `"tool"` field: `action is unreflect(calc_t.as_type())` asks
-"is this value's minted type identical to the Calculator class I built a moment ago?" That
-identity check is what selects the branch — see the `if / else if` chain at the bottom of
-`route_and_dispatch`.
+check, not a string compare on a `"tool"` field: each minted type is bound to a name
+(`type Calc = unreflect(calc_t.as_type())`) and `match (action) { Calc => ... }` selects
+the branch by type identity — Calculator and NoTool are structurally identical
+single-string classes and never confuse, because the patterns match the minted type,
+not the shape.
 
 BAML hands back which tool matched, its parsed arguments (as JSON), and the *exact prompt*
 that was rendered for this turn. The Express backend then runs the actual tool — arithmetic
@@ -33,7 +34,7 @@ result comes back to the chat as a normal message.
 There's no code panel in the UI — this is a pure product experience. `baml_src/toolbox.baml`
 is short and meant to be read straight from an editor after the wow moment lands: point at
 `reflect.class.new`, the `if (weather_on) { member_types.push(...) }` line, and the
-`action is unreflect(weather_t.as_type())` dispatch — a dozen lines are doing everything you
+`match (action) { Calc => ... }` type-identity dispatch — a dozen lines are doing everything you
 just watched happen.
 
 ## Running it
@@ -210,4 +211,4 @@ baml-dev run --output-format json \
    at the bottom to see it persisted.
 7. *Now* open `baml_src/toolbox.baml` in an editor and walk through it — `reflect.class.new`
    per tool, the `if (tool_on) { member_types.push(...) }` gate, `reflect.union.new`, and the
-   `action is unreflect(...)` dispatch chain. That's the whole mechanism.
+   `match (action) { Calc => ... }` type-identity dispatch. That's the whole mechanism.
