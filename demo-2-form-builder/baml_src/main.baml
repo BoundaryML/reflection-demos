@@ -21,7 +21,7 @@ class SavedField {
 // throws the compiler's own CompilationError instead of being silently
 // swallowed (which is what a map would do on a duplicate key).
 function form_type(saved: SavedField[]) -> reflect.class.Type {
-    let builder = reflect.class.builder("DesignedForm");
+    let class_builder = reflect.class.builder("DesignedForm");
     for (let field in saved) {
         let ty = match (field.kind) {
             "number" => reflect.Type.of<int>(),
@@ -37,9 +37,9 @@ function form_type(saved: SavedField[]) -> reflect.class.Type {
         } else {
             field.description
         };
-        builder = builder.field(field.name, ty.meta(description = description));
+        class_builder.field(field.name, ty.meta(description = description));
     }
-    builder.build()
+    class_builder.build()
 }
 
 // The extraction call — generic over whatever runtime type T is bound to.
