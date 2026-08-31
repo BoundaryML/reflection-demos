@@ -42,12 +42,15 @@ function BuildCategoryType(categories: CategoryInput[]) -> reflect.enum.Type thr
   reflect.enum.new("Category", rows)
 }
 
-/// Live path: mint the enum, then call Classify bound to it with `unreflect`.
-/// Returns the synthetic `CAT_<id>` variant name — the backend maps that
-/// back to the category's display name, since it already has the rows.
+/// Live path, in three explainable steps: mint the enum from the rows
+/// (a runtime VALUE), bind that value to a type NAME with `unreflect`,
+/// then call Classify generically over it. Returns the synthetic
+/// `CAT_<id>` variant name — the backend maps that back to the category's
+/// display name, since it already has the rows.
 function ClassifyTicket(ticket_text: string, categories: CategoryInput[]) -> string {
   let category_t = BuildCategoryType(categories)
-  let picked = Classify<unreflect(category_t.as_type())>(ticket_text)
+  type C = unreflect(category_t.as_type())
+  let picked = Classify<C>(ticket_text)
   reflect.enum.get_value(picked)
 }
 
@@ -62,6 +65,7 @@ function ClassifyTicketFromCompletion(
   raw_completion: string,
 ) -> string {
   let category_t = BuildCategoryType(categories)
-  let picked = Classify$parse<unreflect(category_t.as_type())>(raw_completion)
+  type C = unreflect(category_t.as_type())
+  let picked = Classify$parse<C>(raw_completion)
   reflect.enum.get_value(picked)
 }

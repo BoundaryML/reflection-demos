@@ -181,9 +181,11 @@ export const BuildCategoryType = defineFunction("user.BuildCategoryType", "sync"
 export const BuildCategoryType_async = defineFunction("user.BuildCategoryType", "async", ["categories"]) as (categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<BamlType>;
 
 /**
- * Live path: mint the enum, then call Classify bound to it with `unreflect`.
- * Returns the synthetic `CAT_<id>` variant name — the backend maps that
- * back to the category's display name, since it already has the rows.
+ * Live path, in three explainable steps: mint the enum from the rows
+ * (a runtime VALUE), bind that value to a type NAME with `unreflect`,
+ * then call Classify generically over it. Returns the synthetic
+ * `CAT_<id>` variant name — the backend maps that back to the category's
+ * display name, since it already has the rows.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -193,9 +195,11 @@ export const BuildCategoryType_async = defineFunction("user.BuildCategoryType", 
 export const ClassifyTicket = defineFunction("user.ClassifyTicket", "sync", ["ticket_text", "categories"]) as (ticket_text: string, categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
 
 /**
- * Live path: mint the enum, then call Classify bound to it with `unreflect`.
- * Returns the synthetic `CAT_<id>` variant name — the backend maps that
- * back to the category's display name, since it already has the rows.
+ * Live path, in three explainable steps: mint the enum from the rows
+ * (a runtime VALUE), bind that value to a type NAME with `unreflect`,
+ * then call Classify generically over it. Returns the synthetic
+ * `CAT_<id>` variant name — the backend maps that back to the category's
+ * display name, since it already has the rows.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
