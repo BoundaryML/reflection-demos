@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
 const IDEAS = [
-  'a freight invoice with line items and a total',
-  'a clinical visit note: vitals, complaint, plan',
+  'a customer support ticket: customer name, urgency from low to high, product area, one-line summary, steps to reproduce as short phrases',
+  'a freight invoice: number, date, currency, total, line items as short phrases',
+  'a clinical visit note: vitals, complaint, plan as short imperative phrases',
   'a job posting: title, seniority, comp range, must-have skills',
-  'a bug report parsed out of a support email',
 ];
 
 export interface GenerateModalProps {
@@ -48,7 +48,7 @@ export function GenerateModal({ open, busy, error, live, onClose, onSubmit }: Ge
           className="text-input"
           autoFocus
           value={text}
-          placeholder="e.g. a purchase order: vendor, PO number, ship date, and the ordered items"
+          placeholder="e.g. a purchase order: vendor, PO number, ship date, ordered items as short phrases"
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && text.trim() && !busy) onSubmit(text.trim());

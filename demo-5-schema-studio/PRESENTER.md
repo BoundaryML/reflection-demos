@@ -72,7 +72,10 @@ human typed**. If it made a mistake, it gets a squiggle like anyone else.
 > same compiler, gets the same diagnostics — and then you can extract through
 > the class it wrote."
 
-Then extract through the generated schema to close the loop.
+Then extract through the generated schema to close the loop. The modal's
+suggestion chips are all curated to draft schemas that extract cleanly; the
+Draft prompt itself now forces a single flat class with optionals for
+maybe-absent fields, so audience-shouted descriptions are safe too.
 
 ## The code reveal (30s, in your editor)
 
