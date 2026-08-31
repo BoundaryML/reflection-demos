@@ -879,11 +879,11 @@ export const _anthropic_thinking_param_async = defineFunction("anthropic.interna
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const anthropic_messages_request = defineFunction("anthropic.internal.anthropic_messages_request", "sync", ["params", "input", "stream"], ["preview"]) as (params: AnthropicBodyParams, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => AnthropicMessagesRequest;
 
@@ -893,11 +893,11 @@ export const anthropic_messages_request = defineFunction("anthropic.internal.ant
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const anthropic_messages_request_async = defineFunction("anthropic.internal.anthropic_messages_request", "async", ["params", "input", "stream"], ["preview"]) as (params: AnthropicBodyParams, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<AnthropicMessagesRequest>;
 
@@ -907,11 +907,11 @@ export const anthropic_messages_request_async = defineFunction("anthropic.intern
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const anthropic_messages_body = defineFunction("anthropic.internal.anthropic_messages_body", "sync", ["params", "input", "stream"], ["preview"]) as (params: AnthropicBodyParams, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => string;
 
@@ -921,11 +921,11 @@ export const anthropic_messages_body = defineFunction("anthropic.internal.anthro
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const anthropic_messages_body_async = defineFunction("anthropic.internal.anthropic_messages_body", "async", ["params", "input", "stream"], ["preview"]) as (params: AnthropicBodyParams, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 
@@ -951,12 +951,12 @@ export const _anthropic_headers_async = defineFunction("anthropic.internal._anth
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _anthropic_request = defineFunction("anthropic.internal._anthropic_request", "sync", ["c", "input", "stream"], ["preview"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -964,12 +964,12 @@ export const _anthropic_request = defineFunction("anthropic.internal._anthropic_
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _anthropic_request_async = defineFunction("anthropic.internal._anthropic_request", "async", ["c", "input", "stream"], ["preview"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -978,12 +978,12 @@ export const _anthropic_request_async = defineFunction("anthropic.internal._anth
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const anthropic_render = defineFunction("anthropic.internal.anthropic_render", "sync", ["c", "input"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -992,12 +992,12 @@ export const anthropic_render = defineFunction("anthropic.internal.anthropic_ren
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const anthropic_render_async = defineFunction("anthropic.internal.anthropic_render", "async", ["c", "input"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1007,12 +1007,12 @@ export const anthropic_render_async = defineFunction("anthropic.internal.anthrop
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const anthropic_preview = defineFunction("anthropic.internal.anthropic_preview", "sync", ["c", "input"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1022,12 +1022,12 @@ export const anthropic_preview = defineFunction("anthropic.internal.anthropic_pr
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const anthropic_preview_async = defineFunction("anthropic.internal.anthropic_preview", "async", ["c", "input"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1051,7 +1051,6 @@ export const anthropic_parse_async = defineFunction("anthropic.internal.anthropi
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const invoke = defineFunction("anthropic.internal.invoke", "sync", ["c", "input"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
 
@@ -1061,7 +1060,6 @@ export const invoke = defineFunction("anthropic.internal.invoke", "sync", ["c", 
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const invoke_async = defineFunction("anthropic.internal.invoke", "async", ["c", "input"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
 
@@ -1269,7 +1267,6 @@ export const _anthropic_stream_open_failure_async = defineFunction("anthropic.in
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const invoke_stream = defineFunction("anthropic.internal.invoke_stream", "sync", ["c", "input"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.stream.TurnStream;
 
@@ -1279,6 +1276,5 @@ export const invoke_stream = defineFunction("anthropic.internal.invoke_stream", 
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const invoke_stream_async = defineFunction("anthropic.internal.invoke_stream", "async", ["c", "input"]) as (c: vendor.anthropic.AnthropicClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.stream.TurnStream>;

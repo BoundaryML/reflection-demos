@@ -34,6 +34,7 @@ export class AzureClient$stream {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     resource_name: string | null;
@@ -50,6 +51,7 @@ export class AzureClient$stream {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -71,6 +73,7 @@ export class AzureClient {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     resource_name: string | null;
@@ -87,11 +90,12 @@ export class AzureClient {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("openai.AzureClient.new", "sync", ["model"], ["resource_name", "deployment_id", "api_version", "base_url", "api_key", "request_body", "headers", "query_params", "temperature", "max_tokens", "max_completion_tokens", "top_p", "stop", "seed"]) as (model: string, $opts?: { resource_name?: string | null | undefined; deployment_id?: string | null | undefined; api_version?: string | null | undefined; base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; max_completion_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => AzureClient;
-  static new_async = defineFunction("openai.AzureClient.new", "async", ["model"], ["resource_name", "deployment_id", "api_version", "base_url", "api_key", "request_body", "headers", "query_params", "temperature", "max_tokens", "max_completion_tokens", "top_p", "stop", "seed"]) as (model: string, $opts?: { resource_name?: string | null | undefined; deployment_id?: string | null | undefined; api_version?: string | null | undefined; base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; max_completion_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<AzureClient>;
+  static new = defineFunction("openai.AzureClient.new", "sync", ["model"], ["resource_name", "deployment_id", "api_version", "base_url", "api_key", "request_body", "headers", "query_params", "temperature", "max_tokens", "max_completion_tokens", "top_p", "stop", "seed", "capture_wire"]) as (model: string, $opts?: { resource_name?: string | null | undefined; deployment_id?: string | null | undefined; api_version?: string | null | undefined; base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; max_completion_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => AzureClient;
+  static new_async = defineFunction("openai.AzureClient.new", "async", ["model"], ["resource_name", "deployment_id", "api_version", "base_url", "api_key", "request_body", "headers", "query_params", "temperature", "max_tokens", "max_completion_tokens", "top_p", "stop", "seed", "capture_wire"]) as (model: string, $opts?: { resource_name?: string | null | undefined; deployment_id?: string | null | undefined; api_version?: string | null | undefined; base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; max_completion_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<AzureClient>;
 /**
  * @throws Io
  * @throws ParseError
@@ -195,6 +199,7 @@ export class ChatClient$stream {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     api_key: ai.Credential$stream | null;
@@ -210,6 +215,7 @@ export class ChatClient$stream {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -230,6 +236,7 @@ export class ChatClient {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     api_key: ai.Credential | null;
@@ -245,11 +252,12 @@ export class ChatClient {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("openai.ChatClient.new", "sync", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_tokens", "max_completion_tokens", "top_p", "stop", "seed"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; max_completion_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ChatClient;
-  static new_async = defineFunction("openai.ChatClient.new", "async", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_tokens", "max_completion_tokens", "top_p", "stop", "seed"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; max_completion_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ChatClient>;
+  static new = defineFunction("openai.ChatClient.new", "sync", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_tokens", "max_completion_tokens", "top_p", "stop", "seed", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; max_completion_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ChatClient;
+  static new_async = defineFunction("openai.ChatClient.new", "async", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_tokens", "max_completion_tokens", "top_p", "stop", "seed", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; max_completion_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ChatClient>;
 /**
  * @throws Io
  * @throws ParseError
@@ -306,6 +314,7 @@ export class GenericClient$stream {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     base_url: ai.Credential$stream | null;
@@ -320,6 +329,7 @@ export class GenericClient$stream {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -339,6 +349,7 @@ export class GenericClient {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     base_url: ai.Credential | null;
@@ -353,11 +364,12 @@ export class GenericClient {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("openai.GenericClient.new", "sync", ["model"], ["base_url", "api_key", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed"]) as (model: string, $opts?: { base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => GenericClient;
-  static new_async = defineFunction("openai.GenericClient.new", "async", ["model"], ["base_url", "api_key", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed"]) as (model: string, $opts?: { base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<GenericClient>;
+  static new = defineFunction("openai.GenericClient.new", "sync", ["model"], ["base_url", "api_key", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed", "capture_wire"]) as (model: string, $opts?: { base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => GenericClient;
+  static new_async = defineFunction("openai.GenericClient.new", "async", ["model"], ["base_url", "api_key", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed", "capture_wire"]) as (model: string, $opts?: { base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<GenericClient>;
 /**
  * @throws Io
  * @throws ParseError
@@ -421,6 +433,7 @@ export class ImageClient$stream {
   request_body!: baml.json.json$stream | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     api_key: ai.Credential$stream | null;
@@ -438,6 +451,7 @@ export class ImageClient$stream {
     request_body: baml.json.json$stream | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -460,6 +474,7 @@ export class ImageClient {
   request_body!: baml.json.json | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     api_key: ai.Credential | null;
@@ -477,11 +492,12 @@ export class ImageClient {
     request_body: baml.json.json | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("openai.ImageClient.new", "sync", [], ["model", "api_key", "base_url", "n", "size", "quality", "background", "output_format", "output_compression", "moderation", "style", "user", "response_format", "request_body", "headers", "query_params"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; n?: number | null | undefined; size?: string | null | undefined; quality?: string | null | undefined; background?: string | null | undefined; output_format?: string | null | undefined; output_compression?: number | null | undefined; moderation?: string | null | undefined; style?: string | null | undefined; user?: string | null | undefined; response_format?: string | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ImageClient;
-  static new_async = defineFunction("openai.ImageClient.new", "async", [], ["model", "api_key", "base_url", "n", "size", "quality", "background", "output_format", "output_compression", "moderation", "style", "user", "response_format", "request_body", "headers", "query_params"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; n?: number | null | undefined; size?: string | null | undefined; quality?: string | null | undefined; background?: string | null | undefined; output_format?: string | null | undefined; output_compression?: number | null | undefined; moderation?: string | null | undefined; style?: string | null | undefined; user?: string | null | undefined; response_format?: string | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ImageClient>;
+  static new = defineFunction("openai.ImageClient.new", "sync", [], ["model", "api_key", "base_url", "n", "size", "quality", "background", "output_format", "output_compression", "moderation", "style", "user", "response_format", "request_body", "headers", "query_params", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; n?: number | null | undefined; size?: string | null | undefined; quality?: string | null | undefined; background?: string | null | undefined; output_format?: string | null | undefined; output_compression?: number | null | undefined; moderation?: string | null | undefined; style?: string | null | undefined; user?: string | null | undefined; response_format?: string | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ImageClient;
+  static new_async = defineFunction("openai.ImageClient.new", "async", [], ["model", "api_key", "base_url", "n", "size", "quality", "background", "output_format", "output_compression", "moderation", "style", "user", "response_format", "request_body", "headers", "query_params", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; n?: number | null | undefined; size?: string | null | undefined; quality?: string | null | undefined; background?: string | null | undefined; output_format?: string | null | undefined; output_compression?: number | null | undefined; moderation?: string | null | undefined; style?: string | null | undefined; user?: string | null | undefined; response_format?: string | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ImageClient>;
 /**
  * @throws InvalidRequest
  * @throws Io
@@ -518,6 +534,7 @@ export class OllamaClient$stream {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     base_url: ai.Credential$stream | null;
@@ -530,6 +547,7 @@ export class OllamaClient$stream {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -547,6 +565,7 @@ export class OllamaClient {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     base_url: ai.Credential | null;
@@ -559,11 +578,12 @@ export class OllamaClient {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("openai.OllamaClient.new", "sync", ["model"], ["base_url", "api_key", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed"]) as (model: string, $opts?: { base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => OllamaClient;
-  static new_async = defineFunction("openai.OllamaClient.new", "async", ["model"], ["base_url", "api_key", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed"]) as (model: string, $opts?: { base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<OllamaClient>;
+  static new = defineFunction("openai.OllamaClient.new", "sync", ["model"], ["base_url", "api_key", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed", "capture_wire"]) as (model: string, $opts?: { base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => OllamaClient;
+  static new_async = defineFunction("openai.OllamaClient.new", "async", ["model"], ["base_url", "api_key", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed", "capture_wire"]) as (model: string, $opts?: { base_url?: ai.Credential | null | undefined; api_key?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<OllamaClient>;
 /**
  * @throws Io
  * @throws ParseError
@@ -618,6 +638,7 @@ export class OpenRouterClient$stream {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     api_key: ai.Credential$stream | null;
@@ -630,6 +651,7 @@ export class OpenRouterClient$stream {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -647,6 +669,7 @@ export class OpenRouterClient {
   top_p!: number | null;
   stop!: string[] | null;
   seed!: number | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     api_key: ai.Credential | null;
@@ -659,11 +682,12 @@ export class OpenRouterClient {
     top_p: number | null;
     stop: string[] | null;
     seed: number | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("openai.OpenRouterClient.new", "sync", ["model"], ["api_key", "base_url", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed"]) as (model: string, $opts?: { api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => OpenRouterClient;
-  static new_async = defineFunction("openai.OpenRouterClient.new", "async", ["model"], ["api_key", "base_url", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed"]) as (model: string, $opts?: { api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<OpenRouterClient>;
+  static new = defineFunction("openai.OpenRouterClient.new", "sync", ["model"], ["api_key", "base_url", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed", "capture_wire"]) as (model: string, $opts?: { api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => OpenRouterClient;
+  static new_async = defineFunction("openai.OpenRouterClient.new", "async", ["model"], ["api_key", "base_url", "request_body", "headers", "query_params", "temperature", "max_tokens", "top_p", "stop", "seed", "capture_wire"]) as (model: string, $opts?: { api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_tokens?: number | null | undefined; top_p?: number | null | undefined; stop?: string[] | null | undefined; seed?: number | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<OpenRouterClient>;
 /**
  * @throws Io
  * @throws ParseError
@@ -726,6 +750,7 @@ export class OpenRouterClient {
  *     `{"store": null}` drops the `store: false` this client sends.
  *   headers: Extra request headers, applied (lowercased) before authorization.
  *   query_params: Extra URL query parameters, percent-encoded onto the endpoint.
+ *   capture_wire
  */
 export class ResponsesClient$stream {
   model!: string | null;
@@ -744,6 +769,7 @@ export class ResponsesClient$stream {
   request_body!: baml.json.json$stream | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     api_key: ai.Credential$stream | null;
@@ -761,6 +787,7 @@ export class ResponsesClient$stream {
     request_body: baml.json.json$stream | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -786,6 +813,7 @@ export class ResponsesClient$stream {
  *     `{"store": null}` drops the `store: false` this client sends.
  *   headers: Extra request headers, applied (lowercased) before authorization.
  *   query_params: Extra URL query parameters, percent-encoded onto the endpoint.
+ *   capture_wire
  */
 export class ResponsesClient {
   model!: string;
@@ -804,6 +832,7 @@ export class ResponsesClient {
   request_body!: baml.json.json | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     api_key: ai.Credential | null;
@@ -821,11 +850,12 @@ export class ResponsesClient {
     request_body: baml.json.json | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("openai.ResponsesClient.new", "sync", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "temperature", "top_p", "max_output_tokens", "reasoning_effort", "reasoning_summary", "verbosity", "parallel_tool_calls", "store", "request_body", "headers", "query_params"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; max_output_tokens?: number | null | undefined; reasoning_effort?: string | null | undefined; reasoning_summary?: string | null | undefined; verbosity?: string | null | undefined; parallel_tool_calls?: boolean | null | undefined; store?: boolean | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ResponsesClient;
-  static new_async = defineFunction("openai.ResponsesClient.new", "async", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "temperature", "top_p", "max_output_tokens", "reasoning_effort", "reasoning_summary", "verbosity", "parallel_tool_calls", "store", "request_body", "headers", "query_params"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; max_output_tokens?: number | null | undefined; reasoning_effort?: string | null | undefined; reasoning_summary?: string | null | undefined; verbosity?: string | null | undefined; parallel_tool_calls?: boolean | null | undefined; store?: boolean | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ResponsesClient>;
+  static new = defineFunction("openai.ResponsesClient.new", "sync", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "temperature", "top_p", "max_output_tokens", "reasoning_effort", "reasoning_summary", "verbosity", "parallel_tool_calls", "store", "request_body", "headers", "query_params", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; max_output_tokens?: number | null | undefined; reasoning_effort?: string | null | undefined; reasoning_summary?: string | null | undefined; verbosity?: string | null | undefined; parallel_tool_calls?: boolean | null | undefined; store?: boolean | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ResponsesClient;
+  static new_async = defineFunction("openai.ResponsesClient.new", "async", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "temperature", "top_p", "max_output_tokens", "reasoning_effort", "reasoning_summary", "verbosity", "parallel_tool_calls", "store", "request_body", "headers", "query_params", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; max_output_tokens?: number | null | undefined; reasoning_effort?: string | null | undefined; reasoning_summary?: string | null | undefined; verbosity?: string | null | undefined; parallel_tool_calls?: boolean | null | undefined; store?: boolean | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ResponsesClient>;
 /**
  * @throws InvalidRequest
  * @throws Io

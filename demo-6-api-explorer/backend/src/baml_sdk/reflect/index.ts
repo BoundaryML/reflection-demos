@@ -52,6 +52,18 @@ export class Arg$stream {
 }
 
 /**
+ * One-shot compiler output consumed by Package._finish or Session._finish.
+ */
+export class CompileArtifact$stream {
+  _inner!: unknown;
+  constructor(init: {
+    _inner: unknown;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
+/**
  * The stable structured diagnostic surfaced by reflection constructors.
  */
 export class Diagnostic$stream {
@@ -68,12 +80,13 @@ export class Diagnostic$stream {
 }
 
 /**
- * Thrown by `reflect.call_any` when the supplied arguments do not fit the
- * callee's runtime signature. `argument` names the offending key (`$argN`
- * placeholders included). An ill-typed value reports the parameter's and
- * the value's types; a missing required parameter reports the parameter's
- * type and `never`; a key naming no parameter reports the callee's whole
- * function type and the value's type.
+ * Thrown by `reflect.call_any` when the supplied arguments or returned value
+ * do not fit its runtime signature. `argument` names the offending key
+ * (`$argN` placeholders included); a return mismatch names the
+ * `reflect.call_any return value` boundary. An ill-typed value reports the
+ * expected and actual types; a missing required parameter reports the
+ * parameter's type and `never`; a key naming no parameter reports the
+ * callee's whole function type and the value's type.
  */
 export class InvalidArgumentError$stream {
   argument!: string | null;
@@ -345,12 +358,13 @@ export class Signature {
 }
 
 /**
- * Thrown by `reflect.call_any` when the supplied arguments do not fit the
- * callee's runtime signature. `argument` names the offending key (`$argN`
- * placeholders included). An ill-typed value reports the parameter's and
- * the value's types; a missing required parameter reports the parameter's
- * type and `never`; a key naming no parameter reports the callee's whole
- * function type and the value's type.
+ * Thrown by `reflect.call_any` when the supplied arguments or returned value
+ * do not fit its runtime signature. `argument` names the offending key
+ * (`$argN` placeholders included); a return mismatch names the
+ * `reflect.call_any return value` boundary. An ill-typed value reports the
+ * expected and actual types; a missing required parameter reports the
+ * parameter's type and `never`; a key naming no parameter reports the
+ * callee's whole function type and the value's type.
  */
 export class InvalidArgumentError {
   argument!: string;
@@ -360,6 +374,18 @@ export class InvalidArgumentError {
     argument: string;
     expected: BamlType;
     got: BamlType;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
+/**
+ * One-shot compiler output consumed by Package._finish or Session._finish.
+ */
+export class CompileArtifact {
+  _inner!: unknown;
+  constructor(init: {
+    _inner: unknown;
   }) {
     Object.assign(this, init);
   }
@@ -380,13 +406,13 @@ export class Package {
 /**
  * @throws CompilationError
  */
-  static _compile = defineFunction("reflect.Package._compile", "sync", ["files", "packages"]) as (files: { [key: string]: string }, packages: { [key: string]: Package }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Package;
+  static _compile = defineFunction("reflect.Package._compile", "sync", ["files", "packages"]) as (files: { [key: string]: string }, packages: { [key: string]: Package }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => CompileArtifact;
 /**
  * @throws CompilationError
  */
-  static _compile_async = defineFunction("reflect.Package._compile", "async", ["files", "packages"]) as (files: { [key: string]: string }, packages: { [key: string]: Package }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Package>;
-  static _finish = defineFunction("reflect.Package._finish", "sync", ["artifact", "packages"]) as (artifact: Package, packages: { [key: string]: Package }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Package;
-  static _finish_async = defineFunction("reflect.Package._finish", "async", ["artifact", "packages"]) as (artifact: Package, packages: { [key: string]: Package }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Package>;
+  static _compile_async = defineFunction("reflect.Package._compile", "async", ["files", "packages"]) as (files: { [key: string]: string }, packages: { [key: string]: Package }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<CompileArtifact>;
+  static _finish = defineFunction("reflect.Package._finish", "sync", ["artifact", "packages"]) as (artifact: CompileArtifact, packages: { [key: string]: Package }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Package;
+  static _finish_async = defineFunction("reflect.Package._finish", "async", ["artifact", "packages"]) as (artifact: CompileArtifact, packages: { [key: string]: Package }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Package>;
   get_class = defineInstanceFunction("reflect.Package.get_class", "sync", ["self", "name"]).bind(this) as (name: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => BamlType | null;
   get_class_async = defineInstanceFunction("reflect.Package.get_class", "async", ["self", "name"]).bind(this) as (name: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<BamlType | null>;
   get_enum = defineInstanceFunction("reflect.Package.get_enum", "sync", ["self", "name"]).bind(this) as (name: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => BamlType | null;
@@ -481,17 +507,21 @@ export class Session {
  * @throws CompilationError
  * @throws SessionBusy
  */
-  _compile = defineInstanceFunction("reflect.Session._compile", "sync", ["self", "source"], undefined, { typeParams: ["T"] }).bind(this) as <T>(source: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Package;
+  _compile = defineInstanceFunction("reflect.Session._compile", "sync", ["self", "source"], undefined, { typeParams: ["T"] }).bind(this) as <T>(source: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => CompileArtifact;
 /**
  * @throws CompilationError
  * @throws SessionBusy
  */
-  _compile_async = defineInstanceFunction("reflect.Session._compile", "async", ["self", "source"], undefined, { typeParams: ["T"] }).bind(this) as <T>(source: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<Package>;
-  _finish = defineInstanceFunction("reflect.Session._finish", "sync", ["self", "artifact"], undefined, { typeParams: ["T"] }).bind(this) as <T>(artifact: Package, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
-  _finish_async = defineInstanceFunction("reflect.Session._finish", "async", ["self", "artifact"], undefined, { typeParams: ["T"] }).bind(this) as <T>(artifact: Package, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
+  _compile_async = defineInstanceFunction("reflect.Session._compile", "async", ["self", "source"], undefined, { typeParams: ["T"] }).bind(this) as <T>(source: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<CompileArtifact>;
+  _finish = defineInstanceFunction("reflect.Session._finish", "sync", ["self", "artifact"], undefined, { typeParams: ["T"] }).bind(this) as <T>(artifact: CompileArtifact, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
+  _finish_async = defineInstanceFunction("reflect.Session._finish", "async", ["self", "artifact"], undefined, { typeParams: ["T"] }).bind(this) as <T>(artifact: CompileArtifact, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
   diagnostics = defineInstanceFunction("reflect.Session.diagnostics", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Diagnostic[];
   diagnostics_async = defineInstanceFunction("reflect.Session.diagnostics", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Diagnostic[]>;
 }
+
+export const _render_cause = defineFunction("reflect._render_cause", "sync", ["value"]) as (value: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
+
+export const _render_cause_async = defineFunction("reflect._render_cause", "async", ["value"]) as (value: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 
 export const signature = defineFunction("reflect.signature", "sync", ["f"]) as (f: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Signature;
 
@@ -526,6 +556,9 @@ export class Type$stream {
 
 import { reflectType as Type } from "@boundaryml/baml-bridge";
 export { Type };
+
+/** Erased runtime token for BAML interface `reflect.AnyFunction`. */
+export const AnyFunction = Object.freeze({ __baml_interface_fqn__: "reflect.AnyFunction" } as const);
 
 /** Erased runtime token for BAML interface `reflect.TypeView`. */
 export const TypeView = Object.freeze({ __baml_interface_fqn__: "reflect.TypeView" } as const);

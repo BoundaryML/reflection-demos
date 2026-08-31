@@ -56,7 +56,7 @@ function ListFunctions() -> FunctionInfo[] throws reflect.errors.CompilationErro
   let out: FunctionInfo[] = []
   for (let name in app.functions().keys()) {
     if !_is_internal(name) {
-      let f = app.get_function<baml.AnyFunction>(name)
+      let f = app.get_function<reflect.AnyFunction>(name)
       if f != null {
         let sig = reflect.signature(f)
         let params: ParamInfo[] = []
@@ -133,7 +133,7 @@ function _decode_arg(raw_json: string, t: reflect.Type) -> InvokeResult throws n
 /// backend/src/invoke.ts) without this function ever knowing about it.
 function InvokeFunction(name: string, args: map<string, string>) -> InvokeResult throws reflect.errors.CompilationError {
   let app = reflect.Package.current()
-  let f = app.get_function<baml.AnyFunction>(name)
+  let f = app.get_function<reflect.AnyFunction>(name)
   if f == null {
     return InvokeResult { ok: false, value: null, error_type: "NotFound", error_message: "no such function: " + name }
   }
@@ -174,13 +174,13 @@ function InvokeFunction(name: string, args: map<string, string>) -> InvokeResult
           error_message: "'" + e.argument + "': expected " + e.expected.to_string() + ", got " + e.got.to_string(),
         }
       }
-      // Any other thrown value is `unknown` here — bare `baml.AnyFunction`
+      // Any other thrown value is `unknown` here — bare `reflect.AnyFunction`
       // pins `Throws = unknown`. Reflect its runtime type by name and encode
       // its fields generically; this is what makes the throws channel work
       // for a function this dispatcher has never seen before.
       return InvokeResult {
         ok: false, value: null, error_type: reflect.Type.of_value(e).to_string(),
-        error_message: baml.json.encode(e) catch (_) { _ => "<error details unavailable>" },
+        error_message: baml.json.to_string(e) catch (_) { _ => "<error details unavailable>" },
       }
     }
   }

@@ -19,7 +19,7 @@ function classify<T>(ticket_text: string) -> T {
     Ticket:
     ${ticket_text}
 
-    ${ctx.output_format}
+    ${ctx.output_format()}
   `
 }
 

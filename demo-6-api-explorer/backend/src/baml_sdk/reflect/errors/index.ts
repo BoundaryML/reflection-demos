@@ -33,8 +33,10 @@ export class CompilationError$stream {
  */
 export class EvaluationError$stream {
   message!: string | null;
+  cause!: unknown;
   constructor(init: {
     message: string | null;
+    cause: unknown;
   }) {
     Object.assign(this, init);
   }
@@ -44,6 +46,23 @@ export class EvaluationError$stream {
  * A session rejected concurrent use.
  */
 export class SessionBusy$stream {
+  message!: string | null;
+  constructor(init: {
+    message: string | null;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
+/**
+ * A reflective typed read did not fit the requested type: `Field.value<T>()`
+ * or `AnyClass.get<T>()` asked for a `T` the underlying value is not.
+ * 
+ * Distinct from `baml.errors.TypeMismatch`, the host call-boundary error
+ * synthesized from `EngineError::TypeMismatch` — that one names the FFI
+ * contract; this one names a reflection read.
+ */
+export class TypeMismatch$stream {
   message!: string | null;
   constructor(init: {
     message: string | null;
@@ -70,6 +89,25 @@ export class CompilationError {
  * Runtime evaluation failed after successful construction/compilation.
  */
 export class EvaluationError {
+  message!: string;
+  cause!: unknown;
+  constructor(init: {
+    message: string;
+    cause: unknown;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
+/**
+ * A reflective typed read did not fit the requested type: `Field.value<T>()`
+ * or `AnyClass.get<T>()` asked for a `T` the underlying value is not.
+ * 
+ * Distinct from `baml.errors.TypeMismatch`, the host call-boundary error
+ * synthesized from `EngineError::TypeMismatch` — that one names the FFI
+ * contract; this one names a reflection read.
+ */
+export class TypeMismatch {
   message!: string;
   constructor(init: {
     message: string;

@@ -1188,11 +1188,11 @@ export const _chat_tools_async = defineFunction("openai.internal._chat_tools", "
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const chat_build_request = defineFunction("openai.internal.chat_build_request", "sync", ["compat", "params", "input", "stream"], ["preview"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ChatRequest;
 
@@ -1202,11 +1202,11 @@ export const chat_build_request = defineFunction("openai.internal.chat_build_req
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const chat_build_request_async = defineFunction("openai.internal.chat_build_request", "async", ["compat", "params", "input", "stream"], ["preview"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ChatRequest>;
 
@@ -1229,11 +1229,11 @@ export const chat_render_body_async = defineFunction("openai.internal.chat_rende
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const chat_render = defineFunction("openai.internal.chat_render", "sync", ["compat", "params", "input", "stream"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, stream: boolean, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1242,11 +1242,11 @@ export const chat_render = defineFunction("openai.internal.chat_render", "sync",
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const chat_render_async = defineFunction("openai.internal.chat_render", "async", ["compat", "params", "input", "stream"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, stream: boolean, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1256,11 +1256,11 @@ export const chat_render_async = defineFunction("openai.internal.chat_render", "
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const chat_preview = defineFunction("openai.internal.chat_preview", "sync", ["compat", "params", "input"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1270,11 +1270,11 @@ export const chat_preview = defineFunction("openai.internal.chat_preview", "sync
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const chat_preview_async = defineFunction("openai.internal.chat_preview", "async", ["compat", "params", "input"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1346,23 +1346,13 @@ export const chat_parse_async = defineFunction("openai.internal.chat_parse", "as
  * @throws InvalidArgument
  * @throws Timeout
  */
-export const _chat_send = defineFunction("openai.internal._chat_send", "sync", ["request", "provider"], ["audio_mime", "request_timeout_ms"]) as (request: baml.http.Request, provider: string, $opts?: { audio_mime?: string | undefined; request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
+export const _chat_send = defineFunction("openai.internal._chat_send", "sync", ["request", "provider", "client_name"], ["capture_wire", "audio_mime", "request_timeout_ms"]) as (request: baml.http.Request, provider: string, client_name: string, $opts?: { capture_wire?: boolean | undefined; audio_mime?: string | undefined; request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
 
 /**
  * @throws InvalidArgument
  * @throws Timeout
  */
-export const _chat_send_async = defineFunction("openai.internal._chat_send", "async", ["request", "provider"], ["audio_mime", "request_timeout_ms"]) as (request: baml.http.Request, provider: string, $opts?: { audio_mime?: string | undefined; request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
-
-/**
- * The one internal entry point: render, send, normalize — one model turn.
- * @throws InvalidArgument
- * @throws Io
- * @throws Timeout
- * @throws JsonSerializationError
- * @throws CompilationError
- */
-export const chat_invoke = defineFunction("openai.internal.chat_invoke", "sync", ["compat", "params", "input"], ["request_timeout_ms"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
+export const _chat_send_async = defineFunction("openai.internal._chat_send", "async", ["request", "provider", "client_name"], ["capture_wire", "audio_mime", "request_timeout_ms"]) as (request: baml.http.Request, provider: string, client_name: string, $opts?: { capture_wire?: boolean | undefined; audio_mime?: string | undefined; request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
 
 /**
  * The one internal entry point: render, send, normalize — one model turn.
@@ -1370,9 +1360,17 @@ export const chat_invoke = defineFunction("openai.internal.chat_invoke", "sync",
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
-export const chat_invoke_async = defineFunction("openai.internal.chat_invoke", "async", ["compat", "params", "input"], ["request_timeout_ms"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
+export const chat_invoke = defineFunction("openai.internal.chat_invoke", "sync", ["compat", "params", "input"], ["capture_wire", "request_timeout_ms"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { capture_wire?: boolean | undefined; request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
+
+/**
+ * The one internal entry point: render, send, normalize — one model turn.
+ * @throws InvalidArgument
+ * @throws Io
+ * @throws Timeout
+ * @throws JsonSerializationError
+ */
+export const chat_invoke_async = defineFunction("openai.internal.chat_invoke", "async", ["compat", "params", "input"], ["capture_wire", "request_timeout_ms"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { capture_wire?: boolean | undefined; request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
 
 export class CcDelta {
   role!: string | null;
@@ -1507,9 +1505,8 @@ export const _chat_stream_open_failure_async = defineFunction("openai.internal._
  * @throws Timeout
  * @throws JsonSerializationError
  * @throws Cancelled
- * @throws CompilationError
  */
-export const chat_invoke_stream = defineFunction("openai.internal.chat_invoke_stream", "sync", ["compat", "params", "input"], ["request_timeout_ms", "time_to_first_token_timeout_ms"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ai.stream.TurnStream;
+export const chat_invoke_stream = defineFunction("openai.internal.chat_invoke_stream", "sync", ["compat", "params", "input"], ["capture_wire", "request_timeout_ms", "time_to_first_token_timeout_ms"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { capture_wire?: boolean | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ai.stream.TurnStream;
 
 /**
  * The streaming entry point: the same request as `chat_invoke` with
@@ -1519,9 +1516,8 @@ export const chat_invoke_stream = defineFunction("openai.internal.chat_invoke_st
  * @throws Timeout
  * @throws JsonSerializationError
  * @throws Cancelled
- * @throws CompilationError
  */
-export const chat_invoke_stream_async = defineFunction("openai.internal.chat_invoke_stream", "async", ["compat", "params", "input"], ["request_timeout_ms", "time_to_first_token_timeout_ms"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.stream.TurnStream>;
+export const chat_invoke_stream_async = defineFunction("openai.internal.chat_invoke_stream", "async", ["compat", "params", "input"], ["capture_wire", "request_timeout_ms", "time_to_first_token_timeout_ms"]) as (compat: ChatCompat, params: ChatParams, input: ai.ModelTurnInput, $opts?: { capture_wire?: boolean | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.stream.TurnStream>;
 
 export class OaImageDatum$stream {
   b64_json!: string | null;
@@ -1759,6 +1755,7 @@ export const _oai_images_headers_async = defineFunction("openai.internal._oai_im
 
 /**
  * @throws InvalidRequest
+ * @throws PromptRenderError
  * @throws Io
  * @throws ParseError
  * @throws JsonSerializationError
@@ -1767,6 +1764,7 @@ export const images_render = defineFunction("openai.internal.images_render", "sy
 
 /**
  * @throws InvalidRequest
+ * @throws PromptRenderError
  * @throws Io
  * @throws ParseError
  * @throws JsonSerializationError
@@ -2681,7 +2679,6 @@ export const _openai_url_async = defineFunction("openai.internal._openai_url", "
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const openai_render = defineFunction("openai.internal.openai_render", "sync", ["c", "input"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -2691,7 +2688,6 @@ export const openai_render = defineFunction("openai.internal.openai_render", "sy
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const openai_render_async = defineFunction("openai.internal.openai_render", "async", ["c", "input"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -2701,7 +2697,6 @@ export const openai_render_async = defineFunction("openai.internal.openai_render
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const openai_preview = defineFunction("openai.internal.openai_preview", "sync", ["c", "input"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -2711,7 +2706,6 @@ export const openai_preview = defineFunction("openai.internal.openai_preview", "
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const openai_preview_async = defineFunction("openai.internal.openai_preview", "async", ["c", "input"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -2721,7 +2715,6 @@ export const openai_preview_async = defineFunction("openai.internal.openai_previ
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _openai_request = defineFunction("openai.internal._openai_request", "sync", ["c", "input", "stream"], ["preview"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -2731,7 +2724,6 @@ export const _openai_request = defineFunction("openai.internal._openai_request",
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _openai_request_async = defineFunction("openai.internal._openai_request", "async", ["c", "input", "stream"], ["preview"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -2781,7 +2773,6 @@ export const openai_parse_async = defineFunction("openai.internal.openai_parse",
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const invoke = defineFunction("openai.internal.invoke", "sync", ["c", "input"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
 
@@ -2791,7 +2782,6 @@ export const invoke = defineFunction("openai.internal.invoke", "sync", ["c", "in
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const invoke_async = defineFunction("openai.internal.invoke", "async", ["c", "input"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
 
@@ -2906,7 +2896,6 @@ export const _openai_stream_open_failure_async = defineFunction("openai.internal
  * @throws Timeout
  * @throws JsonSerializationError
  * @throws Cancelled
- * @throws CompilationError
  */
 export const invoke_stream = defineFunction("openai.internal.invoke_stream", "sync", ["c", "input"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.stream.TurnStream;
 
@@ -2917,6 +2906,5 @@ export const invoke_stream = defineFunction("openai.internal.invoke_stream", "sy
  * @throws Timeout
  * @throws JsonSerializationError
  * @throws Cancelled
- * @throws CompilationError
  */
 export const invoke_stream_async = defineFunction("openai.internal.invoke_stream", "async", ["c", "input"]) as (c: vendor.openai.ResponsesClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.stream.TurnStream>;

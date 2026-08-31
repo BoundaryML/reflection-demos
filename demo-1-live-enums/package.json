@@ -10,7 +10,7 @@
     "baml:generate": "baml generate"
   },
   "dependencies": {
-    "@boundaryml/baml-bridge": "0.17.1-nightly.20260823.a",
+    "@boundaryml/baml-bridge": "0.18.1-nightly.20260828.a",
     "better-sqlite3": "^11.10.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",

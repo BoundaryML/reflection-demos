@@ -69,17 +69,23 @@ export class StreamRelay$stream {
   retry!: unknown;
   current!: ai.stream.TurnStream$stream | null;
   emitted!: boolean | null;
+  pending_text!: string[];
+  pending_cursor!: number | null;
   terminal!: ai.stream.StreamEvent$stream[];
   terminal_cursor!: number | null;
   finished!: boolean | null;
+  calls!: ai.events.LLMCall$stream[];
   constructor(init: {
     open: unknown;
     retry: unknown;
     current: ai.stream.TurnStream$stream | null;
     emitted: boolean | null;
+    pending_text: string[];
+    pending_cursor: number | null;
     terminal: ai.stream.StreamEvent$stream[];
     terminal_cursor: number | null;
     finished: boolean | null;
+    calls: ai.events.LLMCall$stream[];
   }) {
     Object.assign(this, init);
   }
@@ -157,6 +163,22 @@ export class Backoff {
   delay_ms_async = defineInstanceFunction("ai.clients.Backoff.delay_ms", "async", ["self", "attempt", "f"]).bind(this) as (attempt: number, f: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
 }
 
+/**
+ * Map a classified failure to a failed-leg wire record (`selected: false`).
+ * Timing is best-effort: a failed leg's start was never measured, so it is
+ * null — never fabricated. `client_name` falls back to the failure's own
+ * provider when the wrapper does not know the member's id.
+ */
+export const _failed_leg_call = defineFunction("ai.clients._failed_leg_call", "sync", ["client_name", "f"]) as (client_name: string | null, f: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.events.LLMCall;
+
+/**
+ * Map a classified failure to a failed-leg wire record (`selected: false`).
+ * Timing is best-effort: a failed leg's start was never measured, so it is
+ * null — never fabricated. `client_name` falls back to the failure's own
+ * provider when the wrapper does not know the member's id.
+ */
+export const _failed_leg_call_async = defineFunction("ai.clients._failed_leg_call", "async", ["client_name", "f"]) as (client_name: string | null, f: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.events.LLMCall>;
+
 export class Retry {
   inner!: unknown;
   max_attempts!: number;
@@ -178,14 +200,14 @@ export class Retry {
  * @throws Cancelled
  * @throws CompilationError
  */
-  _attempt = defineInstanceFunction("ai.clients.Retry._attempt", "sync", ["self", "input", "remaining"]).bind(this) as (input: ai.ModelTurnInput, remaining: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
+  _attempt = defineInstanceFunction("ai.clients.Retry._attempt", "sync", ["self", "input", "remaining", "failed"]).bind(this) as (input: ai.ModelTurnInput, remaining: number, failed: ai.events.LLMCall[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
 /**
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
  * @throws CompilationError
  */
-  _attempt_async = defineInstanceFunction("ai.clients.Retry._attempt", "async", ["self", "input", "remaining"]).bind(this) as (input: ai.ModelTurnInput, remaining: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
+  _attempt_async = defineInstanceFunction("ai.clients.Retry._attempt", "async", ["self", "input", "remaining", "failed"]).bind(this) as (input: ai.ModelTurnInput, remaining: number, failed: ai.events.LLMCall[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
 }
 
 export class RoundRobin {
@@ -220,14 +242,14 @@ export class Fallback {
  * @throws Cancelled
  * @throws CompilationError
  */
-  _try = defineInstanceFunction("ai.clients.Fallback._try", "sync", ["self", "input", "index"]).bind(this) as (input: ai.ModelTurnInput, index: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
+  _try = defineInstanceFunction("ai.clients.Fallback._try", "sync", ["self", "input", "index", "failed"]).bind(this) as (input: ai.ModelTurnInput, index: number, failed: ai.events.LLMCall[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
 /**
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
  * @throws CompilationError
  */
-  _try_async = defineInstanceFunction("ai.clients.Fallback._try", "async", ["self", "input", "index"]).bind(this) as (input: ai.ModelTurnInput, index: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
+  _try_async = defineInstanceFunction("ai.clients.Fallback._try", "async", ["self", "input", "index", "failed"]).bind(this) as (input: ai.ModelTurnInput, index: number, failed: ai.events.LLMCall[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
 }
 
 export class StreamRelay {
@@ -235,17 +257,23 @@ export class StreamRelay {
   retry!: (arg0: unknown) => boolean;
   current!: ai.stream.TurnStream | null;
   emitted!: boolean;
+  pending_text!: string[];
+  pending_cursor!: number;
   terminal!: ai.stream.StreamEvent[];
   terminal_cursor!: number;
   finished!: boolean;
+  calls!: ai.events.LLMCall[];
   constructor(init: {
     open: () => ai.stream.TurnStream;
     retry: (arg0: unknown) => boolean;
     current: ai.stream.TurnStream | null;
     emitted: boolean;
+    pending_text: string[];
+    pending_cursor: number;
     terminal: ai.stream.StreamEvent[];
     terminal_cursor: number;
     finished: boolean;
+    calls: ai.events.LLMCall[];
   }) {
     Object.assign(this, init);
   }

@@ -1342,11 +1342,11 @@ export const _merge_adjacent_roles_async = defineFunction("aws.internal._merge_a
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const converse_request = defineFunction("aws.internal.converse_request", "sync", ["client", "input"], ["preview"]) as (client: vendor.aws.BedrockClient, input: ai.ModelTurnInput, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ConverseRequest;
 
@@ -1355,11 +1355,11 @@ export const converse_request = defineFunction("aws.internal.converse_request", 
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const converse_request_async = defineFunction("aws.internal.converse_request", "async", ["client", "input"], ["preview"]) as (client: vendor.aws.BedrockClient, input: ai.ModelTurnInput, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ConverseRequest>;
 
@@ -1407,12 +1407,12 @@ export const _apply_query_async = defineFunction("aws.internal._apply_query", "a
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const build_request = defineFunction("aws.internal.build_request", "sync", ["client", "input"], ["preview"]) as (client: vendor.aws.BedrockClient, input: ai.ModelTurnInput, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1424,12 +1424,12 @@ export const build_request = defineFunction("aws.internal.build_request", "sync"
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const build_request_async = defineFunction("aws.internal.build_request", "async", ["client", "input"], ["preview"]) as (client: vendor.aws.BedrockClient, input: ai.ModelTurnInput, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1649,7 +1649,6 @@ export const parse_response_async = defineFunction("aws.internal.parse_response"
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const invoke = defineFunction("aws.internal.invoke", "sync", ["client", "input"]) as (client: vendor.aws.BedrockClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
 
@@ -1659,6 +1658,5 @@ export const invoke = defineFunction("aws.internal.invoke", "sync", ["client", "
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const invoke_async = defineFunction("aws.internal.invoke", "async", ["client", "input"]) as (client: vendor.aws.BedrockClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;

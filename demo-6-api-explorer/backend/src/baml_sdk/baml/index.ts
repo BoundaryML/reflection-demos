@@ -166,11 +166,14 @@ export class Bigint {
   static parse_async = defineFunction("baml.Bigint.parse", "async", ["text"]) as (text: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<bigint>;
 /**
  * Returns a uniformly distributed random integer in the half-open range
- * `[lower, upper)`.
+ * `[lower, upper)`, drawn from `rng`.
  * 
  * Throws `InvalidArgument` if `lower >= upper` (the range would be empty).
- * Uses the host's cryptographic entropy source — no user-supplied RNG
- * handle.
+ * `rng` defaults to `random.SystemRandom`, the host's cryptographic entropy
+ * source; pass a seeded generator to make the draw reproducible.
+ * 
+ * Rejection sampling avoids modulo bias, so one result may consume multiple
+ * draws from `rng`.
  * 
  * # Examples
  * ```
@@ -179,17 +182,24 @@ export class Bigint {
  * bigint.random(0n, 1n)          // always 0  (single-element range)
  * bigint.random(5n, 5n)          // throws — empty range
  * bigint.random(10n, 0n)         // throws — lower > upper
+ * 
+ * // Reproducible: the same seed replays the same values.
+ * let rng = baml.random.Xoshiro256PlusPlus.new(seed = my_seed);
+ * bigint.random(0n, 10n, rng = rng)
  * ```
  * @throws InvalidArgument
  */
-  static random = defineFunction("baml.Bigint.random", "sync", ["lower", "upper"]) as (lower: bigint, upper: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => bigint;
+  static random = defineFunction("baml.Bigint.random", "sync", ["lower", "upper"], ["rng"]) as (lower: bigint, upper: bigint, $opts?: { rng?: unknown | undefined; $ctx?: BamlCallContext | undefined } | undefined) => bigint;
 /**
  * Returns a uniformly distributed random integer in the half-open range
- * `[lower, upper)`.
+ * `[lower, upper)`, drawn from `rng`.
  * 
  * Throws `InvalidArgument` if `lower >= upper` (the range would be empty).
- * Uses the host's cryptographic entropy source — no user-supplied RNG
- * handle.
+ * `rng` defaults to `random.SystemRandom`, the host's cryptographic entropy
+ * source; pass a seeded generator to make the draw reproducible.
+ * 
+ * Rejection sampling avoids modulo bias, so one result may consume multiple
+ * draws from `rng`.
  * 
  * # Examples
  * ```
@@ -198,10 +208,32 @@ export class Bigint {
  * bigint.random(0n, 1n)          // always 0  (single-element range)
  * bigint.random(5n, 5n)          // throws — empty range
  * bigint.random(10n, 0n)         // throws — lower > upper
+ * 
+ * // Reproducible: the same seed replays the same values.
+ * let rng = baml.random.Xoshiro256PlusPlus.new(seed = my_seed);
+ * bigint.random(0n, 10n, rng = rng)
  * ```
  * @throws InvalidArgument
  */
-  static random_async = defineFunction("baml.Bigint.random", "async", ["lower", "upper"]) as (lower: bigint, upper: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<bigint>;
+  static random_async = defineFunction("baml.Bigint.random", "async", ["lower", "upper"], ["rng"]) as (lower: bigint, upper: bigint, $opts?: { rng?: unknown | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<bigint>;
+/**
+ * Internal: number of bytes needed for one draw over `[lower, upper)`.
+ */
+  static _random_byte_count = defineFunction("baml.Bigint._random_byte_count", "sync", ["lower", "upper"]) as (lower: bigint, upper: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
+/**
+ * Internal: number of bytes needed for one draw over `[lower, upper)`.
+ */
+  static _random_byte_count_async = defineFunction("baml.Bigint._random_byte_count", "async", ["lower", "upper"]) as (lower: bigint, upper: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
+/**
+ * Internal: maps one draw onto `[lower, upper)`, returning `upper` when the
+ * draw must be rejected.
+ */
+  static _random_in_range = defineFunction("baml.Bigint._random_in_range", "sync", ["draw", "lower", "upper"]) as (draw: Uint8Array, lower: bigint, upper: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => bigint;
+/**
+ * Internal: maps one draw onto `[lower, upper)`, returning `upper` when the
+ * draw must be rejected.
+ */
+  static _random_in_range_async = defineFunction("baml.Bigint._random_in_range", "async", ["draw", "lower", "upper"]) as (draw: Uint8Array, lower: bigint, upper: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<bigint>;
 /**
  * Returns the absolute value of `self`.
  * # Examples
@@ -424,6 +456,8 @@ export class Bool {
   constructor(init: {}) {
     Object.assign(this, init);
   }
+  static random = defineFunction("baml.Bool.random", "sync", [], ["rng"]) as ($opts?: { rng?: unknown | undefined; $ctx?: BamlCallContext | undefined } | undefined) => boolean;
+  static random_async = defineFunction("baml.Bool.random", "async", [], ["rng"]) as ($opts?: { rng?: unknown | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<boolean>;
 }
 
 export const _compare_shim = defineFunction("baml._compare_shim", "sync", ["a", "b"], undefined, { typeParams: ["T"] }) as <T>(a: T, b: T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => number;
@@ -1054,8 +1088,52 @@ export class Float {
  * @throws ParseError
  */
   static parse_async = defineFunction("baml.Float.parse", "async", ["text"]) as (text: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
-  static random = defineFunction("baml.Float.random", "sync", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
-  static random_async = defineFunction("baml.Float.random", "async", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
+/**
+ * Returns a uniformly distributed random float in the half-open range
+ * `[0.0, 1.0)`, drawn from `rng`.
+ * 
+ * `rng` defaults to `random.SystemRandom`, the host's cryptographic entropy
+ * source; pass a seeded generator to make the draw reproducible. Each call
+ * consumes one `random_int` value and uses 53 random bits.
+ * 
+ * # Examples
+ * ```
+ * float.random()              // some x with 0 <= x < 1
+ * float.random() * 100.0      // some x with 0 <= x < 100
+ * 
+ * // Reproducible: the same seed replays the same values.
+ * let rng = baml.random.Xoshiro256PlusPlus.new(seed = my_seed);
+ * float.random(rng = rng)
+ * ```
+ */
+  static random = defineFunction("baml.Float.random", "sync", [], ["rng"]) as ($opts?: { rng?: unknown | undefined; $ctx?: BamlCallContext | undefined } | undefined) => number;
+/**
+ * Returns a uniformly distributed random float in the half-open range
+ * `[0.0, 1.0)`, drawn from `rng`.
+ * 
+ * `rng` defaults to `random.SystemRandom`, the host's cryptographic entropy
+ * source; pass a seeded generator to make the draw reproducible. Each call
+ * consumes one `random_int` value and uses 53 random bits.
+ * 
+ * # Examples
+ * ```
+ * float.random()              // some x with 0 <= x < 1
+ * float.random() * 100.0      // some x with 0 <= x < 100
+ * 
+ * // Reproducible: the same seed replays the same values.
+ * let rng = baml.random.Xoshiro256PlusPlus.new(seed = my_seed);
+ * float.random(rng = rng)
+ * ```
+ */
+  static random_async = defineFunction("baml.Float.random", "async", [], ["rng"]) as ($opts?: { rng?: unknown | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
+/**
+ * Internal: maps 53 bits of an `int` draw onto `[0.0, 1.0)`.
+ */
+  static _unit_from_draw = defineFunction("baml.Float._unit_from_draw", "sync", ["draw"]) as (draw: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
+/**
+ * Internal: maps 53 bits of an `int` draw onto `[0.0, 1.0)`.
+ */
+  static _unit_from_draw_async = defineFunction("baml.Float._unit_from_draw", "async", ["draw"]) as (draw: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
 /**
  * Returns π, the ratio of a circle's circumference to its diameter,
  * rounded to f64 precision (~15 decimal digits).
@@ -1754,6 +1832,11 @@ export const _trunc_to_int_async = defineFunction("baml._trunc_to_int", "async",
  * Arithmetic (`+`, `-`, `*`, `/`, unary `-`) that would leave this range
  * throws a catchable `baml.panics.IntegerOverflow` rather than wrapping or
  * crashing; `/` and `%` by zero throw `baml.panics.DivisionByZero`.
+ * 
+ * `<<` is the exception: it discards the bits shifted past the 63-bit width
+ * rather than throwing, so `1 << 62` is `int.min_value()` (bit 62 is the sign
+ * bit) and `1 << 63` is `0`. A negative count on either shift throws
+ * `baml.panics.NegativeBitShift`.
  */
 export class Int$stream {
   constructor(init: {}) {
@@ -1775,6 +1858,11 @@ export class Int$stream {
  * Arithmetic (`+`, `-`, `*`, `/`, unary `-`) that would leave this range
  * throws a catchable `baml.panics.IntegerOverflow` rather than wrapping or
  * crashing; `/` and `%` by zero throw `baml.panics.DivisionByZero`.
+ * 
+ * `<<` is the exception: it discards the bits shifted past the 63-bit width
+ * rather than throwing, so `1 << 62` is `int.min_value()` (bit 62 is the sign
+ * bit) and `1 << 63` is `0`. A negative count on either shift throws
+ * `baml.panics.NegativeBitShift`.
  */
 export class Int {
   constructor(init: {}) {
@@ -1828,14 +1916,13 @@ export class Int {
   static parse_async = defineFunction("baml.Int.parse", "async", ["text"]) as (text: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
 /**
  * Returns a uniformly distributed random integer in the half-open range
- * `[lower, upper)`.
+ * `[lower, upper)`, drawn from `rng`.
  * 
  * Throws `InvalidArgument` if `lower >= upper` (the range would be empty).
- * Uses the host's cryptographic entropy source — no user-supplied RNG
- * handle. The largest representable half-open range is supported (e.g.
- * `random(int.min_value(), int.max_value())` returns a value in
- * `[int.min_value(), int.max_value())`; `int.max_value()` itself is never
- * returned).
+ * `rng` defaults to `random.SystemRandom`, the host's cryptographic entropy
+ * source; pass a seeded generator to make the draw reproducible. The largest
+ * representable half-open range is supported. Rejection sampling avoids
+ * modulo bias, so one result may consume multiple values from `rng`.
  * 
  * # Examples
  * ```
@@ -1844,20 +1931,23 @@ export class Int {
  * int.random(0, 1)          // always 0  (single-element range)
  * int.random(5, 5)          // throws — empty range
  * int.random(10, 0)         // throws — lower > upper
+ * 
+ * // Reproducible: the same seed replays the same values.
+ * let rng = baml.random.Xoshiro256PlusPlus.new(seed = my_seed);
+ * int.random(0, 10, rng = rng)
  * ```
  * @throws InvalidArgument
  */
-  static random = defineFunction("baml.Int.random", "sync", ["lower", "upper"]) as (lower: number, upper: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
+  static random = defineFunction("baml.Int.random", "sync", ["lower", "upper"], ["rng"]) as (lower: number, upper: number, $opts?: { rng?: unknown | undefined; $ctx?: BamlCallContext | undefined } | undefined) => number;
 /**
  * Returns a uniformly distributed random integer in the half-open range
- * `[lower, upper)`.
+ * `[lower, upper)`, drawn from `rng`.
  * 
  * Throws `InvalidArgument` if `lower >= upper` (the range would be empty).
- * Uses the host's cryptographic entropy source — no user-supplied RNG
- * handle. The largest representable half-open range is supported (e.g.
- * `random(int.min_value(), int.max_value())` returns a value in
- * `[int.min_value(), int.max_value())`; `int.max_value()` itself is never
- * returned).
+ * `rng` defaults to `random.SystemRandom`, the host's cryptographic entropy
+ * source; pass a seeded generator to make the draw reproducible. The largest
+ * representable half-open range is supported. Rejection sampling avoids
+ * modulo bias, so one result may consume multiple values from `rng`.
  * 
  * # Examples
  * ```
@@ -1866,10 +1956,24 @@ export class Int {
  * int.random(0, 1)          // always 0  (single-element range)
  * int.random(5, 5)          // throws — empty range
  * int.random(10, 0)         // throws — lower > upper
+ * 
+ * // Reproducible: the same seed replays the same values.
+ * let rng = baml.random.Xoshiro256PlusPlus.new(seed = my_seed);
+ * int.random(0, 10, rng = rng)
  * ```
  * @throws InvalidArgument
  */
-  static random_async = defineFunction("baml.Int.random", "async", ["lower", "upper"]) as (lower: number, upper: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
+  static random_async = defineFunction("baml.Int.random", "async", ["lower", "upper"], ["rng"]) as (lower: number, upper: number, $opts?: { rng?: unknown | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
+/**
+ * Internal: maps one full-range draw onto `[lower, upper)`, returning
+ * `upper` when the draw must be rejected.
+ */
+  static _random_in_range = defineFunction("baml.Int._random_in_range", "sync", ["draw", "lower", "upper"]) as (draw: number, lower: number, upper: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
+/**
+ * Internal: maps one full-range draw onto `[lower, upper)`, returning
+ * `upper` when the draw must be rejected.
+ */
+  static _random_in_range_async = defineFunction("baml.Int._random_in_range", "async", ["draw", "lower", "upper"]) as (draw: number, lower: number, upper: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
 /**
  * Returns the largest representable `int`, equal to `2^62 - 1`
  * (`4_611_686_018_427_387_903`).
@@ -3481,6 +3585,16 @@ export class Uint8Array {
  */
   includes_async = defineInstanceFunction("baml.Uint8Array.includes", "async", ["self", "item"]).bind(this) as (item: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<boolean>;
 /**
+ * Returns the index of the first occurrence of `item`, or `null` when it
+ * is absent. An `item` outside the `u8` range is never present.
+ */
+  index_of = defineInstanceFunction("baml.Uint8Array.index_of", "sync", ["self", "item"]).bind(this) as (item: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number | null;
+/**
+ * Returns the index of the first occurrence of `item`, or `null` when it
+ * is absent. An `item` outside the `u8` range is never present.
+ */
+  index_of_async = defineInstanceFunction("baml.Uint8Array.index_of", "async", ["self", "item"]).bind(this) as (item: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number | null>;
+/**
  * Returns a new `uint8array` with the bytes in reverse order.
  */
   reverse = defineInstanceFunction("baml.Uint8Array.reverse", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Uint8Array;
@@ -3543,6 +3657,3 @@ export class Uint8Array {
   sort = defineInstanceFunction("baml.Uint8Array.sort", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
   sort_async = defineInstanceFunction("baml.Uint8Array.sort", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 }
-
-/** Erased runtime token for BAML interface `baml.AnyFunction`. */
-export const AnyFunction = Object.freeze({ __baml_interface_fqn__: "baml.AnyFunction" } as const);

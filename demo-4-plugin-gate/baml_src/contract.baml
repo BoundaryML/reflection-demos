@@ -31,6 +31,6 @@ function Summarize<T extends Summarizer>(document: string) -> T {
         ${document}
         </document>
 
-        ${ctx.output_format}
+        ${ctx.output_format()}
     `
 }

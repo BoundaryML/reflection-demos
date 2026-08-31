@@ -150,34 +150,34 @@ export const stringify_pretty = defineFunction("baml.json.stringify_pretty", "sy
 export const stringify_pretty_async = defineFunction("baml.json.stringify_pretty", "async", ["j"]) as (j: json, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 
 /**
+ * Serialize any BAML value to its canonical JSON string, dispatching on the
+ * value's runtime type and honoring `baml.ToJson` overrides at every depth.
+ * 
+ * Throws `JsonSerializationError` for non-representable types
+ * (`uint8array` without explicit encoding, function values, etc.).
  * @throws JsonSerializationError
  */
-export const to_string = defineFunction("baml.json.to_string", "sync", ["v"], undefined, { typeParams: ["T"] }) as <T>(v: T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => string;
+export const to_string = defineFunction("baml.json.to_string", "sync", ["value"]) as (value: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
+
+/**
+ * Serialize any BAML value to its canonical JSON string, dispatching on the
+ * value's runtime type and honoring `baml.ToJson` overrides at every depth.
+ * 
+ * Throws `JsonSerializationError` for non-representable types
+ * (`uint8array` without explicit encoding, function values, etc.).
+ * @throws JsonSerializationError
+ */
+export const to_string_async = defineFunction("baml.json.to_string", "async", ["value"]) as (value: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 
 /**
  * @throws JsonSerializationError
  */
-export const to_string_async = defineFunction("baml.json.to_string", "async", ["v"], undefined, { typeParams: ["T"] }) as <T>(v: T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<string>;
+export const to_json = defineFunction("baml.json.to_json", "sync", ["value"]) as (value: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => json;
 
 /**
  * @throws JsonSerializationError
  */
-export const encode = defineFunction("baml.json.encode", "sync", ["v"], undefined, { typeParams: ["T"] }) as <T>(v: T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => string;
-
-/**
- * @throws JsonSerializationError
- */
-export const encode_async = defineFunction("baml.json.encode", "async", ["v"], undefined, { typeParams: ["T"] }) as <T>(v: T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<string>;
-
-/**
- * @throws JsonSerializationError
- */
-export const to_json = defineFunction("baml.json.to_json", "sync", ["v"], undefined, { typeParams: ["T"] }) as <T>(v: T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => json;
-
-/**
- * @throws JsonSerializationError
- */
-export const to_json_async = defineFunction("baml.json.to_json", "async", ["v"], undefined, { typeParams: ["T"] }) as <T>(v: T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<json>;
+export const to_json_async = defineFunction("baml.json.to_json", "async", ["value"]) as (value: unknown, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<json>;
 
 /**
  * Serialize any BAML value `value` of type `T` to its `json` representation,
@@ -346,17 +346,15 @@ export const schema_async = defineFunction("baml.json.schema", "async", ["t"]) a
 
 /**
  * Serialize `v` to JSON text, honoring user-defined `to_json` overrides on
- * classes (via [`to_json<T>`]). Equivalent to `stringify(to_json<T>(v))`.
+ * classes (via [`to_json`]). Equivalent to [`to_string(v)`].
  * 
  * Use this from a host that wants to print a target's return value as JSON
- * while still respecting class-level `to_json` overrides. The structural
- * path is [`to_string<T>`], which walks fields directly and bypasses
- * overrides — appropriate when override behavior would be a problem.
+ * while still respecting class-level `to_json` overrides.
  * 
  * HACK: this is a thin shim that only exists so `baml_exec::dispatch`
  * has a stable named entry point to call from Rust (via
  * `engine.call_function("baml.json.serialize", ...)`). The composition
- * `stringify(to_json<T>(v))` is what callers would write inline anyway;
+ * `to_string(v)` is what callers would write inline anyway;
  * owning a wrapper function gives us one engine-side symbol to look up
  * instead of two, and a place to evolve the override semantics if they
  * drift. Remove this if the host gains a direct way to invoke generic
@@ -367,17 +365,15 @@ export const serialize = defineFunction("baml.json.serialize", "sync", ["v"], un
 
 /**
  * Serialize `v` to JSON text, honoring user-defined `to_json` overrides on
- * classes (via [`to_json<T>`]). Equivalent to `stringify(to_json<T>(v))`.
+ * classes (via [`to_json`]). Equivalent to [`to_string(v)`].
  * 
  * Use this from a host that wants to print a target's return value as JSON
- * while still respecting class-level `to_json` overrides. The structural
- * path is [`to_string<T>`], which walks fields directly and bypasses
- * overrides — appropriate when override behavior would be a problem.
+ * while still respecting class-level `to_json` overrides.
  * 
  * HACK: this is a thin shim that only exists so `baml_exec::dispatch`
  * has a stable named entry point to call from Rust (via
  * `engine.call_function("baml.json.serialize", ...)`). The composition
- * `stringify(to_json<T>(v))` is what callers would write inline anyway;
+ * `to_string(v)` is what callers would write inline anyway;
  * owning a wrapper function gives us one engine-side symbol to look up
  * instead of two, and a place to evolve the override semantics if they
  * drift. Remove this if the host gains a direct way to invoke generic

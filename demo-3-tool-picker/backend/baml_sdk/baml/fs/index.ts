@@ -36,9 +36,9 @@ export class DirEntry$stream {
 /**
  * A handle to an open file. Use `baml.fs.open` to obtain one.
  * 
- * Every `File.*` method can throw `InvalidArgument` when the underlying
- * handle has already been closed (e.g. by a prior `close()`); read-string
- * methods can additionally throw `ParseError` on non-UTF-8 input.
+ * Read and write operations on a closed handle throw `Io`. `text()`
+ * additionally throws `ParseError` when the remaining bytes are not valid
+ * UTF-8.
  */
 export class File$stream {
   _handle!: _BamlHandle;
@@ -67,9 +67,9 @@ export class MkdirOptions$stream {
 /**
  * A handle to an open file. Use `baml.fs.open` to obtain one.
  * 
- * Every `File.*` method can throw `InvalidArgument` when the underlying
- * handle has already been closed (e.g. by a prior `close()`); read-string
- * methods can additionally throw `ParseError` on non-UTF-8 input.
+ * Read and write operations on a closed handle throw `Io`. `text()`
+ * additionally throws `ParseError` when the remaining bytes are not valid
+ * UTF-8.
  */
 export class File {
   _handle!: _BamlHandle;
@@ -81,55 +81,25 @@ export class File {
 /**
  * Reads the entire remaining file contents as a UTF-8 string.
  * @throws Io
- * @throws InvalidArgument
  * @throws ParseError
  */
   text = defineInstanceFunction("baml.fs.File.text", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
 /**
  * Reads the entire remaining file contents as a UTF-8 string.
  * @throws Io
- * @throws InvalidArgument
  * @throws ParseError
  */
   text_async = defineInstanceFunction("baml.fs.File.text", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 /**
  * Reads the entire remaining file contents as raw bytes.
  * @throws Io
- * @throws InvalidArgument
  */
   bytes = defineInstanceFunction("baml.fs.File.bytes", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Uint8Array;
 /**
  * Reads the entire remaining file contents as raw bytes.
  * @throws Io
- * @throws InvalidArgument
  */
   bytes_async = defineInstanceFunction("baml.fs.File.bytes", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Uint8Array>;
-/**
- * Reads up to `n` bytes from the file and returns them as a UTF-8 string.
- * @throws Io
- * @throws InvalidArgument
- * @throws ParseError
- */
-  read = defineInstanceFunction("baml.fs.File.read", "sync", ["self", "n"]).bind(this) as (n: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
-/**
- * Reads up to `n` bytes from the file and returns them as a UTF-8 string.
- * @throws Io
- * @throws InvalidArgument
- * @throws ParseError
- */
-  read_async = defineInstanceFunction("baml.fs.File.read", "async", ["self", "n"]).bind(this) as (n: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
-/**
- * Reads up to `n` bytes from the file and returns them as raw bytes.
- * @throws Io
- * @throws InvalidArgument
- */
-  read_bytes = defineInstanceFunction("baml.fs.File.read_bytes", "sync", ["self", "n"]).bind(this) as (n: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Uint8Array;
-/**
- * Reads up to `n` bytes from the file and returns them as raw bytes.
- * @throws Io
- * @throws InvalidArgument
- */
-  read_bytes_async = defineInstanceFunction("baml.fs.File.read_bytes", "async", ["self", "n"]).bind(this) as (n: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Uint8Array>;
 /**
  * Closes the file handle, flushing any pending writes.
  * @throws Io
@@ -161,29 +131,17 @@ export class File {
  */
   seek_from_async = defineInstanceFunction("baml.fs.File.seek_from", "async", ["self", "whence", "offset"]).bind(this) as (whence: "start" | "current" | "end", offset: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
 /**
- * Writes `data` to the file at the current cursor position. Returns the number of bytes written.
+ * Writes all of `data` to the file at the current cursor position.
+ * Returns the encoded byte count.
  * @throws Io
- * @throws InvalidArgument
  */
-  write = defineInstanceFunction("baml.fs.File.write", "sync", ["self", "data"]).bind(this) as (data: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
+  write = defineInstanceFunction("baml.fs.File.write", "sync", ["self", "data"]).bind(this) as (data: string | Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
 /**
- * Writes `data` to the file at the current cursor position. Returns the number of bytes written.
+ * Writes all of `data` to the file at the current cursor position.
+ * Returns the encoded byte count.
  * @throws Io
- * @throws InvalidArgument
  */
-  write_async = defineInstanceFunction("baml.fs.File.write", "async", ["self", "data"]).bind(this) as (data: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
-/**
- * Writes raw bytes `data` to the file at the current cursor position. Returns the number of bytes written.
- * @throws Io
- * @throws InvalidArgument
- */
-  write_bytes = defineInstanceFunction("baml.fs.File.write_bytes", "sync", ["self", "data"]).bind(this) as (data: Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
-/**
- * Writes raw bytes `data` to the file at the current cursor position. Returns the number of bytes written.
- * @throws Io
- * @throws InvalidArgument
- */
-  write_bytes_async = defineInstanceFunction("baml.fs.File.write_bytes", "async", ["self", "data"]).bind(this) as (data: Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
+  write_async = defineInstanceFunction("baml.fs.File.write", "async", ["self", "data"]).bind(this) as (data: string | Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
 }
 
 /**

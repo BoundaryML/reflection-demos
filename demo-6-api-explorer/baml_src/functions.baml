@@ -115,5 +115,5 @@ function SummarizeText(text: string, tone: Tone) -> Summary {
 
 ${text}
 
-${ctx.output_format}`
+${ctx.output_format()}`
 }

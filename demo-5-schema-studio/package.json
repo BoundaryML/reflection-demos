@@ -14,7 +14,7 @@
     "baml:generate": "node -e \"console.log('demo-5: no client generation needed \u2014 the backend boots baml_src/ directly via BamlRuntime.initializeRuntime')\""
   },
   "dependencies": {
-    "@boundaryml/baml-bridge": "0.17.1-nightly.20260823.a",
+    "@boundaryml/baml-bridge": "0.18.1-nightly.20260828.a",
     "@codemirror/commands": "^6.7.1",
     "@codemirror/language": "^6.10.8",
     "@codemirror/lint": "^6.8.4",

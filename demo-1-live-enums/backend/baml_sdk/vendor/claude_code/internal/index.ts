@@ -91,6 +91,7 @@ export const allowed_mcp_tools_async = defineFunction("claude_code.internal.allo
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws ParseFailed
+ * @throws PromptRenderError
  * @throws Refused
  * @throws Timeout
  * @throws Unsupported
@@ -103,6 +104,7 @@ export const invoke = defineFunction("claude_code.internal.invoke", "sync", ["c"
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws ParseFailed
+ * @throws PromptRenderError
  * @throws Refused
  * @throws Timeout
  * @throws Unsupported

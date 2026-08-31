@@ -33,6 +33,7 @@ export class AnthropicClient$stream {
   request_body!: baml.json.json$stream | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     api_key: ai.Credential$stream | null;
@@ -49,6 +50,7 @@ export class AnthropicClient$stream {
     request_body: baml.json.json$stream | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -194,6 +196,7 @@ export class AnthropicClient {
   request_body!: baml.json.json | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     api_key: ai.Credential | null;
@@ -210,11 +213,12 @@ export class AnthropicClient {
     request_body: baml.json.json | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("anthropic.AnthropicClient.new", "sync", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "max_tokens", "temperature", "top_p", "top_k", "stop_sequences", "thinking", "tool_choice", "request_body", "headers", "query_params"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; max_tokens?: number | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; thinking?: ThinkingConfig | null | undefined; tool_choice?: ToolChoice | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => AnthropicClient;
-  static new_async = defineFunction("anthropic.AnthropicClient.new", "async", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "max_tokens", "temperature", "top_p", "top_k", "stop_sequences", "thinking", "tool_choice", "request_body", "headers", "query_params"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; max_tokens?: number | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; thinking?: ThinkingConfig | null | undefined; tool_choice?: ToolChoice | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<AnthropicClient>;
+  static new = defineFunction("anthropic.AnthropicClient.new", "sync", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "max_tokens", "temperature", "top_p", "top_k", "stop_sequences", "thinking", "tool_choice", "request_body", "headers", "query_params", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; max_tokens?: number | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; thinking?: ThinkingConfig | null | undefined; tool_choice?: ToolChoice | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => AnthropicClient;
+  static new_async = defineFunction("anthropic.AnthropicClient.new", "async", [], ["model", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "max_tokens", "temperature", "top_p", "top_k", "stop_sequences", "thinking", "tool_choice", "request_body", "headers", "query_params", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; max_tokens?: number | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; thinking?: ThinkingConfig | null | undefined; tool_choice?: ToolChoice | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<AnthropicClient>;
 /**
  * @throws InvalidRequest
  * @throws Io

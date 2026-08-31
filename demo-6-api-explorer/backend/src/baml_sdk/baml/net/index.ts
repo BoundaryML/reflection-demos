@@ -129,68 +129,6 @@ export class TcpStream {
  */
   static _connect_async = defineFunction("baml.net.TcpStream._connect", "async", ["addr", "timeout_nanos"]) as (addr: string, timeout_nanos: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<TcpStream>;
 /**
- * Reads the next available bytes from the stream. Blocks until data arrives.
- * Returns an empty `uint8array` once the peer has closed the connection (EOF).
- * 
- * `timeout` bounds the wait for data; `null` (the default) blocks
- * indefinitely. On expiry this throws `root.errors.Timeout` and the stream
- * remains usable for a subsequent read.
- * @throws Io
- * @throws Timeout
- */
-  read = defineInstanceFunction("baml.net.TcpStream.read", "sync", ["self"], ["timeout"]).bind(this) as ($opts?: { timeout?: baml.time.Duration | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Uint8Array;
-/**
- * Reads the next available bytes from the stream. Blocks until data arrives.
- * Returns an empty `uint8array` once the peer has closed the connection (EOF).
- * 
- * `timeout` bounds the wait for data; `null` (the default) blocks
- * indefinitely. On expiry this throws `root.errors.Timeout` and the stream
- * remains usable for a subsequent read.
- * @throws Io
- * @throws Timeout
- */
-  read_async = defineInstanceFunction("baml.net.TcpStream.read", "async", ["self"], ["timeout"]).bind(this) as ($opts?: { timeout?: baml.time.Duration | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<Uint8Array>;
-/**
- * @throws Io
- * @throws Timeout
- */
-  _read = defineInstanceFunction("baml.net.TcpStream._read", "sync", ["self", "timeout_nanos"]).bind(this) as (timeout_nanos: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Uint8Array;
-/**
- * @throws Io
- * @throws Timeout
- */
-  _read_async = defineInstanceFunction("baml.net.TcpStream._read", "async", ["self", "timeout_nanos"]).bind(this) as (timeout_nanos: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Uint8Array>;
-/**
- * Writes `data` to the stream. Blocks until every byte has been flushed.
- * 
- * `timeout` bounds the flush; `null` (the default) blocks indefinitely. On
- * expiry this throws `root.errors.Timeout`; an unknown amount of `data` may
- * already have been written.
- * @throws Io
- * @throws Timeout
- */
-  write = defineInstanceFunction("baml.net.TcpStream.write", "sync", ["self", "data"], ["timeout"]).bind(this) as (data: Uint8Array, $opts?: { timeout?: baml.time.Duration | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => null;
-/**
- * Writes `data` to the stream. Blocks until every byte has been flushed.
- * 
- * `timeout` bounds the flush; `null` (the default) blocks indefinitely. On
- * expiry this throws `root.errors.Timeout`; an unknown amount of `data` may
- * already have been written.
- * @throws Io
- * @throws Timeout
- */
-  write_async = defineInstanceFunction("baml.net.TcpStream.write", "async", ["self", "data"], ["timeout"]).bind(this) as (data: Uint8Array, $opts?: { timeout?: baml.time.Duration | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
-/**
- * @throws Io
- * @throws Timeout
- */
-  _write = defineInstanceFunction("baml.net.TcpStream._write", "sync", ["self", "data", "timeout_nanos"]).bind(this) as (data: Uint8Array, timeout_nanos: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
-/**
- * @throws Io
- * @throws Timeout
- */
-  _write_async = defineInstanceFunction("baml.net.TcpStream._write", "async", ["self", "data", "timeout_nanos"]).bind(this) as (data: Uint8Array, timeout_nanos: bigint, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
-/**
  * Closes the connection.
  * @throws Io
  */

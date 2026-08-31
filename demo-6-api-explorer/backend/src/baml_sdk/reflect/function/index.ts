@@ -43,9 +43,17 @@ export class Parameter$stream {
 /**
  * A function-kind view of a `type` value. Throws are intentionally not part
  * of the function reflection surface.
+ *
+ * Attributes:
+ *   _ty: The wrapped `type` value. Private by invariant: reflection natives are
+ *     its only readers, and each kind method panics if the held type no longer
+ *     classifies as this view's kind.
  */
 export class Type$stream {
-  constructor(init: {}) {
+  _ty!: unknown;
+  constructor(init: {
+    _ty: unknown;
+  }) {
     Object.assign(this, init);
   }
 }
@@ -53,9 +61,17 @@ export class Type$stream {
 /**
  * A function-kind view of a `type` value. Throws are intentionally not part
  * of the function reflection surface.
+ *
+ * Attributes:
+ *   _ty: The wrapped `type` value. Private by invariant: reflection natives are
+ *     its only readers, and each kind method panics if the held type no longer
+ *     classifies as this view's kind.
  */
 export class Type {
-  constructor(init: {}) {
+  _ty!: BamlType;
+  constructor(init: {
+    _ty: BamlType;
+  }) {
     Object.assign(this, init);
   }
   params = defineInstanceFunction("reflect.function.Type.params", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Parameter[];

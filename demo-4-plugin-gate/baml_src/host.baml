@@ -87,7 +87,7 @@ function plugin_host() -> null {
             }
         };
 
-        baml.io.println(baml.json.encode(reply))
+        baml.io.println(baml.json.to_string(reply))
     }
     null
 }

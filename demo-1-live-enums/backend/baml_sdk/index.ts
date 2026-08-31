@@ -66,7 +66,7 @@ export class CategoryInput {
  * @throws Cancelled
  * @throws CompilationError
  */
-export const classify = defineFunction("user.classify", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
+export const classify = defineFunction("user.classify", "sync", ["ticket_text"], ["on_event"], { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
@@ -76,7 +76,7 @@ export const classify = defineFunction("user.classify", "sync", ["ticket_text"],
  * @throws Cancelled
  * @throws CompilationError
  */
-export const classify_async = defineFunction("user.classify", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
+export const classify_async = defineFunction("user.classify", "async", ["ticket_text"], ["on_event"], { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
@@ -112,6 +112,7 @@ export const classify$parse_async = defineFunction("user.classify$parse", "async
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws CompilationError
  */
@@ -119,6 +120,7 @@ export const classify$render_prompt = defineFunction("user.classify$render_promp
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws CompilationError
  */
@@ -132,7 +134,7 @@ export const classify$render_prompt_async = defineFunction("user.classify$render
  * @throws Cancelled
  * @throws CompilationError
  */
-export const classify$stream = defineFunction("user.classify$stream", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.stream.Stream<T | null, T>;
+export const classify$stream = defineFunction("user.classify$stream", "sync", ["ticket_text"], ["on_event"], { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.stream.Stream<T | null, T>;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
@@ -142,7 +144,7 @@ export const classify$stream = defineFunction("user.classify$stream", "sync", ["
  * @throws Cancelled
  * @throws CompilationError
  */
-export const classify$stream_async = defineFunction("user.classify$stream", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.stream.Stream<T | null, T>>;
+export const classify$stream_async = defineFunction("user.classify$stream", "async", ["ticket_text"], ["on_event"], { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.stream.Stream<T | null, T>>;
 
 /**
  * @throws InvalidArgument

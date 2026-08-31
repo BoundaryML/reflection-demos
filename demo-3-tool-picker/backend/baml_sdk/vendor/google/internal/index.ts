@@ -859,11 +859,11 @@ export const google_lower_journal_async = defineFunction("google.internal.google
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const gemini_build_body = defineFunction("google.internal.gemini_build_body", "sync", ["input", "client_id", "generation_config", "safety_settings", "request_body"], ["fetch_url", "preview"]) as (input: ai.ModelTurnInput, client_id: string, generation_config: GmGenerationConfig | null, safety_settings: vendor.google.SafetySetting[] | null, request_body: baml.json.json | null, $opts?: { fetch_url?: boolean | undefined; preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => string;
 
@@ -871,11 +871,11 @@ export const gemini_build_body = defineFunction("google.internal.gemini_build_bo
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const gemini_build_body_async = defineFunction("google.internal.gemini_build_body", "async", ["input", "client_id", "generation_config", "safety_settings", "request_body"], ["fetch_url", "preview"]) as (input: ai.ModelTurnInput, client_id: string, generation_config: GmGenerationConfig | null, safety_settings: vendor.google.SafetySetting[] | null, request_body: baml.json.json | null, $opts?: { fetch_url?: boolean | undefined; preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 
@@ -957,12 +957,12 @@ export const _gm_decode_batch_async = defineFunction("google.internal._gm_decode
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const google_render = defineFunction("google.internal.google_render", "sync", ["c", "input"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -970,12 +970,12 @@ export const google_render = defineFunction("google.internal.google_render", "sy
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const google_render_async = defineFunction("google.internal.google_render", "async", ["c", "input"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -985,12 +985,12 @@ export const google_render_async = defineFunction("google.internal.google_render
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const google_preview = defineFunction("google.internal.google_preview", "sync", ["c", "input"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1000,12 +1000,12 @@ export const google_preview = defineFunction("google.internal.google_preview", "
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const google_preview_async = defineFunction("google.internal.google_preview", "async", ["c", "input"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1013,12 +1013,12 @@ export const google_preview_async = defineFunction("google.internal.google_previ
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _google_request = defineFunction("google.internal._google_request", "sync", ["c", "input", "stream"], ["preview"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1026,12 +1026,12 @@ export const _google_request = defineFunction("google.internal._google_request",
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _google_request_async = defineFunction("google.internal._google_request", "async", ["c", "input", "stream"], ["preview"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1041,7 +1041,6 @@ export const _google_request_async = defineFunction("google.internal._google_req
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const gemini_invoke = defineFunction("google.internal.gemini_invoke", "sync", ["c", "input"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
 
@@ -1051,7 +1050,6 @@ export const gemini_invoke = defineFunction("google.internal.gemini_invoke", "sy
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const gemini_invoke_async = defineFunction("google.internal.gemini_invoke", "async", ["c", "input"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
 
@@ -1074,7 +1072,6 @@ export const _google_decode_batch_async = defineFunction("google.internal._googl
  * @throws Timeout
  * @throws JsonSerializationError
  * @throws Cancelled
- * @throws CompilationError
  */
 export const gemini_invoke_stream = defineFunction("google.internal.gemini_invoke_stream", "sync", ["c", "input"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.stream.TurnStream;
 
@@ -1085,7 +1082,6 @@ export const gemini_invoke_stream = defineFunction("google.internal.gemini_invok
  * @throws Timeout
  * @throws JsonSerializationError
  * @throws Cancelled
- * @throws CompilationError
  */
 export const gemini_invoke_stream_async = defineFunction("google.internal.gemini_invoke_stream", "async", ["c", "input"]) as (c: vendor.google.GoogleClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.stream.TurnStream>;
 
@@ -1259,11 +1255,11 @@ export const vertex_url_async = defineFunction("google.internal.vertex_url", "as
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _vertex_anthropic_body = defineFunction("google.internal._vertex_anthropic_body", "sync", ["c", "input", "stream"], ["preview"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => string;
 
@@ -1271,11 +1267,11 @@ export const _vertex_anthropic_body = defineFunction("google.internal._vertex_an
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _vertex_anthropic_body_async = defineFunction("google.internal._vertex_anthropic_body", "async", ["c", "input", "stream"], ["preview"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 
@@ -1283,13 +1279,13 @@ export const _vertex_anthropic_body_async = defineFunction("google.internal._ver
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws AccessError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const vertex_render = defineFunction("google.internal.vertex_render", "sync", ["c", "input"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1297,13 +1293,13 @@ export const vertex_render = defineFunction("google.internal.vertex_render", "sy
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws AccessError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const vertex_render_async = defineFunction("google.internal.vertex_render", "async", ["c", "input"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1313,13 +1309,13 @@ export const vertex_render_async = defineFunction("google.internal.vertex_render
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws AccessError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const vertex_preview = defineFunction("google.internal.vertex_preview", "sync", ["c", "input"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1329,13 +1325,13 @@ export const vertex_preview = defineFunction("google.internal.vertex_preview", "
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws AccessError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const vertex_preview_async = defineFunction("google.internal.vertex_preview", "async", ["c", "input"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1343,13 +1339,13 @@ export const vertex_preview_async = defineFunction("google.internal.vertex_previ
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws AccessError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _vertex_request = defineFunction("google.internal._vertex_request", "sync", ["c", "input", "stream"], ["preview"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => baml.http.Request;
 
@@ -1357,13 +1353,13 @@ export const _vertex_request = defineFunction("google.internal._vertex_request",
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws AccessError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const _vertex_request_async = defineFunction("google.internal._vertex_request", "async", ["c", "input", "stream"], ["preview"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, stream: boolean, $opts?: { preview?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.http.Request>;
 
@@ -1374,7 +1370,6 @@ export const _vertex_request_async = defineFunction("google.internal._vertex_req
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const vertex_invoke = defineFunction("google.internal.vertex_invoke", "sync", ["c", "input"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.ModelTurn;
 
@@ -1385,7 +1380,6 @@ export const vertex_invoke = defineFunction("google.internal.vertex_invoke", "sy
  * @throws ParseError
  * @throws Timeout
  * @throws JsonSerializationError
- * @throws CompilationError
  */
 export const vertex_invoke_async = defineFunction("google.internal.vertex_invoke", "async", ["c", "input"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.ModelTurn>;
 
@@ -1409,7 +1403,6 @@ export const _vertex_decode_batch_async = defineFunction("google.internal._verte
  * @throws Timeout
  * @throws JsonSerializationError
  * @throws Cancelled
- * @throws CompilationError
  */
 export const vertex_invoke_stream = defineFunction("google.internal.vertex_invoke_stream", "sync", ["c", "input"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.stream.TurnStream;
 
@@ -1421,6 +1414,5 @@ export const vertex_invoke_stream = defineFunction("google.internal.vertex_invok
  * @throws Timeout
  * @throws JsonSerializationError
  * @throws Cancelled
- * @throws CompilationError
  */
 export const vertex_invoke_stream_async = defineFunction("google.internal.vertex_invoke_stream", "async", ["c", "input"]) as (c: vendor.google.VertexClient, input: ai.ModelTurnInput, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.stream.TurnStream>;

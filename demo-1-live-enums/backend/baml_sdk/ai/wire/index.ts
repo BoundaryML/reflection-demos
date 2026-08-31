@@ -34,6 +34,23 @@ export class ResolvedMedia$stream {
 }
 
 /**
+ * `send_as_with_wire`'s result: the decoded envelope plus the wire record.
+ */
+export class SentAs$stream<T> {
+  value!: T | null;
+  call!: ai.events.LLMCall$stream | null;
+  $types?: { T?: BamlType | BamlTypeToken };
+  constructor(init: {
+    value: T | null;
+    call: ai.events.LLMCall$stream | null;
+    $types?: { T?: BamlType | BamlTypeToken };
+  }) {
+    Object.assign(this, init);
+  }
+  static readonly $generic = ["T"] as const;
+}
+
+/**
  * Collapse a client's `root.Credential?` option to the value to put on the
  * wire, reading the environment at REQUEST time (never at construction).
  * 
@@ -110,6 +127,24 @@ export const redact_url_secrets = defineFunction("ai.wire.redact_url_secrets", "
 export const redact_url_secrets_async = defineFunction("ai.wire.redact_url_secrets", "async", ["text"]) as (text: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 
 /**
+ * Replace credential-bearing request headers with "REDACTED" before a
+ * request snapshot rides an `ai.events.LLMCall`. Unlike previews, the
+ * request `invoke` actually sends DOES carry auth headers (`x-api-key`,
+ * `authorization`, Azure's `api-key`, ...), so captured requests must be
+ * scrubbed. Matching is case-insensitive; values are replaced, names kept.
+ */
+export const redact_request_headers = defineFunction("ai.wire.redact_request_headers", "sync", ["headers"]) as (headers: { [key: string]: string }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => { [key: string]: string };
+
+/**
+ * Replace credential-bearing request headers with "REDACTED" before a
+ * request snapshot rides an `ai.events.LLMCall`. Unlike previews, the
+ * request `invoke` actually sends DOES carry auth headers (`x-api-key`,
+ * `authorization`, Azure's `api-key`, ...), so captured requests must be
+ * scrubbed. Matching is case-insensitive; values are replaced, names kept.
+ */
+export const redact_request_headers_async = defineFunction("ai.wire.redact_request_headers", "async", ["headers"]) as (headers: { [key: string]: string }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<{ [key: string]: string }>;
+
+/**
  * The environment variables a credential chain consulted, as a readable list,
  * for the "no credential configured" error a client raises when the whole
  * chain came back empty.
@@ -144,6 +179,47 @@ export const send_as = defineFunction("ai.wire.send_as", "sync", ["req", "provid
  * @throws Timeout
  */
 export const send_as_async = defineFunction("ai.wire.send_as", "async", ["req", "provider"], ["request_timeout_ms"], { typeParams: ["T"] }) as <T>(req: baml.http.Request, provider: string, $opts?: { request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
+
+/**
+ * `send_as_with_wire`'s result: the decoded envelope plus the wire record.
+ */
+export class SentAs<T> {
+  value!: T;
+  call!: ai.events.LLMCall;
+  $types?: { T?: BamlType | BamlTypeToken };
+  constructor(init: {
+    value: T;
+    call: ai.events.LLMCall;
+    $types?: { T?: BamlType | BamlTypeToken };
+  }) {
+    Object.assign(this, init);
+  }
+  static readonly $generic = ["T"] as const;
+}
+
+/**
+ * Same contract as `send_as`, plus the LLMCall wire record. On a non-2xx or
+ * transport failure this still throws the same classified error `send_as`
+ * throws — composite clients build failed-leg records from the error itself
+ * (`_failed_leg_call`), so no record accompanies a throw. `capture_wire`
+ * gates the request/response bodies; status, headers, and timing are always
+ * recorded. The request URL and captured response body are redacted with
+ * `redact_url_secrets` before storing.
+ * @throws Timeout
+ */
+export const send_as_with_wire = defineFunction("ai.wire.send_as_with_wire", "sync", ["req", "provider", "client_name"], ["capture_wire", "request_timeout_ms"], { typeParams: ["T"] }) as <T>(req: baml.http.Request, provider: string, client_name: string, $opts?: { capture_wire?: boolean | undefined; request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => SentAs<T>;
+
+/**
+ * Same contract as `send_as`, plus the LLMCall wire record. On a non-2xx or
+ * transport failure this still throws the same classified error `send_as`
+ * throws — composite clients build failed-leg records from the error itself
+ * (`_failed_leg_call`), so no record accompanies a throw. `capture_wire`
+ * gates the request/response bodies; status, headers, and timing are always
+ * recorded. The request URL and captured response body are redacted with
+ * `redact_url_secrets` before storing.
+ * @throws Timeout
+ */
+export const send_as_with_wire_async = defineFunction("ai.wire.send_as_with_wire", "async", ["req", "provider", "client_name"], ["capture_wire", "request_timeout_ms"], { typeParams: ["T"] }) as <T>(req: baml.http.Request, provider: string, client_name: string, $opts?: { capture_wire?: boolean | undefined; request_timeout_ms?: number | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<SentAs<T>>;
 
 /**
  * @throws CompilationError

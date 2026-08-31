@@ -791,8 +791,8 @@ export class CsvReader {
  * (internal) Pull the next chunk from the backing file, or mark EOF for
  * in-memory sources. IO errors are stream-scoped and fatal: the reader is
  * marked exhausted before the throw, so subsequent `next()` calls return
- * `baml.iter.Done`.
- * @throws CsvError
+ * `baml.iter.Done`. A closed handle arrives as an IO error because
+ * `baml.io.Read` has no separate closed-handle error channel.
  * @throws Io
  */
   _read_chunk = defineInstanceFunction("baml.csv.CsvReader._read_chunk", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
@@ -800,8 +800,8 @@ export class CsvReader {
  * (internal) Pull the next chunk from the backing file, or mark EOF for
  * in-memory sources. IO errors are stream-scoped and fatal: the reader is
  * marked exhausted before the throw, so subsequent `next()` calls return
- * `baml.iter.Done`.
- * @throws CsvError
+ * `baml.iter.Done`. A closed handle arrives as an IO error because
+ * `baml.io.Read` has no separate closed-handle error channel.
  * @throws Io
  */
   _read_chunk_async = defineInstanceFunction("baml.csv.CsvReader._read_chunk", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;

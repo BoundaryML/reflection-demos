@@ -15,7 +15,7 @@ function Extract<T>(document: string) -> T {
         ${role("user")}
         ${document}
 
-        ${ctx.output_format}
+        ${ctx.output_format()}
     `
 }
 
@@ -27,11 +27,10 @@ function Draft(description: string) -> string {
         Write BAML class declarations for the extraction task described below.
 
         Rules:
-        - Declare exactly ONE class: class Name { ... }
+        - A class is: class Name { ... }
         - A field is a name, a space, and a type — one per line, no colon.
-        - Types are string, int, float, bool, an array T[], or an optional T?.
-          Never declare or reference another class; represent repeated or
-          structured data as a string[] of short phrases.
+        - Types are string, int, float, bool, an array T[], an optional T?, or
+          another class you declare. Declare the main record first.
         - Make a field optional (T?) unless a document of this kind always
           states it plainly.
         - Add @description("...") after a field when its name alone is ambiguous.

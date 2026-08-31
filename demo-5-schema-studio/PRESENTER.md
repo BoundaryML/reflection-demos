@@ -20,7 +20,8 @@ Name the incumbent first, or this reads as a JSON-schema form builder:
 
 ## Beat 1 — the loop (20s)
 
-The freight-invoice schema is preloaded; its class card sits on the right.
+The freight-invoice schema is preloaded; two class cards sit on the right —
+`Invoice` and the `LineItem` it nests.
 Point at the pill: **compiled in ~20 ms**.
 
 > "That's the whole compiler, not a linter. Every pause in typing is a full
@@ -49,9 +50,10 @@ Extract tab; the invoice text is pre-pasted. Hit **Extract into Invoice**.
 > "The output type of that model call is the class as of two seconds ago —
 > `paid` included. Nothing was regenerated, nothing redeployed."
 
-The filled table renders per-field, typed — `paid` comes back empty, because
-the document doesn't say and the field is optional. That's the parser being
-honest, not a miss.
+The filled table renders per-field, typed — line items parsed into `LineItem`
+objects that didn't exist a minute ago, and `paid` empty because the document
+doesn't say and the field is optional. That's the parser being honest, not a
+miss.
 
 ## Beat 4 — show what the model saw (20s)
 
@@ -74,10 +76,9 @@ typed**. If it made a mistake, it gets a squiggle like anyone else.
 
 Close the loop: Extract tab → click the **Clinical visit note** sample-doc
 chip (it fills only the document, never your schema) → Extract. A chart note,
-pulled apart by a schema the model wrote a moment ago. All the modal's chips
-are curated to draft schemas that extract cleanly, and the Draft prompt
-forces a single flat class with optionals — audience-shouted descriptions
-are safe too.
+pulled apart by a schema the model wrote a moment ago. The Draft prompt
+steers toward optionals for maybe-absent fields, so audience-shouted
+descriptions extract cleanly too — nested classes included.
 
 ## The code reveal (30s, in your editor)
 
@@ -107,11 +108,6 @@ to start from the diagnostics beat.
 - **The pill reads higher than ~20 ms** — machine-dependent, and fine: anything
   inside the editor's 220 ms debounce feels identical. Seconds instead of
   milliseconds means a version-skewed bridge — match versions via `BAML_VERSION`.
-- **Extract fails with `host-supplied type names unknown declaration`** — the
-  extraction target references another class from the compiled schema (e.g.
-  `line_items LineItem[]`). At the pinned canary a compiled sibling class
-  can't cross the model-call seam (fixed upstream in baml #4577); keep the
-  extraction target self-contained — arrays of strings/numbers are fine.
 - **Extract/Draft fail with a key error** — the backend has no
   `ANTHROPIC_API_KEY`; relaunch via `infisical run -- pnpm dev`. Compiling
   never needs a key, so the editor loop keeps working regardless.

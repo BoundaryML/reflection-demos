@@ -48,10 +48,12 @@ export class InvalidRequest$stream {
 export class NetworkFailure$stream {
   provider!: string | null;
   detail!: string | null;
+  status_code!: number | null;
   raw_body!: string | null;
   constructor(init: {
     provider: string | null;
     detail: string | null;
+    status_code: number | null;
     raw_body: string | null;
   }) {
     Object.assign(this, init);
@@ -80,13 +82,26 @@ export class PreviewUnsupported$stream {
   }
 }
 
+export class PromptRenderError$stream {
+  message!: string | null;
+  cause!: unknown;
+  constructor(init: {
+    message: string | null;
+    cause: unknown;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
 export class RateLimited$stream {
   provider!: string | null;
   retry_after_ms!: number | null;
+  status_code!: number | null;
   raw_body!: string | null;
   constructor(init: {
     provider: string | null;
     retry_after_ms: number | null;
+    status_code: number | null;
     raw_body: string | null;
   }) {
     Object.assign(this, init);
@@ -164,10 +179,12 @@ export const normalize_invoke_async = defineFunction("ai.errors.normalize_invoke
 export class RateLimited {
   provider!: string;
   retry_after_ms!: number | null;
+  status_code!: number | null;
   raw_body!: string | null;
   constructor(init: {
     provider: string;
     retry_after_ms: number | null;
+    status_code: number | null;
     raw_body: string | null;
   }) {
     Object.assign(this, init);
@@ -177,10 +194,12 @@ export class RateLimited {
 export class NetworkFailure {
   provider!: string;
   detail!: string;
+  status_code!: number | null;
   raw_body!: string | null;
   constructor(init: {
     provider: string;
     detail: string;
+    status_code: number | null;
     raw_body: string | null;
   }) {
     Object.assign(this, init);
@@ -197,6 +216,17 @@ export class InvalidRequest {
     status_code: number | null;
     detail: string;
     raw_body: string | null;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
+export class PromptRenderError {
+  message!: string;
+  cause!: unknown;
+  constructor(init: {
+    message: string;
+    cause: unknown;
   }) {
     Object.assign(this, init);
   }

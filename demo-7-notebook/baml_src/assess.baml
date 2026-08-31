@@ -20,7 +20,7 @@ function Assess(ticket: Ticket) -> Assessment {
 
     ${ticket.body}
 
-    ${ctx.output_format}`
+    ${ctx.output_format()}`
 }
 
 /// The prompt the model would actually see. Rendering it costs nothing and

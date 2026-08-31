@@ -28,6 +28,7 @@ export class AiGatewayImageClient$stream {
   request_body!: baml.json.json$stream | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     api_key: ai.Credential$stream | null;
@@ -39,6 +40,7 @@ export class AiGatewayImageClient$stream {
     request_body: baml.json.json$stream | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -55,6 +57,7 @@ export class AiGatewayImageClient {
   request_body!: baml.json.json | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     api_key: ai.Credential | null;
@@ -66,11 +69,12 @@ export class AiGatewayImageClient {
     request_body: baml.json.json | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("vercel.AiGatewayImageClient.new", "sync", [], ["model", "api_key", "base_url", "n", "size", "aspect_ratio", "seed", "request_body", "headers", "query_params"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; n?: number | null | undefined; size?: string | null | undefined; aspect_ratio?: string | null | undefined; seed?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => AiGatewayImageClient;
-  static new_async = defineFunction("vercel.AiGatewayImageClient.new", "async", [], ["model", "api_key", "base_url", "n", "size", "aspect_ratio", "seed", "request_body", "headers", "query_params"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; n?: number | null | undefined; size?: string | null | undefined; aspect_ratio?: string | null | undefined; seed?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<AiGatewayImageClient>;
+  static new = defineFunction("vercel.AiGatewayImageClient.new", "sync", [], ["model", "api_key", "base_url", "n", "size", "aspect_ratio", "seed", "request_body", "headers", "query_params", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; n?: number | null | undefined; size?: string | null | undefined; aspect_ratio?: string | null | undefined; seed?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => AiGatewayImageClient;
+  static new_async = defineFunction("vercel.AiGatewayImageClient.new", "async", [], ["model", "api_key", "base_url", "n", "size", "aspect_ratio", "seed", "request_body", "headers", "query_params", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; n?: number | null | undefined; size?: string | null | undefined; aspect_ratio?: string | null | undefined; seed?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<AiGatewayImageClient>;
 /**
  * @throws InvalidRequest
  * @throws Io

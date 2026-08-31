@@ -279,6 +279,7 @@ export const _gw_images_headers_async = defineFunction("vercel.internal._gw_imag
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError
@@ -291,6 +292,7 @@ export const gateway_images_render = defineFunction("vercel.internal.gateway_ima
  * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws PreviewUnsupported
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws Io
  * @throws ParseError

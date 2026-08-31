@@ -43,11 +43,13 @@ reflection enables in an ENGAGING product-shaped way, then reveal the BAML code 
   …) — never guess the stdlib.
 - Client decl: `client C = openai.ResponsesClient.new(model=..., api_key=..., base_url=...);`
   LLM companions are $-spelled: `Fn$render_prompt<...>(...)`, `Fn$parse<...>(...)`.
-- Field reads: narrow to `baml.AnyClass` (baml #4491 — every class instance implements
-  it, minted classes included) and read method-style: `let v: baml.AnyClass = x else
-  { throw ... }; v.get<T>(name)` (returns `T?`). The older `instance_from` design was
-  superseded by this (#4466); the free function `reflect.class.get_field<T>(obj, name)`
-  also still works.
+- Field reads: narrow to `reflect.AnyClass` (#4491; moved from `baml.AnyClass` to
+  `reflect` in #4580) and read method-style: `let v: reflect.AnyClass = x else
+  { throw ... }; v.get<T>(name)` (returns `T?`). The free function
+  `reflect.class.get_field<T>(obj, name)` also still works. JSON encoding is
+  `baml.json.to_string(v)` (`baml.json.encode` was removed), prompts inject
+  `${ctx.output_format()}` (a call), and `throws unknown` declarations are
+  rejected — omit them; BAML infers thrown types.
 
 ## LLM keys & mock mode (MANDATORY)
 - Backends read `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` from env (document in README).

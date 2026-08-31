@@ -74,6 +74,9 @@ export * as internal from "./internal/index.js";
  *     the signature. Names are lowercased; a name the client already sets is
  *     replaced, not duplicated.
  *   query_params: Extra query parameters, appended (and percent-encoded) BEFORE signing.
+ *   capture_wire: Record request/response bodies on the LLMCall wire records delivered
+ *     through on_event. Status, headers, and timing are always recorded; this
+ *     flag only gates the bodies.
  */
 export class BedrockClient$stream {
   model!: string | null;
@@ -94,6 +97,7 @@ export class BedrockClient$stream {
   request_body!: baml.json.json$stream | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     region: string | null;
@@ -113,6 +117,7 @@ export class BedrockClient$stream {
     request_body: baml.json.json$stream | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -175,6 +180,9 @@ export class BedrockClient$stream {
  *     the signature. Names are lowercased; a name the client already sets is
  *     replaced, not duplicated.
  *   query_params: Extra query parameters, appended (and percent-encoded) BEFORE signing.
+ *   capture_wire: Record request/response bodies on the LLMCall wire records delivered
+ *     through on_event. Status, headers, and timing are always recorded; this
+ *     flag only gates the bodies.
  */
 export class BedrockClient {
   model!: string;
@@ -195,6 +203,7 @@ export class BedrockClient {
   request_body!: baml.json.json | null;
   headers!: { [key: string]: string } | null;
   query_params!: { [key: string]: string } | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     region: string | null;
@@ -214,11 +223,12 @@ export class BedrockClient {
     request_body: baml.json.json | null;
     headers: { [key: string]: string } | null;
     query_params: { [key: string]: string } | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("aws.BedrockClient.new", "sync", ["model"], ["region", "profile", "access_key_id", "secret_access_key", "session_token", "endpoint_url", "max_tokens", "temperature", "top_p", "stop_sequences", "tool_choice", "cache_system_prompt", "cache_tools", "additional_model_request_fields", "request_body", "headers", "query_params"]) as (model: string, $opts?: { region?: string | null | undefined; profile?: string | null | undefined; access_key_id?: string | null | undefined; secret_access_key?: string | null | undefined; session_token?: string | null | undefined; endpoint_url?: ai.Credential | null | undefined; max_tokens?: number | null | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; stop_sequences?: string[] | null | undefined; tool_choice?: string | null | undefined; cache_system_prompt?: boolean | undefined; cache_tools?: boolean | undefined; additional_model_request_fields?: baml.json.json | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => BedrockClient;
-  static new_async = defineFunction("aws.BedrockClient.new", "async", ["model"], ["region", "profile", "access_key_id", "secret_access_key", "session_token", "endpoint_url", "max_tokens", "temperature", "top_p", "stop_sequences", "tool_choice", "cache_system_prompt", "cache_tools", "additional_model_request_fields", "request_body", "headers", "query_params"]) as (model: string, $opts?: { region?: string | null | undefined; profile?: string | null | undefined; access_key_id?: string | null | undefined; secret_access_key?: string | null | undefined; session_token?: string | null | undefined; endpoint_url?: ai.Credential | null | undefined; max_tokens?: number | null | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; stop_sequences?: string[] | null | undefined; tool_choice?: string | null | undefined; cache_system_prompt?: boolean | undefined; cache_tools?: boolean | undefined; additional_model_request_fields?: baml.json.json | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<BedrockClient>;
+  static new = defineFunction("aws.BedrockClient.new", "sync", ["model"], ["region", "profile", "access_key_id", "secret_access_key", "session_token", "endpoint_url", "max_tokens", "temperature", "top_p", "stop_sequences", "tool_choice", "cache_system_prompt", "cache_tools", "additional_model_request_fields", "request_body", "headers", "query_params", "capture_wire"]) as (model: string, $opts?: { region?: string | null | undefined; profile?: string | null | undefined; access_key_id?: string | null | undefined; secret_access_key?: string | null | undefined; session_token?: string | null | undefined; endpoint_url?: ai.Credential | null | undefined; max_tokens?: number | null | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; stop_sequences?: string[] | null | undefined; tool_choice?: string | null | undefined; cache_system_prompt?: boolean | undefined; cache_tools?: boolean | undefined; additional_model_request_fields?: baml.json.json | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => BedrockClient;
+  static new_async = defineFunction("aws.BedrockClient.new", "async", ["model"], ["region", "profile", "access_key_id", "secret_access_key", "session_token", "endpoint_url", "max_tokens", "temperature", "top_p", "stop_sequences", "tool_choice", "cache_system_prompt", "cache_tools", "additional_model_request_fields", "request_body", "headers", "query_params", "capture_wire"]) as (model: string, $opts?: { region?: string | null | undefined; profile?: string | null | undefined; access_key_id?: string | null | undefined; secret_access_key?: string | null | undefined; session_token?: string | null | undefined; endpoint_url?: ai.Credential | null | undefined; max_tokens?: number | null | undefined; temperature?: number | null | undefined; top_p?: number | null | undefined; stop_sequences?: string[] | null | undefined; tool_choice?: string | null | undefined; cache_system_prompt?: boolean | undefined; cache_tools?: boolean | undefined; additional_model_request_fields?: baml.json.json | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<BedrockClient>;
 /**
  * The request-time endpoint override: the explicit value (a literal, or
  * the value of the variable an `env.NAME` ref points at), else null

@@ -42,6 +42,7 @@ export class GoogleClient$stream {
   stop_sequences!: string[] | null;
   response_modalities!: string[] | null;
   safety_settings!: SafetySetting$stream[] | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     api_key: ai.Credential$stream | null;
@@ -56,6 +57,7 @@ export class GoogleClient$stream {
     stop_sequences: string[] | null;
     response_modalities: string[] | null;
     safety_settings: SafetySetting$stream[] | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -146,6 +148,7 @@ export class GoogleClient {
   stop_sequences!: string[] | null;
   response_modalities!: string[] | null;
   safety_settings!: SafetySetting[] | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     api_key: ai.Credential | null;
@@ -160,11 +163,12 @@ export class GoogleClient {
     stop_sequences: string[] | null;
     response_modalities: string[] | null;
     safety_settings: SafetySetting[] | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("google.GoogleClient.new", "sync", [], ["model", "api_key", "base_url", "request_body", "headers", "query_params", "temperature", "max_output_tokens", "top_p", "top_k", "stop_sequences", "response_modalities", "safety_settings"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_output_tokens?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; response_modalities?: string[] | null | undefined; safety_settings?: SafetySetting[] | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => GoogleClient;
-  static new_async = defineFunction("google.GoogleClient.new", "async", [], ["model", "api_key", "base_url", "request_body", "headers", "query_params", "temperature", "max_output_tokens", "top_p", "top_k", "stop_sequences", "response_modalities", "safety_settings"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_output_tokens?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; response_modalities?: string[] | null | undefined; safety_settings?: SafetySetting[] | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<GoogleClient>;
+  static new = defineFunction("google.GoogleClient.new", "sync", [], ["model", "api_key", "base_url", "request_body", "headers", "query_params", "temperature", "max_output_tokens", "top_p", "top_k", "stop_sequences", "response_modalities", "safety_settings", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_output_tokens?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; response_modalities?: string[] | null | undefined; safety_settings?: SafetySetting[] | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => GoogleClient;
+  static new_async = defineFunction("google.GoogleClient.new", "async", [], ["model", "api_key", "base_url", "request_body", "headers", "query_params", "temperature", "max_output_tokens", "top_p", "top_k", "stop_sequences", "response_modalities", "safety_settings", "capture_wire"]) as ($opts?: { model?: string | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_output_tokens?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; response_modalities?: string[] | null | undefined; safety_settings?: SafetySetting[] | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<GoogleClient>;
 /**
  * @throws InvalidRequest
  * @throws Io
@@ -229,6 +233,7 @@ export class VertexClient$stream {
   stop_sequences!: string[] | null;
   response_modalities!: string[] | null;
   safety_settings!: SafetySetting$stream[] | null;
+  capture_wire!: boolean | null;
   constructor(init: {
     model: string | null;
     project_id: ai.Credential$stream | null;
@@ -249,6 +254,7 @@ export class VertexClient$stream {
     stop_sequences: string[] | null;
     response_modalities: string[] | null;
     safety_settings: SafetySetting$stream[] | null;
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -294,6 +300,7 @@ export class VertexClient {
   stop_sequences!: string[] | null;
   response_modalities!: string[] | null;
   safety_settings!: SafetySetting[] | null;
+  capture_wire!: boolean;
   constructor(init: {
     model: string;
     project_id: ai.Credential | null;
@@ -314,11 +321,12 @@ export class VertexClient {
     stop_sequences: string[] | null;
     response_modalities: string[] | null;
     safety_settings: SafetySetting[] | null;
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("google.VertexClient.new", "sync", [], ["model", "project_id", "location", "credentials_json", "credentials_file", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_output_tokens", "top_p", "top_k", "stop_sequences", "response_modalities", "safety_settings"]) as ($opts?: { model?: string | undefined; project_id?: ai.Credential | null | undefined; location?: string | null | undefined; credentials_json?: string | null | undefined; credentials_file?: string | null | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_output_tokens?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; response_modalities?: string[] | null | undefined; safety_settings?: SafetySetting[] | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => VertexClient;
-  static new_async = defineFunction("google.VertexClient.new", "async", [], ["model", "project_id", "location", "credentials_json", "credentials_file", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_output_tokens", "top_p", "top_k", "stop_sequences", "response_modalities", "safety_settings"]) as ($opts?: { model?: string | undefined; project_id?: ai.Credential | null | undefined; location?: string | null | undefined; credentials_json?: string | null | undefined; credentials_file?: string | null | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_output_tokens?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; response_modalities?: string[] | null | undefined; safety_settings?: SafetySetting[] | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<VertexClient>;
+  static new = defineFunction("google.VertexClient.new", "sync", [], ["model", "project_id", "location", "credentials_json", "credentials_file", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_output_tokens", "top_p", "top_k", "stop_sequences", "response_modalities", "safety_settings", "capture_wire"]) as ($opts?: { model?: string | undefined; project_id?: ai.Credential | null | undefined; location?: string | null | undefined; credentials_json?: string | null | undefined; credentials_file?: string | null | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_output_tokens?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; response_modalities?: string[] | null | undefined; safety_settings?: SafetySetting[] | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => VertexClient;
+  static new_async = defineFunction("google.VertexClient.new", "async", [], ["model", "project_id", "location", "credentials_json", "credentials_file", "api_key", "base_url", "request_timeout_ms", "time_to_first_token_timeout_ms", "request_body", "headers", "query_params", "temperature", "max_output_tokens", "top_p", "top_k", "stop_sequences", "response_modalities", "safety_settings", "capture_wire"]) as ($opts?: { model?: string | undefined; project_id?: ai.Credential | null | undefined; location?: string | null | undefined; credentials_json?: string | null | undefined; credentials_file?: string | null | undefined; api_key?: ai.Credential | null | undefined; base_url?: ai.Credential | null | undefined; request_timeout_ms?: number | null | undefined; time_to_first_token_timeout_ms?: number | null | undefined; request_body?: baml.json.json | null | undefined; headers?: { [key: string]: string } | null | undefined; query_params?: { [key: string]: string } | null | undefined; temperature?: number | null | undefined; max_output_tokens?: number | null | undefined; top_p?: number | null | undefined; top_k?: number | null | undefined; stop_sequences?: string[] | null | undefined; response_modalities?: string[] | null | undefined; safety_settings?: SafetySetting[] | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<VertexClient>;
 /**
  * @throws Io
  * @throws ParseError

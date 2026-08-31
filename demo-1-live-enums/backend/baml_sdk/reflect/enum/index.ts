@@ -17,9 +17,17 @@ import type * as reflect from "../../reflect/index.js";
 
 /**
  * An enum-kind view of a `type` value. Users never construct this class.
+ *
+ * Attributes:
+ *   _ty: The wrapped `type` value. Private by invariant: reflection natives are
+ *     its only readers, and each kind method panics if the held type no longer
+ *     classifies as this view's kind.
  */
 export class Type$stream {
-  constructor(init: {}) {
+  _ty!: unknown;
+  constructor(init: {
+    _ty: unknown;
+  }) {
     Object.assign(this, init);
   }
 }
@@ -67,9 +75,17 @@ export const get_value_async = defineFunction("reflect.enum.get_value", "async",
 
 /**
  * An enum-kind view of a `type` value. Users never construct this class.
+ *
+ * Attributes:
+ *   _ty: The wrapped `type` value. Private by invariant: reflection natives are
+ *     its only readers, and each kind method panics if the held type no longer
+ *     classifies as this view's kind.
  */
 export class Type {
-  constructor(init: {}) {
+  _ty!: BamlType;
+  constructor(init: {
+    _ty: BamlType;
+  }) {
     Object.assign(this, init);
   }
   values = defineInstanceFunction("reflect.enum.Type.values", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Value[];

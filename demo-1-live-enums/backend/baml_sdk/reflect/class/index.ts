@@ -40,7 +40,7 @@ export class Builder$stream {
  *   name
  *   type
  *   meta
- *   _owner: Present only for handles returned from `baml.AnyClass.list_fields` or
+ *   _owner: Present only for handles returned from `reflect.AnyClass.list_fields` or
  *     `get_field`. Type-side descriptors returned by `Type.fields()` are
  *     intentionally ownerless.
  */
@@ -78,7 +78,7 @@ export class Field {
  *   name
  *   type
  *   meta
- *   _owner: Present only for handles returned from `baml.AnyClass.list_fields` or
+ *   _owner: Present only for handles returned from `reflect.AnyClass.list_fields` or
  *     `get_field`. Type-side descriptors returned by `Type.fields()` are
  *     intentionally ownerless.
  */
@@ -116,9 +116,17 @@ export class PendingType$stream {
 
 /**
  * A class-kind view of a `type` value. Users never construct this class.
+ *
+ * Attributes:
+ *   _ty: The wrapped `type` value. Private by invariant: reflection natives are
+ *     its only readers, and each kind method panics if the held type no longer
+ *     classifies as this view's kind.
  */
 export class Type$stream {
-  constructor(init: {}) {
+  _ty!: unknown;
+  constructor(init: {
+    _ty: unknown;
+  }) {
     Object.assign(this, init);
   }
 }
@@ -236,9 +244,17 @@ export const get_field_async = defineFunction("reflect.class.get_field", "async"
 
 /**
  * A class-kind view of a `type` value. Users never construct this class.
+ *
+ * Attributes:
+ *   _ty: The wrapped `type` value. Private by invariant: reflection natives are
+ *     its only readers, and each kind method panics if the held type no longer
+ *     classifies as this view's kind.
  */
 export class Type {
-  constructor(init: {}) {
+  _ty!: BamlType;
+  constructor(init: {
+    _ty: BamlType;
+  }) {
     Object.assign(this, init);
   }
   fields = defineInstanceFunction("reflect.class.Type.fields", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Field[];

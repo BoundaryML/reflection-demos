@@ -96,6 +96,11 @@ export class TurnStream$stream {
   _done!: boolean | null;
   _require_terminal!: string | null;
   _saw_terminal!: boolean | null;
+  _calls!: ai.events.LLMCall$stream[];
+  _wire_call!: ai.events.LLMCall$stream | null;
+  _call_started!: baml.time.Instant$stream | null;
+  _ttft_from!: baml.time.Instant$stream | null;
+  _capture_sse!: boolean | null;
   constructor(init: {
     _event_source: EventSource$stream | null;
     _sse: baml.http.SseStream$stream | null;
@@ -111,6 +116,11 @@ export class TurnStream$stream {
     _done: boolean | null;
     _require_terminal: string | null;
     _saw_terminal: boolean | null;
+    _calls: ai.events.LLMCall$stream[];
+    _wire_call: ai.events.LLMCall$stream | null;
+    _call_started: baml.time.Instant$stream | null;
+    _ttft_from: baml.time.Instant$stream | null;
+    _capture_sse: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -198,6 +208,11 @@ export class TurnStream {
   _done!: boolean;
   _require_terminal!: string | null;
   _saw_terminal!: boolean;
+  _calls!: ai.events.LLMCall[];
+  _wire_call!: ai.events.LLMCall | null;
+  _call_started!: baml.time.Instant | null;
+  _ttft_from!: baml.time.Instant | null;
+  _capture_sse!: boolean;
   constructor(init: {
     _event_source: EventSource | null;
     _sse: baml.http.SseStream | null;
@@ -213,6 +228,11 @@ export class TurnStream {
     _done: boolean;
     _require_terminal: string | null;
     _saw_terminal: boolean;
+    _calls: ai.events.LLMCall[];
+    _wire_call: ai.events.LLMCall | null;
+    _call_started: baml.time.Instant | null;
+    _ttft_from: baml.time.Instant | null;
+    _capture_sse: boolean;
   }) {
     Object.assign(this, init);
   }
@@ -222,6 +242,10 @@ export class TurnStream {
   static from_chunks_async = defineFunction("ai.stream.TurnStream.from_chunks", "async", ["chunks"]) as (chunks: string[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<TurnStream>;
   static from_event_source = defineFunction("ai.stream.TurnStream.from_event_source", "sync", ["next_event"]) as (next_event: EventSource, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => TurnStream;
   static from_event_source_async = defineFunction("ai.stream.TurnStream.from_event_source", "async", ["next_event"]) as (next_event: EventSource, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<TurnStream>;
+  _stamp_first_delta = defineInstanceFunction("ai.stream.TurnStream._stamp_first_delta", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
+  _stamp_first_delta_async = defineInstanceFunction("ai.stream.TurnStream._stamp_first_delta", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
+  _capture_batch = defineInstanceFunction("ai.stream.TurnStream._capture_batch", "sync", ["self", "batch"]).bind(this) as (batch: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
+  _capture_batch_async = defineInstanceFunction("ai.stream.TurnStream._capture_batch", "async", ["self", "batch"]).bind(this) as (batch: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
   _finish = defineInstanceFunction("ai.stream.TurnStream._finish", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
   _finish_async = defineInstanceFunction("ai.stream.TurnStream._finish", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 /**
@@ -239,7 +263,7 @@ export class TurnStream {
  * @throws Cancelled
  * @throws CompilationError
  */
-  next = defineInstanceFunction("ai.stream.TurnStream.next", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string | Done;
+  next = defineInstanceFunction("ai.stream.TurnStream.next", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string[] | Done;
 /**
  * @throws Io
  * @throws Timeout
@@ -247,7 +271,7 @@ export class TurnStream {
  * @throws Cancelled
  * @throws CompilationError
  */
-  next_async = defineInstanceFunction("ai.stream.TurnStream.next", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string | Done>;
+  next_async = defineInstanceFunction("ai.stream.TurnStream.next", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string[] | Done>;
 /**
  * @throws Io
  * @throws Timeout
@@ -276,7 +300,7 @@ export { Stream };
  * @throws Cancelled
  * @throws CompilationError
  */
-export const from_spec = defineFunction("ai.stream.from_spec", "sync", ["spec"], ["client"], { typeParams: ["TStream", "TFinal"] }) as <TStream, TFinal>(spec: ai.FunctionSpec<TFinal>, $opts?: { client?: unknown | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { TStream?: BamlType | BamlTypeToken; TFinal?: BamlType | BamlTypeToken } | undefined } | undefined) => Stream<TStream, TFinal>;
+export const from_spec = defineFunction("ai.stream.from_spec", "sync", ["spec"], ["client", "on_event"], { typeParams: ["TStream", "TFinal"] }) as <TStream, TFinal>(spec: ai.FunctionSpec<TFinal>, $opts?: { client?: unknown | null | undefined; on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { TStream?: BamlType | BamlTypeToken; TFinal?: BamlType | BamlTypeToken } | undefined } | undefined) => Stream<TStream, TFinal>;
 
 /**
  * @throws InvalidArgument
@@ -285,7 +309,7 @@ export const from_spec = defineFunction("ai.stream.from_spec", "sync", ["spec"],
  * @throws Cancelled
  * @throws CompilationError
  */
-export const from_spec_async = defineFunction("ai.stream.from_spec", "async", ["spec"], ["client"], { typeParams: ["TStream", "TFinal"] }) as <TStream, TFinal>(spec: ai.FunctionSpec<TFinal>, $opts?: { client?: unknown | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { TStream?: BamlType | BamlTypeToken; TFinal?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<Stream<TStream, TFinal>>;
+export const from_spec_async = defineFunction("ai.stream.from_spec", "async", ["spec"], ["client", "on_event"], { typeParams: ["TStream", "TFinal"] }) as <TStream, TFinal>(spec: ai.FunctionSpec<TFinal>, $opts?: { client?: unknown | null | undefined; on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined; $types?: { TStream?: BamlType | BamlTypeToken; TFinal?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<Stream<TStream, TFinal>>;
 
 /** Erased runtime token for BAML interface `ai.stream.StreamingClient`. */
 export const StreamingClient = Object.freeze({ __baml_interface_fqn__: "ai.stream.StreamingClient" } as const);

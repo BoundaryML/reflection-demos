@@ -13,6 +13,7 @@
 // BAML files and re-generate this code using: baml-cli generate
 
 import { defineFunction, defineInstanceFunction, type BamlCallContext, type BamlType, type BamlTypeToken } from "@boundaryml/baml-bridge";
+import type * as baml from "../../baml/index.js";
 
 /**
  * The error `any` throws when EVERY input future failed. `errors` holds the
@@ -253,3 +254,17 @@ export const any = defineFunction("baml.future.any", "sync", ["futures"], undefi
  * neither win nor contribute an error).
  */
 export const any_async = defineFunction("baml.future.any", "async", ["futures"], undefined, { typeParams: ["T", "Err"] }) as <T, Err>(futures: unknown[], $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken; Err?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<unknown>;
+
+/**
+ * Run `body` under a deadline.
+ * @throws Timeout
+ * @throws Cancelled
+ */
+export const with_timeout = defineFunction("baml.future.with_timeout", "sync", ["limit", "body"], undefined, { typeParams: ["T", "E"] }) as <T, E>(limit: baml.time.Duration, body: () => T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken; E?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
+
+/**
+ * Run `body` under a deadline.
+ * @throws Timeout
+ * @throws Cancelled
+ */
+export const with_timeout_async = defineFunction("baml.future.with_timeout", "async", ["limit", "body"], undefined, { typeParams: ["T", "E"] }) as <T, E>(limit: baml.time.Duration, body: () => T, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken; E?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;

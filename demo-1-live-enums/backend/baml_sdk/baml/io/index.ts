@@ -65,3 +65,13 @@ export const eprintln = defineFunction("baml.io.eprintln", "sync", ["s"]) as (s:
  * Like `println` but writes to stderr.
  */
 export const eprintln_async = defineFunction("baml.io.eprintln", "async", ["s"]) as (s: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
+
+/**
+ * @throws ParseError
+ */
+export const _decode_utf8 = defineFunction("baml.io._decode_utf8", "sync", ["data"]) as (data: Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
+
+/**
+ * @throws ParseError
+ */
+export const _decode_utf8_async = defineFunction("baml.io._decode_utf8", "async", ["data"]) as (data: Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;

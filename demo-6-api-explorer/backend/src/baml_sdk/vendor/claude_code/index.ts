@@ -24,6 +24,7 @@ export class ClaudeCodeClient$stream {
   permission_mode!: string | null;
   harness_tools!: string[];
   mcp_servers!: { [key: string]: baml.json.json$stream };
+  capture_wire!: boolean | null;
   constructor(init: {
     executable: string | null;
     model: string | null;
@@ -32,6 +33,7 @@ export class ClaudeCodeClient$stream {
     permission_mode: string | null;
     harness_tools: string[];
     mcp_servers: { [key: string]: baml.json.json$stream };
+    capture_wire: boolean | null;
   }) {
     Object.assign(this, init);
   }
@@ -45,6 +47,7 @@ export class ClaudeCodeClient {
   permission_mode!: string;
   harness_tools!: string[];
   mcp_servers!: { [key: string]: baml.json.json };
+  capture_wire!: boolean;
   constructor(init: {
     executable: string;
     model: string;
@@ -53,9 +56,10 @@ export class ClaudeCodeClient {
     permission_mode: string;
     harness_tools: string[];
     mcp_servers: { [key: string]: baml.json.json };
+    capture_wire: boolean;
   }) {
     Object.assign(this, init);
   }
-  static new = defineFunction("claude_code.ClaudeCodeClient.new", "sync", [], ["model", "executable", "cwd", "timeout_ms", "permission_mode", "harness_tools", "mcp_servers"]) as ($opts?: { model?: string | undefined; executable?: string | undefined; cwd?: string | null | undefined; timeout_ms?: number | undefined; permission_mode?: string | undefined; harness_tools?: string[] | undefined; mcp_servers?: { [key: string]: baml.json.json } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ClaudeCodeClient;
-  static new_async = defineFunction("claude_code.ClaudeCodeClient.new", "async", [], ["model", "executable", "cwd", "timeout_ms", "permission_mode", "harness_tools", "mcp_servers"]) as ($opts?: { model?: string | undefined; executable?: string | undefined; cwd?: string | null | undefined; timeout_ms?: number | undefined; permission_mode?: string | undefined; harness_tools?: string[] | undefined; mcp_servers?: { [key: string]: baml.json.json } | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ClaudeCodeClient>;
+  static new = defineFunction("claude_code.ClaudeCodeClient.new", "sync", [], ["model", "executable", "cwd", "timeout_ms", "permission_mode", "harness_tools", "mcp_servers", "capture_wire"]) as ($opts?: { model?: string | undefined; executable?: string | undefined; cwd?: string | null | undefined; timeout_ms?: number | undefined; permission_mode?: string | undefined; harness_tools?: string[] | undefined; mcp_servers?: { [key: string]: baml.json.json } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ClaudeCodeClient;
+  static new_async = defineFunction("claude_code.ClaudeCodeClient.new", "async", [], ["model", "executable", "cwd", "timeout_ms", "permission_mode", "harness_tools", "mcp_servers", "capture_wire"]) as ($opts?: { model?: string | undefined; executable?: string | undefined; cwd?: string | null | undefined; timeout_ms?: number | undefined; permission_mode?: string | undefined; harness_tools?: string[] | undefined; mcp_servers?: { [key: string]: baml.json.json } | null | undefined; capture_wire?: boolean | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ClaudeCodeClient>;
 }

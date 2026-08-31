@@ -19,10 +19,14 @@ import type * as baml from "../../baml/index.js";
 export class McpConnection$stream {
   server_name!: string | null;
   p!: baml.sys.Process$stream | null;
+  out!: baml.sys.ReadPipeLines$stream | null;
+  timeout_ms!: number | null;
   next_id!: number | null;
   constructor(init: {
     server_name: string | null;
     p: baml.sys.Process$stream | null;
+    out: baml.sys.ReadPipeLines$stream | null;
+    timeout_ms: number | null;
     next_id: number | null;
   }) {
     Object.assign(this, init);
@@ -42,22 +46,24 @@ export const rpc_line_async = defineFunction("ai.mcp.rpc_line", "async", ["id", 
 export class McpConnection {
   server_name!: string;
   p!: baml.sys.Process;
+  out!: baml.sys.ReadPipeLines;
+  timeout_ms!: number;
   next_id!: number;
   constructor(init: {
     server_name: string;
     p: baml.sys.Process;
+    out: baml.sys.ReadPipeLines;
+    timeout_ms: number;
     next_id: number;
   }) {
     Object.assign(this, init);
   }
 /**
- * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws JsonSerializationError
  */
   static connect = defineFunction("ai.mcp.McpConnection.connect", "sync", ["name", "command", "args"], ["timeout_ms"]) as (name: string, command: string, args: string[], $opts?: { timeout_ms?: number | undefined; $ctx?: BamlCallContext | undefined } | undefined) => McpConnection;
 /**
- * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws JsonSerializationError
  */
@@ -71,40 +77,34 @@ export class McpConnection {
  */
   _send_async = defineInstanceFunction("ai.mcp.McpConnection._send", "async", ["self", "line"]).bind(this) as (line: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 /**
- * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws JsonSerializationError
  */
   _request = defineInstanceFunction("ai.mcp.McpConnection._request", "sync", ["self", "method", "params"]).bind(this) as (method: string, params: { [key: string]: unknown }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => baml.json.json;
 /**
- * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws JsonSerializationError
  */
   _request_async = defineInstanceFunction("ai.mcp.McpConnection._request", "async", ["self", "method", "params"]).bind(this) as (method: string, params: { [key: string]: unknown }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<baml.json.json>;
 /**
- * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws InvalidArgument
  * @throws JsonSerializationError
  */
   tools = defineInstanceFunction("ai.mcp.McpConnection.tools", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.tools.Tool[];
 /**
- * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws InvalidArgument
  * @throws JsonSerializationError
  */
   tools_async = defineInstanceFunction("ai.mcp.McpConnection.tools", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.tools.Tool[]>;
 /**
- * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws InvalidArgument
  * @throws JsonSerializationError
  */
   call_tool = defineInstanceFunction("ai.mcp.McpConnection.call_tool", "sync", ["self", "name", "args"]).bind(this) as (name: string, args: { [key: string]: unknown }, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
 /**
- * @throws InvalidRequest
  * @throws NetworkFailure
  * @throws InvalidArgument
  * @throws JsonSerializationError

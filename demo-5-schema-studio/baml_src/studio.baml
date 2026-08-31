@@ -45,7 +45,7 @@ class SchemaDraft {
 // ── compile ─────────────────────────────────────────────────────────────────
 
 /// Compile the editor's text and report what the compiler found.
-function CompileSchema(source: string) -> Compilation throws unknown {
+function CompileSchema(source: string) -> Compilation {
     let started = baml.time.Instant.now()
     let pkg = reflect.Package.compile({ "schema.baml": source }) catch (e) {
         let rejected: reflect.errors.CompilationError => return Compilation {
@@ -108,14 +108,14 @@ function retell(found: reflect.Diagnostic[]) -> Note[] throws never {
 /// Extract a document into one of the classes the editor just defined:
 /// compile the editor's text, bind the chosen class as a type, and make a
 /// generic LLM call over it.
-function RunExtraction(source: string, record: string, document: string) -> Extraction throws unknown {
+function RunExtraction(source: string, record: string, document: string) -> Extraction {
     let pkg = reflect.Package.compile({ "schema.baml": source });
     let target = pkg.get_class(record) ?? throw `the package has no class named ${record}`;
-    let shape = target.as_type();
+    type T = unreflect(target.as_type());
 
     Extraction {
-        prompt: Extract$render_prompt<unreflect(shape)>(document).text(),
-        response: json.encode(Extract<unreflect(shape)>(document)),
+        prompt: Extract$render_prompt<T>(document).text(),
+        response: baml.json.to_string(Extract<T>(document)),
     }
 }
 
@@ -123,7 +123,7 @@ function RunExtraction(source: string, record: string, document: string) -> Extr
 
 /// Ask the model for a schema. Its text lands in the editor and compiles
 /// like anything a human typed.
-function DraftSchema(description: string) -> SchemaDraft throws unknown {
+function DraftSchema(description: string) -> SchemaDraft {
     SchemaDraft {
         prompt: Draft$render_prompt(description).text(),
         schema: Draft(description),

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 const IDEAS = [
   'a customer support ticket: customer name, urgency from low to high, product area, one-line summary, steps to reproduce as short phrases',
-  'a freight invoice: number, date, currency, total, line items as short phrases',
+  'a freight invoice with line items and a total',
   'a clinical visit note: vitals, complaint, plan as short imperative phrases',
   'a job posting: title, seniority, comp range, must-have skills',
 ];

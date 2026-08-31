@@ -19,15 +19,19 @@ import type * as baml from "../../baml/index.js";
 /**
  * A live child process created with `start_process`.
  * 
- * `stdout` is consumed incrementally. Stderr inherits the parent process so
- * diagnostics remain visible without risking a blocked, unread stderr pipe.
+ * `stdin` and `stdout` are always caller-owned pipes. `stderr` is populated
+ * only when `ProcessOptions.stderr` is `StderrMode.Pipe`.
  */
 export class Process$stream {
-  stdout!: ProcessLineStream$stream | null;
   _handle!: _BamlHandle;
+  stdin!: WritePipe$stream | null;
+  stdout!: ReadPipe$stream | null;
+  stderr!: ReadPipe$stream | null;
   constructor(init: {
-    stdout: ProcessLineStream$stream | null;
     _handle: _BamlHandle;
+    stdin: WritePipe$stream | null;
+    stdout: ReadPipe$stream | null;
+    stderr: ReadPipe$stream | null;
   }) {
     Object.assign(this, init);
   }
@@ -48,46 +52,59 @@ export class ProcessExit$stream {
 }
 
 /**
- * A live line-oriented child-process output stream.
- * 
- * Iteration waits for one complete UTF-8 line without blocking other BAML
- * green threads. The final unterminated line is yielded at EOF.
- */
-export class ProcessLineStream$stream {
-  _handle!: _BamlHandle;
-  constructor(init: {
-    _handle: _BamlHandle;
-  }) {
-    Object.assign(this, init);
-  }
-}
-
-/**
  * Options for `exec`, `start_process`, and `shell`.
  *
  * Attributes:
  *   cwd: Working directory for the child process.
  *   env: Environment variables to set for the child process.
  *   timeout_ms: Maximum time in milliseconds to wait for the process to complete.
- *   stdin: Data to write to the child process's stdin.
- *   keep_stdin_open: Keep a writable stdin pipe on a process returned by `start_process`.
- *     
- *     When this is `true`, use `Process.write_stdin` to send data incrementally
- *     and `Process.close_stdin` to deliver EOF. This option has no effect on
- *     `exec` or `shell`.
+ *   stdin: The child process's complete stdin. `start_process` writes it and then
+ *     closes the pipe. Leave it unset to drive `Process.stdin` incrementally.
+ *   stderr: Where the child's stderr goes. `null` means `StderrMode.Inherit`, and
+ *     only `StderrMode.Pipe` populates `Process.stderr`.
  */
 export class ProcessOptions$stream {
   cwd!: string | null;
   env!: { [key: string]: string } | null;
   timeout_ms!: number | null;
   stdin!: string | null;
-  keep_stdin_open!: boolean | null;
+  stderr!: StderrMode | null;
   constructor(init: {
     cwd: string | null;
     env: { [key: string]: string } | null;
     timeout_ms: number | null;
     stdin: string | null;
-    keep_stdin_open: boolean | null;
+    stderr: StderrMode | null;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
+/**
+ * A system pipe for reading data, typically from another process.
+ */
+export class ReadPipe$stream {
+  _pipe!: _BamlHandle;
+  constructor(init: {
+    _pipe: _BamlHandle;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
+/**
+ * A line-oriented view over a `ReadPipe`.
+ * 
+ * It reads through to the pipe on demand and holds only bytes past the last
+ * newline. The final unterminated line is yielded at EOF. Invalid UTF-8 is
+ * replaced with U+FFFD.
+ */
+export class ReadPipeLines$stream {
+  pipe!: ReadPipe$stream | null;
+  _pending!: Uint8Array;
+  constructor(init: {
+    pipe: ReadPipe$stream | null;
+    _pending: Uint8Array;
   }) {
     Object.assign(this, init);
   }
@@ -110,34 +127,59 @@ export class ShellOutput$stream {
 }
 
 /**
+ * A system pipe for writing data, typically to another process.
+ */
+export class WritePipe$stream {
+  _pipe!: _BamlHandle;
+  constructor(init: {
+    _pipe: _BamlHandle;
+  }) {
+    Object.assign(this, init);
+  }
+}
+
+/**
  * Options for `exec`, `start_process`, and `shell`.
  *
  * Attributes:
  *   cwd: Working directory for the child process.
  *   env: Environment variables to set for the child process.
  *   timeout_ms: Maximum time in milliseconds to wait for the process to complete.
- *   stdin: Data to write to the child process's stdin.
- *   keep_stdin_open: Keep a writable stdin pipe on a process returned by `start_process`.
- *     
- *     When this is `true`, use `Process.write_stdin` to send data incrementally
- *     and `Process.close_stdin` to deliver EOF. This option has no effect on
- *     `exec` or `shell`.
+ *   stdin: The child process's complete stdin. `start_process` writes it and then
+ *     closes the pipe. Leave it unset to drive `Process.stdin` incrementally.
+ *   stderr: Where the child's stderr goes. `null` means `StderrMode.Inherit`, and
+ *     only `StderrMode.Pipe` populates `Process.stderr`.
  */
 export class ProcessOptions {
   cwd!: string | null;
   env!: { [key: string]: string } | null;
   timeout_ms!: number | null;
   stdin!: string | null;
-  keep_stdin_open!: boolean | null;
+  stderr!: StderrMode | null;
   constructor(init: {
     cwd: string | null;
     env: { [key: string]: string } | null;
     timeout_ms: number | null;
     stdin: string | null;
-    keep_stdin_open: boolean | null;
+    stderr: StderrMode | null;
   }) {
     Object.assign(this, init);
   }
+}
+
+/**
+ * Where a child process's standard error goes.
+ *
+ * Members:
+ *   Inherit: The child writes to this process's stderr. This is the default.
+ *   Pipe: The child's stderr becomes `Process.stderr`. The caller must drain it
+ *     concurrently with stdout to prevent the child from blocking.
+ *   Discard: The child's stderr is discarded.
+ */
+export enum StderrMode {
+  Inherit = "Inherit",
+  Pipe = "Pipe",
+  Discard = "Discard",
 }
 
 /**
@@ -187,75 +229,52 @@ export class ProcessExit {
 }
 
 /**
- * A live line-oriented child-process output stream.
+ * A line-oriented view over a `ReadPipe`.
  * 
- * Iteration waits for one complete UTF-8 line without blocking other BAML
- * green threads. The final unterminated line is yielded at EOF.
+ * It reads through to the pipe on demand and holds only bytes past the last
+ * newline. The final unterminated line is yielded at EOF. Invalid UTF-8 is
+ * replaced with U+FFFD.
  */
-export class ProcessLineStream {
-  _handle!: _BamlHandle;
+export class ReadPipeLines {
+  pipe!: ReadPipe;
+  _pending!: Uint8Array;
   constructor(init: {
-    _handle: _BamlHandle;
+    pipe: ReadPipe;
+    _pending: Uint8Array;
   }) {
     Object.assign(this, init);
   }
-/**
- * Wait for and return the next line, or `null` at EOF.
- * @throws Io
- * @throws Timeout
- */
-  _next = defineInstanceFunction("baml.sys.ProcessLineStream._next", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string | null;
-/**
- * Wait for and return the next line, or `null` at EOF.
- * @throws Io
- * @throws Timeout
- */
-  _next_async = defineInstanceFunction("baml.sys.ProcessLineStream._next", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string | null>;
-/**
- * Stop reading this stream. Later reads return EOF.
- */
-  close = defineInstanceFunction("baml.sys.ProcessLineStream.close", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
-/**
- * Stop reading this stream. Later reads return EOF.
- */
-  close_async = defineInstanceFunction("baml.sys.ProcessLineStream.close", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 }
+
+/**
+ * Drop one trailing carriage return so CRLF input produces clean lines.
+ */
+export const _strip_carriage_return = defineFunction("baml.sys._strip_carriage_return", "sync", ["line"]) as (line: Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Uint8Array;
+
+/**
+ * Drop one trailing carriage return so CRLF input produces clean lines.
+ */
+export const _strip_carriage_return_async = defineFunction("baml.sys._strip_carriage_return", "async", ["line"]) as (line: Uint8Array, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Uint8Array>;
 
 /**
  * A live child process created with `start_process`.
  * 
- * `stdout` is consumed incrementally. Stderr inherits the parent process so
- * diagnostics remain visible without risking a blocked, unread stderr pipe.
+ * `stdin` and `stdout` are always caller-owned pipes. `stderr` is populated
+ * only when `ProcessOptions.stderr` is `StderrMode.Pipe`.
  */
 export class Process {
-  stdout!: ProcessLineStream;
   _handle!: _BamlHandle;
+  stdin!: WritePipe;
+  stdout!: ReadPipe;
+  stderr!: ReadPipe | null;
   constructor(init: {
-    stdout: ProcessLineStream;
     _handle: _BamlHandle;
+    stdin: WritePipe;
+    stdout: ReadPipe;
+    stderr: ReadPipe | null;
   }) {
     Object.assign(this, init);
   }
-/**
- * Write data to the child process's open stdin pipe.
- * @throws Io
- */
-  write_stdin = defineInstanceFunction("baml.sys.Process.write_stdin", "sync", ["self", "data"]).bind(this) as (data: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
-/**
- * Write data to the child process's open stdin pipe.
- * @throws Io
- */
-  write_stdin_async = defineInstanceFunction("baml.sys.Process.write_stdin", "async", ["self", "data"]).bind(this) as (data: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
-/**
- * Close the child process's stdin pipe, delivering EOF.
- * @throws Io
- */
-  close_stdin = defineInstanceFunction("baml.sys.Process.close_stdin", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
-/**
- * Close the child process's stdin pipe, delivering EOF.
- * @throws Io
- */
-  close_stdin_async = defineInstanceFunction("baml.sys.Process.close_stdin", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 /**
  * Wait for the child to exit.
  * @throws Io
@@ -279,17 +298,69 @@ export class Process {
  */
   kill_async = defineInstanceFunction("baml.sys.Process.kill", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 /**
- * Terminate an un-waited child and close its stdout stream.
+ * Terminate an un-waited child and close its stdin, stdout, and stderr pipes.
  * 
  * Safe to use with `defer { process.close() }`.
  */
   close = defineInstanceFunction("baml.sys.Process.close", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
 /**
- * Terminate an un-waited child and close its stdout stream.
+ * Terminate an un-waited child and close its stdin, stdout, and stderr pipes.
  * 
  * Safe to use with `defer { process.close() }`.
  */
   close_async = defineInstanceFunction("baml.sys.Process.close", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
+}
+
+/**
+ * A system pipe for reading data, typically from another process.
+ */
+export class ReadPipe {
+  _pipe!: _BamlHandle;
+  constructor(init: {
+    _pipe: _BamlHandle;
+  }) {
+    Object.assign(this, init);
+  }
+/**
+ * Close the read pipe, releasing any resources.
+ * @throws Io
+ */
+  close = defineInstanceFunction("baml.sys.ReadPipe.close", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
+/**
+ * Close the read pipe, releasing any resources.
+ * @throws Io
+ */
+  close_async = defineInstanceFunction("baml.sys.ReadPipe.close", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
+/**
+ * Return a line-oriented view over this pipe.
+ */
+  lines = defineInstanceFunction("baml.sys.ReadPipe.lines", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ReadPipeLines;
+/**
+ * Return a line-oriented view over this pipe.
+ */
+  lines_async = defineInstanceFunction("baml.sys.ReadPipe.lines", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ReadPipeLines>;
+}
+
+/**
+ * A system pipe for writing data, typically to another process.
+ */
+export class WritePipe {
+  _pipe!: _BamlHandle;
+  constructor(init: {
+    _pipe: _BamlHandle;
+  }) {
+    Object.assign(this, init);
+  }
+/**
+ * Close the write pipe, flushing pending data and delivering EOF.
+ * @throws Io
+ */
+  close = defineInstanceFunction("baml.sys.WritePipe.close", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
+/**
+ * Close the write pipe, flushing pending data and delivering EOF.
+ * @throws Io
+ */
+  close_async = defineInstanceFunction("baml.sys.WritePipe.close", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 }
 
 /**
@@ -307,19 +378,23 @@ export const exec = defineFunction("baml.sys.exec", "sync", ["program", "args", 
 export const exec_async = defineFunction("baml.sys.exec", "async", ["program", "args", "options"]) as (program: string, args: string[] | null, options: ProcessOptions | null, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ShellOutput>;
 
 /**
- * Starts `program` and returns immediately with a live stdout line stream.
+ * Starts `program` and returns a live process with caller-owned pipes.
  * 
  * Unlike `exec`, output is not buffered until process exit. Reading
- * `process.stdout` suspends only the current BAML green thread.
+ * `process.stdout` suspends only the current BAML green thread. If
+ * `ProcessOptions.stdin` is set, this call writes that input and waits for the
+ * child to consume it, bounded by `ProcessOptions.timeout_ms`.
  * @throws Io
  */
 export const start_process = defineFunction("baml.sys.start_process", "sync", ["program", "args", "options"]) as (program: string, args: string[] | null, options: ProcessOptions | null, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Process;
 
 /**
- * Starts `program` and returns immediately with a live stdout line stream.
+ * Starts `program` and returns a live process with caller-owned pipes.
  * 
  * Unlike `exec`, output is not buffered until process exit. Reading
- * `process.stdout` suspends only the current BAML green thread.
+ * `process.stdout` suspends only the current BAML green thread. If
+ * `ProcessOptions.stdin` is set, this call writes that input and waits for the
+ * child to consume it, bounded by `ProcessOptions.timeout_ms`.
  * @throws Io
  */
 export const start_process_async = defineFunction("baml.sys.start_process", "async", ["program", "args", "options"]) as (program: string, args: string[] | null, options: ProcessOptions | null, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Process>;

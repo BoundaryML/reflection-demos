@@ -54,18 +54,18 @@ function extract<T>(transcript: string) -> T {
         Text:
         ${transcript}
 
-        ${ctx.output_format}
+        ${ctx.output_format()}
     `
 }
 
 // Mint the type, bind it, call the LLM through it, then read every field
-// back out through baml.AnyClass — the uniform read-only reflection surface
+// back out through reflect.AnyClass — the uniform read-only reflection surface
 // every class instance implements, minted classes included — flattened to
 // strings so the frontend can render a plain filled-in form.
 function extract_into_form(saved: SavedField[], transcript: string) -> map<string, string> {
     let form_t = form_type(saved);
     type F = unreflect(form_t.as_type());
-    let note: baml.AnyClass = extract<F>(transcript) else {
+    let note: reflect.AnyClass = extract<F>(transcript) else {
         throw baml.errors.TypeMismatch { message: "extraction did not produce a class instance" }
     };
 

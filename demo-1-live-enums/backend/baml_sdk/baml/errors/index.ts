@@ -234,7 +234,9 @@ export class Timeout$stream {
  * could not be inferred and must be specified, or repeat occurrences of a
  * `TypeVar` have no consistent binding. Synthesized host-side from
  * `EngineError::TypeMismatch`; each host SDK surfaces it as its native
- * type-error (Python `TypeError`).
+ * type-error (Python `TypeError`). The stdlib itself never throws this class
+ * from BAML source (reflection's typed reads throw
+ * `reflect.errors.TypeMismatch` instead); user code remains free to.
  */
 export class TypeMismatch$stream {
   message!: string | null;
@@ -430,7 +432,9 @@ export class CompilationError {
  * could not be inferred and must be specified, or repeat occurrences of a
  * `TypeVar` have no consistent binding. Synthesized host-side from
  * `EngineError::TypeMismatch`; each host SDK surfaces it as its native
- * type-error (Python `TypeError`).
+ * type-error (Python `TypeError`). The stdlib itself never throws this class
+ * from BAML source (reflection's typed reads throw
+ * `reflect.errors.TypeMismatch` instead); user code remains free to.
  */
 export class TypeMismatch {
   message!: string;

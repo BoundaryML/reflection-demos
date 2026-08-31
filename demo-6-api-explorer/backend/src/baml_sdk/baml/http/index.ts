@@ -66,12 +66,24 @@ export class Response$stream {
 
 /**
  * A Server-Sent Events (SSE) stream. Created by `baml.http.fetch_sse`.
+ *
+ * Attributes:
+ *   url
+ *   status_code: Status code of the opening response. `fetch_sse` throws on non-2xx,
+ *     so this is always a success status.
+ *   headers: Response headers at connection open — the provider request id
+ *     (`x-request-id`, `request-id`, ...) lives here.
+ *   _handle
  */
 export class SseStream$stream {
   url!: string | null;
+  status_code!: number | null;
+  headers!: { [key: string]: string };
   _handle!: _BamlHandle;
   constructor(init: {
     url: string | null;
+    status_code: number | null;
+    headers: { [key: string]: string };
     _handle: _BamlHandle;
   }) {
     Object.assign(this, init);
@@ -264,12 +276,24 @@ export class Response {
 
 /**
  * A Server-Sent Events (SSE) stream. Created by `baml.http.fetch_sse`.
+ *
+ * Attributes:
+ *   url
+ *   status_code: Status code of the opening response. `fetch_sse` throws on non-2xx,
+ *     so this is always a success status.
+ *   headers: Response headers at connection open — the provider request id
+ *     (`x-request-id`, `request-id`, ...) lives here.
+ *   _handle
  */
 export class SseStream {
   url!: string;
+  status_code!: number;
+  headers!: { [key: string]: string };
   _handle!: _BamlHandle;
   constructor(init: {
     url: string;
+    status_code: number;
+    headers: { [key: string]: string };
     _handle: _BamlHandle;
   }) {
     Object.assign(this, init);

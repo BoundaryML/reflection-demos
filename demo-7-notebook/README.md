@@ -159,25 +159,16 @@ scripts/
   a debug-built one (`pnpm build:debug`) in 120–175 ms — whatever the cell does, since the
   fixed cost is the submission compile, not the work.
 
-### Known engine rough edges (canary a50430fba, bridge 0.17.0)
+### Known engine rough edges (nightly 0.18.1-nightly.20260828.a)
 
-All of these are reachable from the scratch cell; none is on the guided path. They share
-one cause: a value whose *class* lives in the mounted package keeps its type only as far
-as the first binding.
+Fixed since earlier canaries: reading a field off a bound or inline
+mounted-package instance (`t.subject`, `app.GetTicket(...).subject`) now
+works — the guided notebook no longer needs `reflect.class.get_field`
+workarounds, though the free function remains available.
 
-- **Reading a field off a bound instance.** `let t = app.GetTicket("SUP-1041")` then
-  `t.subject` panics with `VM internal error: type error: expected map, got instance`.
-  Use `reflect.class.get_field<string>(t, "subject")`, which works.
-  <!-- The `reflect.class.instance_from` wrapper was superseded and removed (baml #4466); the free function is the lasting spelling. -->
-- **Reading a field off an instance inline.** `app.GetTicket("SUP-1041").subject` fails
-  earlier still, as `internal compiler error: MIR failed to resolve field access .subject
-  against class definition 'Ticket'`. Same workaround.
-- **Re-binding an array.** `let v = app.LoadTickets()` then `let w = v` then `w.length()`
-  panics with `expected array, got any`. One binding deep is fine (see below).
+Still open, reachable from the scratch cell:
 
-Passing a bound instance straight to another `app` function — `app.Headline(t)` — works,
-which is why the guided notebook is built out of calls rather than field reads.
-
-Fixed since the previous build: methods on a *singly* bound mounted-package array.
-`let v = app.LoadTickets()` then `v.length()`, `v[0]`, `v.map(…)`, `v.filter(…)` and
-`v.find(…)` all work now; they used to panic with `expected array, got any`.
+- **Re-binding an array.** `let v = app.LoadTickets()` then `let w = v` then
+  `w.length()` panics with `expected array, got any`. One binding deep is
+  fine: `let v = app.LoadTickets()` then `v.length()`, `v[0]`, `v.map(…)`
+  all work.

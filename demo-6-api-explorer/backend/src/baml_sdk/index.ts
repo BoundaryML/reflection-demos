@@ -186,7 +186,7 @@ export class Summary {
  * @throws Cancelled
  * @throws CompilationError
  */
-export const SummarizeText = defineFunction("user.SummarizeText", "sync", ["text", "tone"]) as (text: string, tone: Tone, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Summary;
+export const SummarizeText = defineFunction("user.SummarizeText", "sync", ["text", "tone"], ["on_event"]) as (text: string, tone: Tone, $opts?: { on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Summary;
 
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
@@ -196,7 +196,7 @@ export const SummarizeText = defineFunction("user.SummarizeText", "sync", ["text
  * @throws Cancelled
  * @throws CompilationError
  */
-export const SummarizeText_async = defineFunction("user.SummarizeText", "async", ["text", "tone"]) as (text: string, tone: Tone, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Summary>;
+export const SummarizeText_async = defineFunction("user.SummarizeText", "async", ["text", "tone"], ["on_event"]) as (text: string, tone: Tone, $opts?: { on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<Summary>;
 
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
@@ -232,6 +232,7 @@ export const SummarizeText$parse_async = defineFunction("user.SummarizeText$pars
 
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws CompilationError
  */
@@ -239,6 +240,7 @@ export const SummarizeText$render_prompt = defineFunction("user.SummarizeText$re
 
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
+ * @throws PromptRenderError
  * @throws InvalidArgument
  * @throws CompilationError
  */
@@ -252,7 +254,7 @@ export const SummarizeText$render_prompt_async = defineFunction("user.SummarizeT
  * @throws Cancelled
  * @throws CompilationError
  */
-export const SummarizeText$stream = defineFunction("user.SummarizeText$stream", "sync", ["text", "tone"]) as (text: string, tone: Tone, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.stream.Stream<Summary$stream | null, Summary>;
+export const SummarizeText$stream = defineFunction("user.SummarizeText$stream", "sync", ["text", "tone"], ["on_event"]) as (text: string, tone: Tone, $opts?: { on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => ai.stream.Stream<Summary$stream | null, Summary>;
 
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
@@ -262,7 +264,7 @@ export const SummarizeText$stream = defineFunction("user.SummarizeText$stream", 
  * @throws Cancelled
  * @throws CompilationError
  */
-export const SummarizeText$stream_async = defineFunction("user.SummarizeText$stream", "async", ["text", "tone"]) as (text: string, tone: Tone, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.stream.Stream<Summary$stream | null, Summary>>;
+export const SummarizeText$stream_async = defineFunction("user.SummarizeText$stream", "async", ["text", "tone"], ["on_event"]) as (text: string, tone: Tone, $opts?: { on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.stream.Stream<Summary$stream | null, Summary>>;
 
 /**
  * One function of this package, shaped for an auto-generated console card.

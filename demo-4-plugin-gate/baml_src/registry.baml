@@ -41,7 +41,7 @@ class Report {
 ///
 /// `sign = false` is what an unchecked plugin loader would do: same class, no
 /// witness. Gate 2 catches those.
-function mint(submission: Submission, sign: bool = true) -> reflect.class.Type throws unknown {
+function mint(submission: Submission, sign: bool = true) -> reflect.class.Type {
     let package = reflect.Package.compile({ "plugin.baml": submission.source });
     let declared = package.get_class("root." + submission.name)
         ?? throw "the plugin declares no class named `" + submission.name + "`";
@@ -84,7 +84,7 @@ function invoke<P extends Summarizer>(document: string, answered: string[]) -> R
         if (!answered.includes(field.name)) {
             extras.set(
                 field.name,
-                baml.json.encode(reflect.class.get_field<unknown>(result, field.name)),
+                baml.json.to_string(reflect.class.get_field<unknown>(result, field.name)),
             )
         }
     }

@@ -18,7 +18,7 @@ function pick_action<T>(request: string) -> T {
 
         User request: ${request}
 
-        ${ctx.output_format}
+        ${ctx.output_format()}
     `
 }
 
@@ -29,7 +29,7 @@ class ToolPick {
     prompt_preview string
 }
 
-function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick throws unknown {
+function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick {
     let calc_t = reflect.class.new("Calculator", {
         "expression": reflect.Type.of<string>().meta(
             description = "a math expression using + - * / ( ), e.g. \"2 * (3 + 4)\"",
@@ -107,7 +107,7 @@ function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick thro
     ToolPick {
         matched: tool != "",
         tool: tool,
-        args_json: baml.json.encode(action),
+        args_json: baml.json.to_string(action),
         prompt_preview: prompt_preview,
     }
 }

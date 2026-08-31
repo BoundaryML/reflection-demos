@@ -16,18 +16,34 @@ import { defineInstanceFunction, type BamlCallContext, type BamlType } from "@bo
 
 /**
  * An array-kind view of a `type` value. Users never construct this class.
+ *
+ * Attributes:
+ *   _ty: The wrapped `type` value. Private by invariant: reflection natives are
+ *     its only readers, and each kind method panics if the held type no longer
+ *     classifies as this view's kind.
  */
 export class Type$stream {
-  constructor(init: {}) {
+  _ty!: unknown;
+  constructor(init: {
+    _ty: unknown;
+  }) {
     Object.assign(this, init);
   }
 }
 
 /**
  * An array-kind view of a `type` value. Users never construct this class.
+ *
+ * Attributes:
+ *   _ty: The wrapped `type` value. Private by invariant: reflection natives are
+ *     its only readers, and each kind method panics if the held type no longer
+ *     classifies as this view's kind.
  */
 export class Type {
-  constructor(init: {}) {
+  _ty!: BamlType;
+  constructor(init: {
+    _ty: BamlType;
+  }) {
     Object.assign(this, init);
   }
   element_type = defineInstanceFunction("reflect.array.Type.element_type", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => BamlType;

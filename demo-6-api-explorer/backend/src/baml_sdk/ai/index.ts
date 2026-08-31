@@ -32,12 +32,10 @@ export * as wire from "./wire/index.js";
 export class Context$stream {
   client!: ContextClient$stream | null;
   tags!: { [key: string]: unknown };
-  output_format!: string | null;
   _output_format!: OutputFormat$stream | null;
   constructor(init: {
     client: ContextClient$stream | null;
     tags: { [key: string]: unknown };
-    output_format: string | null;
     _output_format: OutputFormat$stream | null;
   }) {
     Object.assign(this, init);
@@ -104,6 +102,8 @@ export class OutputFormat {
   }) {
     Object.assign(this, init);
   }
+  _render = defineInstanceFunction("ai.OutputFormat._render", "sync", ["self"], ["prefix", "or_splitter", "enum_value_prefix", "hoisted_class_prefix", "always_hoist_enums", "quote_class_fields", "hoist_classes", "map_style", "render_null_as"]).bind(this) as ($opts?: { prefix?: string | ai.internal.OutputFormatDefault | null | undefined; or_splitter?: string | ai.internal.OutputFormatDefault | undefined; enum_value_prefix?: string | ai.internal.OutputFormatDefault | null | undefined; hoisted_class_prefix?: string | ai.internal.OutputFormatDefault | null | undefined; always_hoist_enums?: boolean | ai.internal.OutputFormatDefault | undefined; quote_class_fields?: boolean | ai.internal.OutputFormatDefault | undefined; hoist_classes?: boolean | "auto" | string[] | ai.internal.OutputFormatDefault | undefined; map_style?: "angle" | "object" | ai.internal.OutputFormatDefault | undefined; render_null_as?: string | ai.internal.OutputFormatDefault | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => string;
+  _render_async = defineInstanceFunction("ai.OutputFormat._render", "async", ["self"], ["prefix", "or_splitter", "enum_value_prefix", "hoisted_class_prefix", "always_hoist_enums", "quote_class_fields", "hoist_classes", "map_style", "render_null_as"]).bind(this) as ($opts?: { prefix?: string | ai.internal.OutputFormatDefault | null | undefined; or_splitter?: string | ai.internal.OutputFormatDefault | undefined; enum_value_prefix?: string | ai.internal.OutputFormatDefault | null | undefined; hoisted_class_prefix?: string | ai.internal.OutputFormatDefault | null | undefined; always_hoist_enums?: boolean | ai.internal.OutputFormatDefault | undefined; quote_class_fields?: boolean | ai.internal.OutputFormatDefault | undefined; hoist_classes?: boolean | "auto" | string[] | ai.internal.OutputFormatDefault | undefined; map_style?: "angle" | "object" | ai.internal.OutputFormatDefault | undefined; render_null_as?: string | ai.internal.OutputFormatDefault | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 }
 
 /**
@@ -148,18 +148,16 @@ export class ContextClient {
 export class Context {
   client!: ContextClient;
   tags!: { [key: string]: unknown };
-  output_format!: string;
   _output_format!: OutputFormat;
   constructor(init: {
     client: ContextClient;
     tags: { [key: string]: unknown };
-    output_format: string;
     _output_format: OutputFormat;
   }) {
     Object.assign(this, init);
   }
-  output_format_with = defineInstanceFunction("ai.Context.output_format_with", "sync", ["self"], ["prefix", "or_splitter", "enum_value_prefix", "hoisted_class_prefix", "always_hoist_enums", "quote_class_fields", "hoist_classes", "map_style", "render_null_as"]).bind(this) as ($opts?: { prefix?: string | null | undefined; or_splitter?: string | null | undefined; enum_value_prefix?: string | null | undefined; hoisted_class_prefix?: string | null | undefined; always_hoist_enums?: boolean | null | undefined; quote_class_fields?: boolean | null | undefined; hoist_classes?: string[] | null | undefined; map_style?: string | null | undefined; render_null_as?: string | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => string;
-  output_format_with_async = defineInstanceFunction("ai.Context.output_format_with", "async", ["self"], ["prefix", "or_splitter", "enum_value_prefix", "hoisted_class_prefix", "always_hoist_enums", "quote_class_fields", "hoist_classes", "map_style", "render_null_as"]).bind(this) as ($opts?: { prefix?: string | null | undefined; or_splitter?: string | null | undefined; enum_value_prefix?: string | null | undefined; hoisted_class_prefix?: string | null | undefined; always_hoist_enums?: boolean | null | undefined; quote_class_fields?: boolean | null | undefined; hoist_classes?: string[] | null | undefined; map_style?: string | null | undefined; render_null_as?: string | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
+  output_format = defineInstanceFunction("ai.Context.output_format", "sync", ["self"], ["prefix", "or_splitter", "enum_value_prefix", "hoisted_class_prefix", "always_hoist_enums", "quote_class_fields", "hoist_classes", "map_style", "render_null_as"]).bind(this) as ($opts?: { prefix?: string | ai.internal.OutputFormatDefault | null | undefined; or_splitter?: string | ai.internal.OutputFormatDefault | undefined; enum_value_prefix?: string | ai.internal.OutputFormatDefault | null | undefined; hoisted_class_prefix?: string | ai.internal.OutputFormatDefault | null | undefined; always_hoist_enums?: boolean | ai.internal.OutputFormatDefault | undefined; quote_class_fields?: boolean | ai.internal.OutputFormatDefault | undefined; hoist_classes?: boolean | "auto" | string[] | ai.internal.OutputFormatDefault | undefined; map_style?: "angle" | "object" | ai.internal.OutputFormatDefault | undefined; render_null_as?: string | ai.internal.OutputFormatDefault | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => string;
+  output_format_async = defineInstanceFunction("ai.Context.output_format", "async", ["self"], ["prefix", "or_splitter", "enum_value_prefix", "hoisted_class_prefix", "always_hoist_enums", "quote_class_fields", "hoist_classes", "map_style", "render_null_as"]).bind(this) as ($opts?: { prefix?: string | ai.internal.OutputFormatDefault | null | undefined; or_splitter?: string | ai.internal.OutputFormatDefault | undefined; enum_value_prefix?: string | ai.internal.OutputFormatDefault | null | undefined; hoisted_class_prefix?: string | ai.internal.OutputFormatDefault | null | undefined; always_hoist_enums?: boolean | ai.internal.OutputFormatDefault | undefined; quote_class_fields?: boolean | ai.internal.OutputFormatDefault | undefined; hoist_classes?: boolean | "auto" | string[] | ai.internal.OutputFormatDefault | undefined; map_style?: "angle" | "object" | ai.internal.OutputFormatDefault | undefined; render_null_as?: string | ai.internal.OutputFormatDefault | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
 }
 
 export class Journal$stream {
@@ -186,24 +184,21 @@ export class Journal {
   append_all_async = defineInstanceFunction("ai.Journal.append_all", "async", ["self", "events"]).bind(this) as (events: ai.events.Event[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 }
 
-export class Agent$stream<Out> {
+export class Agent$stream {
   max_steps!: number | null;
   schema_attempts!: number | null;
   client!: unknown | null;
   tool_errors!: ai.tools.ErrorMode | null;
-  on_event!: unknown;
-  $types?: { Out?: BamlType | BamlTypeToken };
+  on_event!: unknown | null;
   constructor(init: {
     max_steps: number | null;
     schema_attempts: number | null;
     client: unknown | null;
     tool_errors: ai.tools.ErrorMode | null;
-    on_event: unknown;
-    $types?: { Out?: BamlType | BamlTypeToken };
+    on_event: unknown | null;
   }) {
     Object.assign(this, init);
   }
-  static readonly $generic = ["Out"] as const;
 }
 
 export class RunResult$stream<Out> {
@@ -238,90 +233,87 @@ export class RunResult<Out> {
   static readonly $generic = ["Out"] as const;
 }
 
-export class Agent<Out> {
+export class Agent {
   max_steps!: number;
   schema_attempts!: number;
   client!: unknown | null;
   tool_errors!: ai.tools.ErrorMode;
-  on_event!: (arg0: ai.events.Event) => null;
-  $types?: { Out?: BamlType | BamlTypeToken };
+  on_event!: ((arg0: ai.events.Event) => null) | null;
   constructor(init: {
     max_steps: number;
     schema_attempts: number;
     client: unknown | null;
     tool_errors: ai.tools.ErrorMode;
-    on_event: (arg0: ai.events.Event) => null;
-    $types?: { Out?: BamlType | BamlTypeToken };
+    on_event: ((arg0: ai.events.Event) => null) | null;
   }) {
     Object.assign(this, init);
   }
-  static readonly $generic = ["Out"] as const;
 /**
  * @throws InvalidArgument
  */
-  static new = defineFunction("ai.Agent.new", "sync", [], ["max_steps", "schema_attempts", "client", "tool_errors", "on_event"]) as <Out>($opts?: { max_steps?: number | undefined; schema_attempts?: number | undefined; client?: unknown | null | undefined; tool_errors?: ai.tools.ErrorMode | undefined; on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Agent<Out>;
+  static new = defineFunction("ai.Agent.new", "sync", [], ["max_steps", "schema_attempts", "client", "tool_errors", "on_event"]) as ($opts?: { max_steps?: number | undefined; schema_attempts?: number | undefined; client?: unknown | null | undefined; tool_errors?: ai.tools.ErrorMode | undefined; on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Agent;
 /**
  * @throws InvalidArgument
  */
-  static new_async = defineFunction("ai.Agent.new", "async", [], ["max_steps", "schema_attempts", "client", "tool_errors", "on_event"]) as <Out>($opts?: { max_steps?: number | undefined; schema_attempts?: number | undefined; client?: unknown | null | undefined; tool_errors?: ai.tools.ErrorMode | undefined; on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<Agent<Out>>;
+  static new_async = defineFunction("ai.Agent.new", "async", [], ["max_steps", "schema_attempts", "client", "tool_errors", "on_event"]) as ($opts?: { max_steps?: number | undefined; schema_attempts?: number | undefined; client?: unknown | null | undefined; tool_errors?: ai.tools.ErrorMode | undefined; on_event?: ((arg0: ai.events.Event) => null) | null | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<Agent>;
 /**
  * @throws InvalidArgument
  */
-  _validated_schema_attempts = defineInstanceFunction("ai.Agent._validated_schema_attempts", "sync", ["self"], undefined, { classTypeParams: ["Out"] }).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
+  _validated_schema_attempts = defineInstanceFunction("ai.Agent._validated_schema_attempts", "sync", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
 /**
  * @throws InvalidArgument
  */
-  _validated_schema_attempts_async = defineInstanceFunction("ai.Agent._validated_schema_attempts", "async", ["self"], undefined, { classTypeParams: ["Out"] }).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
+  _validated_schema_attempts_async = defineInstanceFunction("ai.Agent._validated_schema_attempts", "async", ["self"]).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
 /**
  * @throws ToolFailedError
  */
-  _run_one_tool = defineInstanceFunction("ai.Agent._run_one_tool", "sync", ["self", "tb", "call", "j"], undefined, { classTypeParams: ["Out"] }).bind(this) as (tb: ai.tools.Toolbox, call: ai.content.ToolUse, j: Journal, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
+  _run_one_tool = defineInstanceFunction("ai.Agent._run_one_tool", "sync", ["self", "tb", "call", "j"]).bind(this) as (tb: ai.tools.Toolbox, call: ai.content.ToolUse, j: Journal, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => null;
 /**
  * @throws ToolFailedError
  */
-  _run_one_tool_async = defineInstanceFunction("ai.Agent._run_one_tool", "async", ["self", "tb", "call", "j"], undefined, { classTypeParams: ["Out"] }).bind(this) as (tb: ai.tools.Toolbox, call: ai.content.ToolUse, j: Journal, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
+  _run_one_tool_async = defineInstanceFunction("ai.Agent._run_one_tool", "async", ["self", "tb", "call", "j"]).bind(this) as (tb: ai.tools.Toolbox, call: ai.content.ToolUse, j: Journal, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<null>;
 /**
  * @throws UnknownError
  */
-  _has_media_output = defineInstanceFunction("ai.Agent._has_media_output", "sync", ["self", "turn"], undefined, { classTypeParams: ["Out"] }).bind(this) as (turn: ModelTurn, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => boolean;
+  _has_media_output = defineInstanceFunction("ai.Agent._has_media_output", "sync", ["self", "turn"], undefined, { typeParams: ["Out"] }).bind(this) as <Out>(turn: ModelTurn, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { Out?: BamlType | BamlTypeToken } | undefined } | undefined) => boolean;
 /**
  * @throws UnknownError
  */
-  _has_media_output_async = defineInstanceFunction("ai.Agent._has_media_output", "async", ["self", "turn"], undefined, { classTypeParams: ["Out"] }).bind(this) as (turn: ModelTurn, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<boolean>;
+  _has_media_output_async = defineInstanceFunction("ai.Agent._has_media_output", "async", ["self", "turn"], undefined, { typeParams: ["Out"] }).bind(this) as <Out>(turn: ModelTurn, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { Out?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<boolean>;
 /**
  * @throws ParseFailed
  * @throws UnknownError
  */
-  _media_value = defineInstanceFunction("ai.Agent._media_value", "sync", ["self", "turn", "provider"], undefined, { classTypeParams: ["Out"] }).bind(this) as (turn: ModelTurn, provider: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Out;
+  _media_value = defineInstanceFunction("ai.Agent._media_value", "sync", ["self", "turn", "provider"], undefined, { typeParams: ["Out"] }).bind(this) as <Out>(turn: ModelTurn, provider: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { Out?: BamlType | BamlTypeToken } | undefined } | undefined) => Out;
 /**
  * @throws ParseFailed
  * @throws UnknownError
  */
-  _media_value_async = defineInstanceFunction("ai.Agent._media_value", "async", ["self", "turn", "provider"], undefined, { classTypeParams: ["Out"] }).bind(this) as (turn: ModelTurn, provider: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Out>;
+  _media_value_async = defineInstanceFunction("ai.Agent._media_value", "async", ["self", "turn", "provider"], undefined, { typeParams: ["Out"] }).bind(this) as <Out>(turn: ModelTurn, provider: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { Out?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<Out>;
 /**
  * @throws UnknownError
  */
-  _parses = defineInstanceFunction("ai.Agent._parses", "sync", ["self", "turn", "candidate"], undefined, { classTypeParams: ["Out"] }).bind(this) as (turn: ModelTurn, candidate: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => boolean;
+  _parses = defineInstanceFunction("ai.Agent._parses", "sync", ["self", "turn", "candidate"], undefined, { typeParams: ["Out"] }).bind(this) as <Out>(turn: ModelTurn, candidate: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { Out?: BamlType | BamlTypeToken } | undefined } | undefined) => boolean;
 /**
  * @throws UnknownError
  */
-  _parses_async = defineInstanceFunction("ai.Agent._parses", "async", ["self", "turn", "candidate"], undefined, { classTypeParams: ["Out"] }).bind(this) as (turn: ModelTurn, candidate: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<boolean>;
+  _parses_async = defineInstanceFunction("ai.Agent._parses", "async", ["self", "turn", "candidate"], undefined, { typeParams: ["Out"] }).bind(this) as <Out>(turn: ModelTurn, candidate: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { Out?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<boolean>;
 /**
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
  * @throws CompilationError
  */
-  _attempt_turn = defineInstanceFunction("ai.Agent._attempt_turn", "sync", ["self", "c", "spec", "j", "total", "attempts_left"], undefined, { classTypeParams: ["Out"] }).bind(this) as (c: unknown, spec: FunctionSpec<Out>, j: Journal, total: ai.events.Usage, attempts_left: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ModelTurn;
+  _attempt_turn = defineInstanceFunction("ai.Agent._attempt_turn", "sync", ["self", "c", "spec", "j", "total", "attempts_left"], undefined, { typeParams: ["Out"] }).bind(this) as <Out>(c: unknown, spec: FunctionSpec<Out>, j: Journal, total: ai.events.Usage, attempts_left: number, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { Out?: BamlType | BamlTypeToken } | undefined } | undefined) => ModelTurn;
 /**
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
  * @throws CompilationError
  */
-  _attempt_turn_async = defineInstanceFunction("ai.Agent._attempt_turn", "async", ["self", "c", "spec", "j", "total", "attempts_left"], undefined, { classTypeParams: ["Out"] }).bind(this) as (c: unknown, spec: FunctionSpec<Out>, j: Journal, total: ai.events.Usage, attempts_left: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ModelTurn>;
-  _emit_from = defineInstanceFunction("ai.Agent._emit_from", "sync", ["self", "j", "seen"], undefined, { classTypeParams: ["Out"] }).bind(this) as (j: Journal, seen: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
-  _emit_from_async = defineInstanceFunction("ai.Agent._emit_from", "async", ["self", "j", "seen"], undefined, { classTypeParams: ["Out"] }).bind(this) as (j: Journal, seen: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
+  _attempt_turn_async = defineInstanceFunction("ai.Agent._attempt_turn", "async", ["self", "c", "spec", "j", "total", "attempts_left"], undefined, { typeParams: ["Out"] }).bind(this) as <Out>(c: unknown, spec: FunctionSpec<Out>, j: Journal, total: ai.events.Usage, attempts_left: number, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { Out?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ModelTurn>;
+  _emit_from = defineInstanceFunction("ai.Agent._emit_from", "sync", ["self", "j", "seen"]).bind(this) as (j: Journal, seen: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => number;
+  _emit_from_async = defineInstanceFunction("ai.Agent._emit_from", "async", ["self", "j", "seen"]).bind(this) as (j: Journal, seen: number, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<number>;
 }
 
 export class FunctionSpec$stream<Out> {
@@ -457,14 +449,14 @@ export const prompt_async = defineFunction("ai.prompt", "async", ["body"]) as (b
 export class FunctionSpec<Out> {
   spec_name!: string;
   args!: { [key: string]: unknown };
-  prompt_template!: (arg0: string) => Prompt;
+  prompt_template!: (arg0: OutputFormat) => Prompt;
   toolbox!: ai.tools.Toolbox;
   default_client!: unknown;
   $types?: { Out?: BamlType | BamlTypeToken };
   constructor(init: {
     spec_name: string;
     args: { [key: string]: unknown };
-    prompt_template: (arg0: string) => Prompt;
+    prompt_template: (arg0: OutputFormat) => Prompt;
     toolbox: ai.tools.Toolbox;
     default_client: unknown;
     $types?: { Out?: BamlType | BamlTypeToken };
@@ -498,8 +490,16 @@ export class FunctionSpec<Out> {
  * @throws CompilationError
  */
   output_type_async = defineInstanceFunction("ai.FunctionSpec.output_type", "async", ["self"], undefined, { classTypeParams: ["Out"] }).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<BamlType>;
-  prompt = defineInstanceFunction("ai.FunctionSpec.prompt", "sync", ["self"], ["output_format"], { classTypeParams: ["Out"] }).bind(this) as ($opts?: { output_format?: string | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Prompt;
-  prompt_async = defineInstanceFunction("ai.FunctionSpec.prompt", "async", ["self"], ["output_format"], { classTypeParams: ["Out"] }).bind(this) as ($opts?: { output_format?: string | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<Prompt>;
+/**
+ * @throws PromptRenderError
+ * @throws CompilationError
+ */
+  prompt = defineInstanceFunction("ai.FunctionSpec.prompt", "sync", ["self"], undefined, { classTypeParams: ["Out"] }).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Prompt;
+/**
+ * @throws PromptRenderError
+ * @throws CompilationError
+ */
+  prompt_async = defineInstanceFunction("ai.FunctionSpec.prompt", "async", ["self"], undefined, { classTypeParams: ["Out"] }).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<Prompt>;
   tools = defineInstanceFunction("ai.FunctionSpec.tools", "sync", ["self"], undefined, { classTypeParams: ["Out"] }).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.tools.Toolbox;
   tools_async = defineInstanceFunction("ai.FunctionSpec.tools", "async", ["self"], undefined, { classTypeParams: ["Out"] }).bind(this) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.tools.Toolbox>;
 }
@@ -508,10 +508,12 @@ export class ModelTurn$stream {
   content!: ai.content.Block$stream[];
   stop_reason!: ai.content.StopReason | null;
   usage!: ai.events.Usage$stream | null;
+  calls!: ai.events.LLMCall$stream[];
   constructor(init: {
     content: ai.content.Block$stream[];
     stop_reason: ai.content.StopReason | null;
     usage: ai.events.Usage$stream | null;
+    calls: ai.events.LLMCall$stream[];
   }) {
     Object.assign(this, init);
   }
@@ -533,12 +535,12 @@ export class ModelTurnInput$stream {
 }
 
 export class ModelTurnInput {
-  prompt!: (arg0: string) => Prompt;
+  prompt!: (arg0: OutputFormat) => Prompt;
   journal!: Journal;
   toolbox!: ai.tools.Toolbox;
   output_type!: BamlType;
   constructor(init: {
-    prompt: (arg0: string) => Prompt;
+    prompt: (arg0: OutputFormat) => Prompt;
     journal: Journal;
     toolbox: ai.tools.Toolbox;
     output_type: BamlType;
@@ -551,10 +553,12 @@ export class ModelTurn {
   content!: ai.content.Block[];
   stop_reason!: ai.content.StopReason;
   usage!: ai.events.Usage | null;
+  calls!: ai.events.LLMCall[];
   constructor(init: {
     content: ai.content.Block[];
     stop_reason: ai.content.StopReason;
     usage: ai.events.Usage | null;
+    calls: ai.events.LLMCall[];
   }) {
     Object.assign(this, init);
   }
