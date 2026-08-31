@@ -1,11 +1,8 @@
 import express from "express";
 import { PluginHost, type Failure, type PluginField, type Report } from "./host.js";
-import { CONTRACT_FIELDS, DOCUMENTS, EXAMPLES, cannedResponse } from "./catalog.js";
+import { CONTRACT_FIELDS, DOCUMENTS, EXAMPLES } from "./catalog.js";
 
 const PORT = Number(process.env.PORT ?? 4440);
-
-const liveKey = process.env.OPENAI_API_KEY ?? process.env.ANTHROPIC_API_KEY ?? null;
-const MOCK = process.env.MOCK_LLM === "1" || !liveKey;
 
 interface InstalledPlugin {
   name: string;
@@ -65,7 +62,7 @@ app.get("/api/health", (_req, res) => {
 
 app.get("/api/bootstrap", (_req, res) => {
   res.json({
-    mode: MOCK ? "mock" : "live",
+    mode: "live",
     model: process.env.PLUGIN_MODEL ?? "anthropic/claude-haiku-4-5",
     host: { status: host.status, error: host.lastError },
     contract: CONTRACT_FIELDS,
@@ -109,8 +106,7 @@ app.post("/api/plugins/:name/run", async (req, res) => {
     res.status(400).json({ ok: false, error: { message: "no such document", diagnostics: [] } });
     return;
   }
-  const canned = MOCK ? cannedResponse(plugin.fields, document) : undefined;
-  const reply = await host.send({ op: "invoke", name: plugin.name, document, canned });
+  const reply = await host.send({ op: "invoke", name: plugin.name, document });
   if (!reply.ok || !reply.report) {
     res.status(422).json({
       ok: false,
@@ -118,7 +114,7 @@ app.post("/api/plugins/:name/run", async (req, res) => {
     });
     return;
   }
-  res.json({ ok: true, report: reply.report satisfies Report, mode: MOCK ? "mock" : "live" });
+  res.json({ ok: true, report: reply.report satisfies Report, mode: "live" });
 });
 
 /**
@@ -143,7 +139,6 @@ app.post("/api/force", async (req, res) => {
     source,
     bindings: bindings ?? {},
     document,
-    canned: "{}",
   });
   if (!reply.ok || !reply.report) {
     res.json({
@@ -156,7 +151,7 @@ app.post("/api/force", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`[plugin-gate] api on http://localhost:${PORT} (${MOCK ? "mock" : "live"} mode)`);
+  console.log(`[plugin-gate] api on http://localhost:${PORT}`);
 });
 
 host

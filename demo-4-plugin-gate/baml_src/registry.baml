@@ -74,17 +74,9 @@ function mint(submission: Submission, sign: bool = true) -> reflect.class.Type t
 ///
 /// `answered` names the plugin's own fields that back the contract; everything
 /// else the plugin declared is an extra, and extras are read reflectively.
-function invoke<P extends Summarizer>(
-    document: string,
-    canned: string?,
-    answered: string[],
-) -> Report {
+function invoke<P extends Summarizer>(document: string, answered: string[]) -> Report {
     let prompt = Summarize$render_prompt<P>(document).text();
-    let result: Summarizer = if (canned == null) {
-        Summarize<P>(document)
-    } else {
-        Summarize$parse<P>(canned ?? "")
-    };
+    let result: Summarizer = Summarize<P>(document);
 
     let extras: map<string, string> = {};
     let plugin = reflect.Type.of<P>().as_class() ?? throw "plugin type is not a class";

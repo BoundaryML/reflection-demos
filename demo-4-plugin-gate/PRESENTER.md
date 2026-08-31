@@ -139,16 +139,16 @@ reflect.class.new(submission.name, fields, implementations = [witness])
 > chose, and mint. If the witness does not check out, `reflect.class.new` throws, and the throw
 > carries the compiler's diagnostics. That is everything you saw in red."
 
-**3. `baml_src/registry.baml` — `invoke`, line 77, together with `host.baml` line 99.** Gate 2.
+**3. `baml_src/registry.baml` — `invoke`, line 77, together with `host.baml` line 97.** Gate 2.
 
 ```baml
 // host.baml
 type P = unreflect(plugin.as_type());
-invoke<P>(request.document ?? "", request.canned, answered)
+invoke<P>(request.document ?? "", answered)
 
 // registry.baml
-function invoke<P extends Summarizer>(document: string, canned: string?, answered: string[]) -> Report {
-  let result: Summarizer = Summarize$parse<P>(canned ?? "")
+function invoke<P extends Summarizer>(document: string, answered: string[]) -> Report {
+  let result: Summarizer = Summarize<P>(document)
   …
   reflect.class.get_field<unknown>(result, field.name)
 }

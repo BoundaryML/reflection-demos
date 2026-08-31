@@ -13,8 +13,6 @@ class Request {
     source: string?,
     bindings: map<string, string>?,
     document: string?,
-    /// A canned model response. Present in mock mode, absent in live mode.
-    canned: string?,
 }
 
 class Reply {
@@ -97,7 +95,7 @@ function plugin_host() -> null {
 function run(request: Request, plugin: reflect.class.Type, answered: string[]) -> Reply {
     let report = {
         type P = unreflect(plugin.as_type());
-        invoke<P>(request.document ?? "", request.canned, answered)
+        invoke<P>(request.document ?? "", answered)
     };
     Reply { id: request.id, ok: true, manifest: null, fields: null, report: report, error: null }
 }

@@ -55,21 +55,20 @@ Validate the BAML on its own:
 pnpm --filter demo-4-plugin-gate baml:check
 ```
 
-## Mock mode and live mode
+## Live only
 
-The demo is **fully presentable offline**; no key is needed.
+`ANTHROPIC_API_KEY` must be in the environment (e.g. `infisical run -- pnpm dev`) — there
+is no mock mode; the code is deliberately minimal. Note that the two rejection beats
+(gate 1 and gate 2) never reach a model at all, so only actual **Run plugin** clicks
+spend tokens.
 
 | variable | effect |
 | --- | --- |
-| `MOCK_LLM=1` | force mock mode (default when no key is set) |
-| `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | enables live mode |
 | `PLUGIN_MODEL` | model selector, e.g. `openai/gpt-4o-mini`; defaults to `anthropic/claude-haiku-4-5` |
 
-In mock mode the backend renders the **real** prompt from the plugin's runtime schema through
-`Summarize$render_prompt<P>`, then feeds a canned JSON body shaped to that same schema through the
-**real** parser with `Summarize$parse<P>` — the same `$render_prompt` / `$parse` seam the BAML test
-suite uses. Everything on screen is genuine except the model's words. In live mode the same
-function is called for real (`Summarize<P>(document)`); nothing else changes.
+Each run's `Report.prompt` carries the request the plugin's schema produced
+(`Summarize$render_prompt<P>` — shown in the UI behind "Show the request this plugin's
+schema produced").
 
 ## Files
 
@@ -79,7 +78,7 @@ function is called for real (`Summarize<P>(document)`); nothing else changes.
 | `baml_src/registry.baml` | both gates: `mint` (witness construction) and `invoke` (the bounded call), plus `describe` and `manifest` for the registry listing |
 | `baml_src/host.baml` | plumbing — the long-lived JSON-lines worker that holds the minted types |
 | `backend/src/host.ts` | spawns and talks to that worker |
-| `backend/src/catalog.ts` | sample plugins, sample documents, mock-response synthesis |
+| `backend/src/catalog.ts` | sample plugins and sample documents |
 | `frontend/src/` | the marketplace UI |
 
 ## Note on the runtime: CLI host, not the bridge

@@ -52,14 +52,13 @@ export interface Reply {
 
 export type Request =
   | { op: "install"; name: string; source: string; bindings: Record<string, string> }
-  | { op: "invoke"; name: string; document: string; canned?: string }
+  | { op: "invoke"; name: string; document: string }
   | {
       op: "force";
       name: string;
       source: string;
       bindings: Record<string, string>;
       document: string;
-      canned?: string;
     };
 
 /** Where the locally built BAML toolchain lives. */
