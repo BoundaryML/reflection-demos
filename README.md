@@ -33,15 +33,21 @@ and shows a live up/down dot for each one's backend.
   pinned to the **same version** in each demo's `package.json` and comes down
   with `pnpm install` — prebuilt, no Rust needed. The CLI toolchain and the
   bridge must stay the same version; that's the one rule.
-- **`ANTHROPIC_API_KEY`** in your environment — every demo makes real model
-  calls (Haiku 4.5, and Sonnet 4.5 in Schema Studio). There is no mock mode.
+- **An LLM key** in your environment — every demo makes real model calls;
+  there is no mock mode. Either provider works:
+  - `OPENAI_API_KEY` → the demos use `gpt-4o-mini`.
+  - `ANTHROPIC_API_KEY` → the demos use `claude-haiku-4-5` (Schema Studio uses
+    `claude-sonnet-4-5`).
+  When **both** are set, OpenAI wins — the selection lives in one tiny
+  `default_client()` function in each demo's `baml_src`, so it's easy to
+  point at (and to flip).
 
 ## Run everything
 
 ```bash
 baml toolchain use "$(cat BAML_VERSION)"   # once
 pnpm install
-export ANTHROPIC_API_KEY=sk-ant-...        # or however you manage secrets
+export OPENAI_API_KEY=sk-...               # or ANTHROPIC_API_KEY=sk-ant-...
 pnpm dev
 ```
 

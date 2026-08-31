@@ -46,7 +46,23 @@ export type ToolId$stream = "calculator" | "unit_converter" | "note_saver" | "we
 export type ToolId = "calculator" | "unit_converter" | "note_saver" | "weather";
 
 /**
+ * Whichever provider the user has a key for; OpenAI wins when both are set.
+ * @throws Io
+ * @throws ParseError
+ */
+export const default_client = defineFunction("user.default_client", "sync", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
+
+/**
+ * Whichever provider the user has a key for; OpenAI wins when both are set.
+ * @throws Io
+ * @throws ParseError
+ */
+export const default_client_async = defineFunction("user.default_client", "async", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
+
+/**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -56,6 +72,8 @@ export const pick_action = defineFunction("user.pick_action", "sync", ["request"
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -65,6 +83,8 @@ export const pick_action_async = defineFunction("user.pick_action", "async", ["r
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -74,6 +94,8 @@ export const pick_action$build_request = defineFunction("user.pick_action$build_
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -92,21 +114,29 @@ export const pick_action$parse = defineFunction("user.pick_action$parse", "sync"
 export const pick_action$parse_async = defineFunction("user.pick_action$parse", "async", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
 
 /**
+ * @throws InvalidRequest
  * @throws PromptRenderError
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws CompilationError
  */
 export const pick_action$render_prompt = defineFunction("user.pick_action$render_prompt", "sync", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.Prompt;
 
 /**
+ * @throws InvalidRequest
  * @throws PromptRenderError
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws CompilationError
  */
 export const pick_action$render_prompt_async = defineFunction("user.pick_action$render_prompt", "async", ["request"], undefined, { typeParams: ["T"] }) as <T>(request: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.Prompt>;
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -116,6 +146,8 @@ export const pick_action$stream = defineFunction("user.pick_action$stream", "syn
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -140,6 +172,8 @@ export class ToolPick {
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws JsonSerializationError
@@ -150,6 +184,8 @@ export const route_and_dispatch = defineFunction("user.route_and_dispatch", "syn
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws JsonSerializationError

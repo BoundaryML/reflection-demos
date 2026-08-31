@@ -39,27 +39,14 @@ those two functions and nothing else. **Add a seventh function to
 card, new form, working Invoke button, typed errors — with zero other changes
 anywhere in this repo.
 
-## Mock mode (no API key required)
+## Live only
 
-`SummarizeText` is the one LLM function. With `MOCK_LLM=1` (or simply no
-`ANTHROPIC_API_KEY` — see below), the backend never calls it directly.
-Instead, `backend/src/invoke.ts` calls the compiler-synthesized
-`root.SummarizeText$parse` companion — through the *exact same*
-`InvokeFunction` dispatcher used for every other function — with a canned
-JSON response templated from the request. This is the same
-render-prompt/parse-canned-response seam the BAML test suite itself uses; the
-`reflection.baml` dispatcher never has to know mock mode exists, because
-`$parse` is just another function it can find by name.
-
-Mode selection (`backend/src/server.ts`):
-
-- `MOCK_LLM=1` — always mock, even with a key present (handy for presenting).
-- `MOCK_LLM=0` — always live. With no `ANTHROPIC_API_KEY` the backend still
-  starts and warns at startup — the five non-LLM functions need no key and keep
-  working, and `SummarizeText` comes back as a typed
-  `ai.errors.InvalidRequest` saying the key is missing.
-- unset (default) — mock unless `ANTHROPIC_API_KEY` is present. **`pnpm dev`
-  with zero setup is fully offline-presentable.**
+`SummarizeText` is the one LLM function; the other five are pure and need no
+key. `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` enables it (OpenAI preferred
+when both are set — `default_client()` in `baml_src/functions.baml`). With no
+key at all the backend still starts: the five pure functions keep working,
+and `SummarizeText` comes back as a typed `ai.errors.InvalidRequest` — which
+is itself a demo of the generic error channel.
 
 ## Running standalone
 
@@ -75,8 +62,8 @@ needed to start the demo. Only re-run `baml generate` after editing
 `baml_src/` — see [Regenerating the client](#regenerating-the-client).
 
 Backend on `http://localhost:4460`, frontend on `http://localhost:4461`
-(proxies `/api` to the backend). For live LLM calls, `export
-ANTHROPIC_API_KEY=...` first.
+(proxies `/api` to the backend). For live LLM calls, export `OPENAI_API_KEY`
+or `ANTHROPIC_API_KEY` first (OpenAI preferred when both are set).
 
 ## Try the reflection loop yourself
 
@@ -182,7 +169,7 @@ baml_src/
   reflection.baml     the two-function reflection layer — never edit this to add a function
 backend/
   src/server.ts        two routes: GET /api/functions, POST /api/invoke
-  src/invoke.ts         the one MOCK_LLM branch (SummarizeText -> $parse companion)
+  src/invoke.ts         thin wrapper over the reflective InvokeFunction dispatcher
   src/bamlClient.ts     lazy-loads the generated client so a stale bridge degrades, not crashes
   src/baml_sdk/         generated TypeScript client (committed; regenerate via baml generate)
 frontend/

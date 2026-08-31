@@ -22,8 +22,13 @@ function contract_fields() -> string[] {
 /// `T` is the plugin's own class. It is minted at install time from source the
 /// host never compiled against, and handed to this function as a runtime type.
 /// `T extends Summarizer` is the whole reason that is safe.
+/// Whichever provider the user has a key for; OpenAI wins when both are set.
+function default_client() -> string {
+    if (env.OPENAI_API_KEY.get() != null) { "openai/gpt-4o-mini" } else { "anthropic/claude-haiku-4-5" }
+}
+
 function Summarize<T extends Summarizer>(document: string) -> T {
-    client: env.PLUGIN_MODEL.get() ?? "anthropic/claude-haiku-4-5"
+    client: env.PLUGIN_MODEL.get() ?? default_client()
     prompt: `
         Summarize the document below for a busy reader.
 

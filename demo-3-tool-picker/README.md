@@ -59,8 +59,8 @@ Or standalone, from this directory: `pnpm install && pnpm dev`.
 
 ### Env vars
 
-- `ANTHROPIC_API_KEY` — required (e.g. `infisical run -- pnpm dev`); the assistant calls
-  Claude Haiku 4.5. There is no mock mode — the code is deliberately minimal.
+- `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` — required; OpenAI preferred when both are
+  set (see `default_client()` in `baml_src/toolbox.baml`). There is no mock mode.
 - `PORT` — backend port (default `4430`).
 
 ## Regenerating the BAML client

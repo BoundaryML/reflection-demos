@@ -25,7 +25,8 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.get("/api/config", (_req, res) => {
-  res.json({ mode: "live", model: "claude-haiku-4-5" });
+  // Mirrors default_client() in baml_src/triage.baml: OpenAI wins when both keys are set.
+  res.json({ mode: "live", model: process.env.OPENAI_API_KEY?.trim() ? "gpt-4o-mini" : "claude-haiku-4-5" });
 });
 
 app.get("/api/categories", (_req, res) => {

@@ -51,8 +51,8 @@ No code-generation step. The backend boots the BAML runtime straight from `baml_
 
 | Variable | Effect |
 | --- | --- |
-| `ANTHROPIC_API_KEY` | Extraction and *Let the model write it* call `claude-sonnet-4-5` (required — e.g. `infisical run -- pnpm dev`). |
-| `OPENAI_API_KEY` | Same, via `gpt-4o-mini`, when no Anthropic key is set. |
+| `OPENAI_API_KEY` | Extraction and *Let the model write it* call `gpt-4o-mini` (preferred when both keys are set). |
+| `ANTHROPIC_API_KEY` | Same, via `claude-sonnet-4-5`, when no OpenAI key is set. |
 | `PORT` | Backend port (default `4450`). |
 
 The provider is chosen inside BAML, per call, by the `client:` selector in `baml_src/model.baml` —
@@ -173,4 +173,4 @@ since the authority on this document is a compiler on the other side of an HTTP 
 | **Extract** fails live with `ai.errors.ParseFailed` | Recognise it by the *shape* of the failure, not the code: the model's reply is well-formed JSON, but its keys are the **document's own labels** (`vendor`, `total`) rather than your schema's field names. That means `ctx.output_format` never reached the model, so the answer had nothing to match. It is a **stale bridge addon** — one built before the `baml-cli` you are running drops the output format when the output type is a runtime-minted class. Rebuild the bridge (row above); compiling and the class list are never affected. Confirm the diagnosis without spending a token: `Fn@spec<unreflect(t)>(...).build_request()` under a current bridge shows your field names in the request body, and a stale one refuses to load the program at all with `Bex is outdated`. |
 | Red banner *"The BAML runtime failed to load"* | Same as above. The app degrades gracefully and tells you the error; it does not silently fake results. |
 | Compiles report seconds rather than milliseconds | Version-skewed bridge — match versions via `BAML_VERSION` and `pnpm install`. |
-| *Let the model write it* / Extract fail with a key error | No `ANTHROPIC_API_KEY` in the environment — run via `infisical run -- pnpm dev`. Compiling is unaffected. |
+| *Let the model write it* / Extract fail with a key error | No `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` in the environment. Compiling is unaffected. |

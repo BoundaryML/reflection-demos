@@ -9,7 +9,8 @@ import { listNotes, runNoteSaver } from "./tools/noteSaver.js";
 import { runWeatherLookup } from "./tools/weatherLookup.js";
 
 const PORT = Number(process.env.PORT ?? 4430);
-const MODEL = "claude-haiku-4-5";
+// Mirrors default_client() in baml_src/toolbox.baml: OpenAI wins when both keys are set.
+const MODEL = process.env.OPENAI_API_KEY?.trim() ? "gpt-4o-mini" : "claude-haiku-4-5";
 
 // The generated BAML client runs `initializeRuntimeFromBytecode` as a
 // top-level side effect on import, so a stale native bridge addon (see

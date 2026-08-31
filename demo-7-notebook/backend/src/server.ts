@@ -144,10 +144,10 @@ app.listen(PORT, () => {
   } else {
     console.error(`[demo-7-notebook] BAML IS DOWN\n${boot.error}`);
   }
-  if (process.env.ANTHROPIC_API_KEY) {
-    console.log('[demo-7-notebook] LLM: live (app.Assess calls the model)');
+  if (process.env.OPENAI_API_KEY?.trim() || process.env.ANTHROPIC_API_KEY?.trim()) {
+    console.log('[demo-7-notebook] LLM: live (app.Assess calls the model; OpenAI preferred when both keys are set)');
   } else {
-    console.warn('[demo-7-notebook] ANTHROPIC_API_KEY is unset — app.Assess will fail.');
+    console.warn('[demo-7-notebook] no OPENAI_API_KEY or ANTHROPIC_API_KEY — app.Assess will fail.');
   }
   console.log(`[demo-7-notebook] api on http://localhost:${PORT}`);
 });

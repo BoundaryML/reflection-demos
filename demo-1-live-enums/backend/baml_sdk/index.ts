@@ -59,8 +59,24 @@ export class CategoryInput {
 }
 
 /**
+ * Whichever provider the user has a key for; OpenAI wins when both are set.
+ * @throws Io
+ * @throws ParseError
+ */
+export const default_client = defineFunction("user.default_client", "sync", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
+
+/**
+ * Whichever provider the user has a key for; OpenAI wins when both are set.
+ * @throws Io
+ * @throws ParseError
+ */
+export const default_client_async = defineFunction("user.default_client", "async", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
+
+/**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -71,6 +87,8 @@ export const classify = defineFunction("user.classify", "sync", ["ticket_text"],
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -81,6 +99,8 @@ export const classify_async = defineFunction("user.classify", "async", ["ticket_
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -91,6 +111,8 @@ export const classify$build_request = defineFunction("user.classify$build_reques
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -112,16 +134,22 @@ export const classify$parse_async = defineFunction("user.classify$parse", "async
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
+ * @throws InvalidRequest
  * @throws PromptRenderError
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws CompilationError
  */
 export const classify$render_prompt = defineFunction("user.classify$render_prompt", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.Prompt;
 
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
+ * @throws InvalidRequest
  * @throws PromptRenderError
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws CompilationError
  */
 export const classify$render_prompt_async = defineFunction("user.classify$render_prompt", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.Prompt>;
@@ -129,6 +157,8 @@ export const classify$render_prompt_async = defineFunction("user.classify$render
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -139,6 +169,8 @@ export const classify$stream = defineFunction("user.classify$stream", "sync", ["
 /**
  * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -148,6 +180,8 @@ export const classify$stream_async = defineFunction("user.classify$stream", "asy
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -157,6 +191,8 @@ export const classify_ticket = defineFunction("user.classify_ticket", "sync", ["
 
 /**
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled

@@ -38,7 +38,7 @@ Only `app.Assess` talks to the network (one LLM call); every other cell is pure.
 
 | Variable | Effect |
 | --- | --- |
-| `ANTHROPIC_API_KEY` | Required for the one LLM function, `app.Assess` (e.g. `infisical run -- pnpm dev`); every other cell is pure and needs nothing. `app.AssessPrompt` renders the prompt without calling. |
+| `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | Either enables the one LLM function, `app.Assess` (OpenAI preferred when both are set); every other cell is pure and needs nothing. `app.AssessPrompt` renders the prompt without calling. |
 | `PORT` | Backend port (default `4470`). |
 
 ---

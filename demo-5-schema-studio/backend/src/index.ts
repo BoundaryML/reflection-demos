@@ -18,8 +18,8 @@ const PORT = Number(process.env.PORT ?? 4450);
 
 /** Mirrors the `client:` selector in baml_src/model.baml. */
 function chosenModel(): string | null {
-  if (process.env.ANTHROPIC_API_KEY?.trim()) return 'claude-sonnet-4-5';
   if (process.env.OPENAI_API_KEY?.trim()) return 'gpt-4o-mini';
+  if (process.env.ANTHROPIC_API_KEY?.trim()) return 'claude-sonnet-4-5';
   return null;
 }
 

@@ -10,8 +10,13 @@
 
 type ToolId = "calculator" | "unit_converter" | "note_saver" | "weather"
 
+/// Whichever provider the user has a key for; OpenAI wins when both are set.
+function default_client() -> string {
+    if (env.OPENAI_API_KEY.get() != null) { "openai/gpt-4o-mini" } else { "anthropic/claude-haiku-4-5" }
+}
+
 function pick_action<T>(request: string) -> T {
-    client: "anthropic/claude-haiku-4-5"
+    client: default_client()
     prompt: `
         You are a routing layer for a small toolbox app. Read the
         user's request and produce exactly one tool call that satisfies it.

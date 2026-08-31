@@ -61,12 +61,11 @@ included.
 
 ### Live only
 
-This demo calls `claude-haiku-4-5` for real — `ANTHROPIC_API_KEY` must be
-in the environment (e.g. `infisical run -- pnpm dev`). There is no mock
+This demo calls the model for real — `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` must be in the environment (OpenAI
+preferred when both are set — the choice lives in `default_client()` in this
+demo's `baml_src`). There is no mock
 mode: the code is deliberately minimal so the whole demo fits on one
-screen. `classify<T>` uses the inline client shorthand
-(`client: "anthropic/claude-haiku-4-5"`) rather than a top-level client
-declaration; it's a style choice, both work.
+screen.
 
 ### Resetting the demo
 

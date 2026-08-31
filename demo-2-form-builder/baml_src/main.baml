@@ -3,7 +3,10 @@
 // those rows — form_type — and extracts unstructured text straight into it.
 // The schema is built from data; nothing is templated ahead of time.
 
-client Extractor = anthropic.AnthropicClient.new(model = "claude-haiku-4-5")
+/// Whichever provider the user has a key for; OpenAI wins when both are set.
+function default_client() -> string {
+    if (env.OPENAI_API_KEY.get() != null) { "openai/gpt-4o-mini" } else { "anthropic/claude-haiku-4-5" }
+}
 
 // One saved form field, as persisted by the Design tab.
 class SavedField {
@@ -46,7 +49,7 @@ function form_type(saved: SavedField[]) -> reflect.class.Type {
 
 // The extraction call — generic over whatever runtime type T is bound to.
 function extract<T>(transcript: string) -> T {
-    client: Extractor
+    client: default_client()
     prompt: `
         Extract the fields described below from this text. Only use
         information that is actually present — never invent values.

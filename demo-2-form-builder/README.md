@@ -52,10 +52,11 @@ pnpm dev
 
 ### Live only
 
-`ANTHROPIC_API_KEY` must be in the environment (e.g.
-`infisical run -- pnpm dev`) — there is no mock mode; the code is
+`OPENAI_API_KEY` or `ANTHROPIC_API_KEY` must be in the environment (OpenAI
+preferred when both are set — the choice lives in `default_client()` in this
+demo's `baml_src`) — there is no mock mode; the code is
 deliberately minimal so the whole demo fits on one screen. Extraction goes
-through `extract<T>` using `claude-haiku-4-5`: the runtime-minted class
+through `extract<T>`: the runtime-minted class
 renders into the prompt as a genuine schema, and the model's JSON is
 parsed straight back into it. The doctor transcript says "six foot even"
 and the model returns `patient_height_cm: 183`, and a field you added

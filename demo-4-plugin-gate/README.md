@@ -57,7 +57,9 @@ pnpm --filter demo-4-plugin-gate baml:check
 
 ## Live only
 
-`ANTHROPIC_API_KEY` must be in the environment (e.g. `infisical run -- pnpm dev`) — there
+`OPENAI_API_KEY` or `ANTHROPIC_API_KEY` must be in the environment (OpenAI
+preferred when both are set — the choice lives in `default_client()` in this
+demo's `baml_src`) — there
 is no mock mode; the code is deliberately minimal. Note that the two rejection beats
 (gate 1 and gate 2) never reach a model at all, so only actual **Run plugin** clicks
 spend tokens.

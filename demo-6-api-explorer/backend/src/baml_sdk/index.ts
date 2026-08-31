@@ -161,6 +161,20 @@ export const BuildContact = defineFunction("user.BuildContact", "sync", ["name",
  */
 export const BuildContact_async = defineFunction("user.BuildContact", "async", ["name", "email"], ["phone", "tags"]) as (name: string, email: string, $opts?: { phone?: string | null | undefined; tags?: string[] | undefined; $ctx?: BamlCallContext | undefined } | undefined) => Promise<Contact>;
 
+/**
+ * Whichever provider the user has a key for; OpenAI wins when both are set.
+ * @throws Io
+ * @throws ParseError
+ */
+export const default_client = defineFunction("user.default_client", "sync", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
+
+/**
+ * Whichever provider the user has a key for; OpenAI wins when both are set.
+ * @throws Io
+ * @throws ParseError
+ */
+export const default_client_async = defineFunction("user.default_client", "async", []) as ($opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
+
 export enum Tone {
   Neutral = "Neutral",
   Enthusiastic = "Enthusiastic",
@@ -181,6 +195,8 @@ export class Summary {
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -191,6 +207,8 @@ export const SummarizeText = defineFunction("user.SummarizeText", "sync", ["text
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -201,6 +219,8 @@ export const SummarizeText_async = defineFunction("user.SummarizeText", "async",
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -211,6 +231,8 @@ export const SummarizeText$build_request = defineFunction("user.SummarizeText$bu
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -232,16 +254,22 @@ export const SummarizeText$parse_async = defineFunction("user.SummarizeText$pars
 
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
+ * @throws InvalidRequest
  * @throws PromptRenderError
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws CompilationError
  */
 export const SummarizeText$render_prompt = defineFunction("user.SummarizeText$render_prompt", "sync", ["text", "tone"]) as (text: string, tone: Tone, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => ai.Prompt;
 
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
+ * @throws InvalidRequest
  * @throws PromptRenderError
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws CompilationError
  */
 export const SummarizeText$render_prompt_async = defineFunction("user.SummarizeText$render_prompt", "async", ["text", "tone"]) as (text: string, tone: Tone, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<ai.Prompt>;
@@ -249,6 +277,8 @@ export const SummarizeText$render_prompt_async = defineFunction("user.SummarizeT
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled
@@ -259,6 +289,8 @@ export const SummarizeText$stream = defineFunction("user.SummarizeText$stream", 
 /**
  * Summarizes `text` into a headline and a few bullets, in the requested tone.
  * @throws InvalidArgument
+ * @throws Io
+ * @throws ParseError
  * @throws Timeout
  * @throws UnknownError
  * @throws Cancelled

@@ -63,7 +63,9 @@ app.get("/api/health", (_req, res) => {
 app.get("/api/bootstrap", (_req, res) => {
   res.json({
     mode: "live",
-    model: process.env.PLUGIN_MODEL ?? "anthropic/claude-haiku-4-5",
+    model:
+      process.env.PLUGIN_MODEL ??
+      (process.env.OPENAI_API_KEY?.trim() ? "openai/gpt-4o-mini" : "anthropic/claude-haiku-4-5"),
     host: { status: host.status, error: host.lastError },
     contract: CONTRACT_FIELDS,
     examples: EXAMPLES,

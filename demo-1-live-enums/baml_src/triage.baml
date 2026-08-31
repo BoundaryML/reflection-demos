@@ -10,9 +10,14 @@ class CategoryInput {
   description string?
 }
 
+/// Whichever provider the user has a key for; OpenAI wins when both are set.
+function default_client() -> string {
+  if (env.OPENAI_API_KEY.get() != null) { "openai/gpt-4o-mini" } else { "anthropic/claude-haiku-4-5" }
+}
+
 /// Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
 function classify<T>(ticket_text: string) -> T {
-  client: "anthropic/claude-haiku-4-5"
+  client: default_client()
   prompt: `
     You are a support triage agent. Read the ticket and choose the single best category for it.
 

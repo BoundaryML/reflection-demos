@@ -108,6 +108,6 @@ to start from the diagnostics beat.
 - **The pill reads higher than ~20 ms** — machine-dependent, and fine: anything
   inside the editor's 220 ms debounce feels identical. Seconds instead of
   milliseconds means a version-skewed bridge — match versions via `BAML_VERSION`.
-- **Extract/Draft fail with a key error** — the backend has no
-  `ANTHROPIC_API_KEY`; relaunch via `infisical run -- pnpm dev`. Compiling
-  never needs a key, so the editor loop keeps working regardless.
+- **Extract/Draft fail with a key error** — the backend has neither
+  `OPENAI_API_KEY` nor `ANTHROPIC_API_KEY`. Compiling never needs a key, so
+  the editor loop keeps working regardless.

@@ -5,8 +5,13 @@
 
 /// Pull a record out of a document. `T` is supplied at the call site — usually
 /// a class the user typed thirty seconds ago and the compiler minted just now.
+/// Whichever provider the user has a key for; OpenAI wins when both are set.
+function default_client() -> string {
+    if (env.OPENAI_API_KEY.get() != null) { "openai/gpt-4o-mini" } else { "anthropic/claude-sonnet-4-5" }
+}
+
 function Extract<T>(document: string) -> T {
-    client: if (env.ANTHROPIC_API_KEY.get() != null) { "anthropic/claude-sonnet-4-5" } else { "openai/gpt-4o-mini" }
+    client: default_client()
     prompt: `
         ${role("system")}
         Read the document and fill in the schema. Copy values verbatim where you
@@ -21,7 +26,7 @@ function Extract<T>(document: string) -> T {
 
 /// Turn a plain-English description into BAML class declarations.
 function Draft(description: string) -> string {
-    client: if (env.ANTHROPIC_API_KEY.get() != null) { "anthropic/claude-sonnet-4-5" } else { "openai/gpt-4o-mini" }
+    client: default_client()
     prompt: `
         ${role("system")}
         Write BAML class declarations for the extraction task described below.

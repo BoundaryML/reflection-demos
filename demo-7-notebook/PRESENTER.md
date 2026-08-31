@@ -112,7 +112,7 @@ cleanup — nothing else references the image.
 **"Two cells at once?"** A `Session` permits one active eval and throws `SessionBusy`
 otherwise. The backend queues per notebook, so it never surfaces.
 
-**"Is the LLM real?"** With `ANTHROPIC_API_KEY` set, yes — `app.Assess(...)` calls the
+**"Is the LLM real?"** With `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` set, yes — `app.Assess(...)` calls the
 model. Without it, the same function renders the real prompt and parses a canned reply
 through the `$parse` seam, exactly like the BAML test suite. `app.AssessPrompt(...)` shows
 the prompt either way.

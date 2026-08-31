@@ -4,28 +4,15 @@ import { invokeFunction } from "./invoke.js";
 
 const PORT = Number(process.env.PORT ?? 4460);
 
-// MOCK_LLM=1 always forces mock mode; MOCK_LLM=0 always forces live mode.
-// Left unset, mock mode is the default unless an API key is present — so
-// `npm run dev` with no setup at all is fully offline-presentable, per the
-// repo's mock-mode mandate, while dropping in a key upgrades it for free.
-const MOCK_LLM =
-  process.env.MOCK_LLM === "1" || (process.env.MOCK_LLM !== "0" && !process.env.ANTHROPIC_API_KEY);
-
-if (!MOCK_LLM && !process.env.ANTHROPIC_API_KEY) {
-  // MOCK_LLM=0 is an explicit opt out of mock mode, so honour it — but say so
-  // now rather than letting the presenter discover it mid-demo. The other five
-  // functions need no key, so this is a warning, not a fatal: the console still
-  // works, and SummarizeText returns a typed ai.errors.InvalidRequest.
-  console.warn(
-    "[demo-6-api-explorer] MOCK_LLM=0 but ANTHROPIC_API_KEY is unset — SummarizeText will fail " +
-      "with ai.errors.InvalidRequest. Unset MOCK_LLM (or set MOCK_LLM=1) to use the canned response.",
-  );
-} else if (!MOCK_LLM) {
-  console.log("[demo-6-api-explorer] Live mode: SummarizeText will call Anthropic.");
-} else if (!process.env.ANTHROPIC_API_KEY) {
-  console.log("[demo-6-api-explorer] No ANTHROPIC_API_KEY found — running in mock mode (MOCK_LLM=1).");
+// Live only. Mirrors default_client() in baml_src/functions.baml:
+// OpenAI wins when both keys are set.
+if (process.env.OPENAI_API_KEY?.trim() || process.env.ANTHROPIC_API_KEY?.trim()) {
+  console.log("[demo-6-api-explorer] Live: SummarizeText calls the model (OpenAI preferred when both keys are set).");
 } else {
-  console.log("[demo-6-api-explorer] MOCK_LLM=1 set — running in mock mode despite a present API key.");
+  console.warn(
+    "[demo-6-api-explorer] no OPENAI_API_KEY or ANTHROPIC_API_KEY — the five pure functions " +
+      "work, and SummarizeText returns a typed ai.errors.InvalidRequest.",
+  );
 }
 
 const app = express();
@@ -35,7 +22,7 @@ app.get("/api/health", async (_req, res) => {
   const bridgeOk = await loadBamlSdk()
     .then(() => true)
     .catch(() => false);
-  res.json({ ok: true, mock: MOCK_LLM, bridge: bridgeOk });
+  res.json({ ok: true, mock: false, bridge: bridgeOk });
 });
 
 // The ONE generic read: reflect.Package.current() enumerates every function
@@ -45,7 +32,7 @@ app.get("/api/functions", async (_req, res) => {
   try {
     const sdk = await loadBamlSdk();
     const functions = await sdk.ListFunctions_async();
-    res.json({ functions, mock: MOCK_LLM });
+    res.json({ functions, mock: false });
   } catch (err) {
     res.status(503).json({ error: bridgeErrorMessage(err) });
   }
@@ -65,7 +52,7 @@ app.post("/api/invoke", async (req, res) => {
     return;
   }
   try {
-    const result = await invokeFunction(name, args as Record<string, string>, MOCK_LLM);
+    const result = await invokeFunction(name, args as Record<string, string>);
     res.json(result);
   } catch (err) {
     res.status(503).json({
@@ -85,6 +72,6 @@ function bridgeErrorMessage(err: unknown): string {
 
 app.listen(PORT, () => {
   console.log(
-    `demo-6-api-explorer backend on http://localhost:${PORT} (MOCK_LLM=${MOCK_LLM ? "1" : "0"})`,
+    `demo-6-api-explorer backend on http://localhost:${PORT}`,
   );
 });
