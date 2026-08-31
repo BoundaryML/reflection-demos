@@ -422,8 +422,9 @@ export const _param_info_async = defineFunction("user._param_info", "async", ["n
  * True for functions that are part of the reflection plumbing itself (this
  * file, by its `_`-prefixed local names), compiler-synthesized companions
  * ($parse, $render_prompt, $spec, $stream), or anything living in a nested
- * namespace (`ns_*/` dirs, e.g. root.internal.*) — the console describes the
- * package's public root namespace. All structural rules; no function named.
+ * namespace (`ns_` directories, e.g. root.internal.default_client) — the
+ * console describes the package's public root namespace. All structural
+ * rules; no function named.
  */
 export const _is_internal = defineFunction("user._is_internal", "sync", ["name"]) as (name: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => boolean;
 
@@ -431,8 +432,9 @@ export const _is_internal = defineFunction("user._is_internal", "sync", ["name"]
  * True for functions that are part of the reflection plumbing itself (this
  * file, by its `_`-prefixed local names), compiler-synthesized companions
  * ($parse, $render_prompt, $spec, $stream), or anything living in a nested
- * namespace (`ns_*/` dirs, e.g. root.internal.*) — the console describes the
- * package's public root namespace. All structural rules; no function named.
+ * namespace (`ns_` directories, e.g. root.internal.default_client) — the
+ * console describes the package's public root namespace. All structural
+ * rules; no function named.
  */
 export const _is_internal_async = defineFunction("user._is_internal", "async", ["name"]) as (name: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<boolean>;
 

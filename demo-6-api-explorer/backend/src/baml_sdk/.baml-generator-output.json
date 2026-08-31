@@ -7,7 +7,7 @@
     },
     {
       "relative_path": "_inlinedbaml.ts",
-      "sha256": "77fe69ed96652ef80cd55d749d9c493b3279f103a538a4358dbe960ba1d3ec6a"
+      "sha256": "3aa3e8868b06bdceb5751acfb4b4079a2738a038fa9766d93cd3b37fb877a3db"
     },
     {
       "relative_path": "_typemap.ts",
@@ -159,7 +159,7 @@
     },
     {
       "relative_path": "index.ts",
-      "sha256": "e589708c55cb5802b23ef7ff8d7c845313912ca27140c43f68cce23cc7e8417f"
+      "sha256": "1b15249cfbfee4468ff353bd870720e1371070cad6f8422ee73a4765ed437ec3"
     },
     {
       "relative_path": "internal/index.ts",

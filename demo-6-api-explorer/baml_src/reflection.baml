@@ -43,8 +43,9 @@ function _param_info(name: string, t: reflect.Type, required: bool) -> ParamInfo
 /// True for functions that are part of the reflection plumbing itself (this
 /// file, by its `_`-prefixed local names), compiler-synthesized companions
 /// ($parse, $render_prompt, $spec, $stream), or anything living in a nested
-/// namespace (`ns_*/` dirs, e.g. root.internal.*) — the console describes the
-/// package's public root namespace. All structural rules; no function named.
+/// namespace (`ns_` directories, e.g. root.internal.default_client) — the
+/// console describes the package's public root namespace. All structural
+/// rules; no function named.
 function _is_internal(name: string) -> bool throws never {
   name.includes("$") || name.starts_with("root._")
     || name == "root.ListFunctions" || name == "root.InvokeFunction"
