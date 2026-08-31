@@ -74,19 +74,20 @@ declaration; it's a style choice, both work.
 Classifications, added tickets, and category edits persist in
 `backend/data/triage.db` (gitignored). The **Reset demo** button in the UI
 header (or `POST /api/reset`) restores the pristine inbox the presenter
-script assumes: two starter categories (Billing, Bug Report) and three
-*unclassified* tickets, one of which — the dark-mode request — fits neither
-category, so the natural opening move is adding a "Feature Request"
-category live and re-running triage.
+script assumes: three starter categories (Billing, Bug Report, and Unknown —
+an ordinary row that gives the model an honest answer when nothing fits) and
+three *unclassified* tickets, one of which — the dark-mode request — lands in
+Unknown, so the natural opening move is adding a "Feature Request" category
+live and re-running triage.
 
 ## What's in here
 
 - `baml_src/triage.baml` — three declarations: `CategoryInput`
   (`id`, `name`, `description`), the generic `Classify<T>` function (with
   its inline client), and `ClassifyTicket` — mint, bind, call.
-- `backend/` — Express + better-sqlite3. Seeds 3 tickets and 2 starter
-  categories (Billing, Bug Report) on first run; the third ticket (a dark
-  mode request) deliberately fits neither category.
+- `backend/` — Express + better-sqlite3. Seeds 3 tickets and 3 starter
+  categories (Billing, Bug Report, Unknown) on first run; the third ticket
+  (a dark mode request) deliberately fits nothing but Unknown.
 - `frontend/` — React + Vite. Ticket inbox (left, with a compose form to
   add tickets mid-demo) and category editor (right); a "Run Triage" button
   reclassifies every ticket against the current category list, and "Reset
@@ -95,12 +96,13 @@ category live and re-running triage.
 ## 30-second presenter script
 
 1. **Open the app.** Point at the inbox: "Three support tickets, all
-   unclassified." Point at the category list on the right: "Two categories
-   — and they aren't code, they're rows in a database."
+   unclassified." Point at the category list on the right: "Three categories
+   — and they aren't code, they're rows in a database. Even Unknown is just
+   a row."
 2. **Click "Run Triage."** The billing ticket and the crash ticket get the
-   right badges — and the dark-mode request gets shoehorned into the
-   nearest bucket, because the enum is exhaustive: the model *must* pick a
-   variant. "That misfit is the interesting one."
+   right badges — and the dark-mode request lands in **Unknown**: the enum
+   is exhaustive, the model must pick a variant, and Unknown is the honest
+   one. "That misfit is the interesting one."
 3. **Add a category.** "Feature Request" with a one-line description.
    Don't touch any code.
 4. **Click "Run Triage" again.** The dark-mode ticket moves to the

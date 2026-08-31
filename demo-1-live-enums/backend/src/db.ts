@@ -44,9 +44,12 @@ export interface TicketRow {
   classified_at: string | null;
 }
 
-// Deliberately sparse: two categories and three tickets, one of which (dark
-// mode) fits neither category — the presenter's opening move is to add a
-// "Feature Request" category live and watch the enum grow.
+// Deliberately sparse: three tickets, one of which (dark mode) fits nothing
+// but Unknown — the presenter's opening move is to add a "Feature Request"
+// category live and watch the enum grow. Unknown is an ordinary row, not a
+// special case: it rides through the same minted enum as everything else,
+// and gives the model an honest answer when no real category fits (an
+// exhaustive enum otherwise forces a wrong pick, or a parse failure).
 const DEFAULT_CATEGORIES: Array<{ name: string; description: string }> = [
   {
     name: "Billing",
@@ -55,6 +58,10 @@ const DEFAULT_CATEGORIES: Array<{ name: string; description: string }> = [
   {
     name: "Bug Report",
     description: "Something in the product is broken, crashing, or behaving incorrectly.",
+  },
+  {
+    name: "Unknown",
+    description: "Use this only when none of the other categories fits the ticket.",
   },
 ];
 
