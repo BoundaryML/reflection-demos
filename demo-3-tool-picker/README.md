@@ -118,17 +118,21 @@ Skewing them fails in two different ways, both listed under
 
 ### "I don't have a tool for that" is a real answer, not an error
 
-When you switch a tool off, the runtime union genuinely loses that member — so on a request
-only that tool could satisfy, there is no value the model is *able* to return. It says so in
-prose, the runner spends its retry and raises `ai.errors.ParseFailed`. That is this demo's
-`no_match` beat arriving live, and `backend/src/server.ts` (`declinedForLackOfTool`) turns it
-into a "I don't have a tool for that right now. Enabled: …" reply,
-logging the model's own words server-side.
+The union always carries one extra minted member, `NoTool { reason }` — the same
+lesson as demo-1's Unknown category. Without it, a cornered model invents a
+refusal shape (`{"error": ...}`) and the schema-aligned parser coerces it into
+whichever tool happens to have a single string field — ask for math with the
+calculator off and you'd get simulated weather for a city named
+`{error: ...}`. With it, "nothing fits" is a first-class variant: the decline
+parses in one round trip (~1s instead of a retry cycle), carries the model's
+own reason, and dispatches to `matched: false`.
 
-Deliberately narrow: a `ParseFailed` whose raw output contains a JSON object is *not*
-treated as a refusal. There the model did answer in schema and the runtime still couldn't
-read it — a toolchain regression, which stays loud as `status: "error"` rather than
-masquerading as "no tool for that".
+A prose refusal (the model ignoring the schemas entirely) is still possible;
+that path raises `ai.errors.ParseFailed` after the runner's retry, and
+`backend/src/server.ts` (`declinedForLackOfTool`) turns it into the same reply
+as a backstop. A `ParseFailed` whose raw output contains a JSON object is *not*
+treated as a refusal — there the model answered in schema and the runtime still
+couldn't read it, a toolchain regression that stays loud as `status: "error"`.
 
 ## Troubleshooting
 

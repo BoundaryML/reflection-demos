@@ -125,7 +125,11 @@ app.post("/api/chat", async (req, res) => {
     const pick = await route_and_dispatch_async(Array.from(enabled), message);
 
     if (!pick.matched || !isToolId(pick.tool)) {
-      res.json({ status: "no_match", reply: noToolReply(enabled) });
+      res.json({
+        status: "no_match",
+        reply: noToolReply(enabled),
+        promptPreview: pick.prompt_preview,
+      });
       return;
     }
 

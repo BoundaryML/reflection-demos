@@ -56,6 +56,17 @@ function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick thro
         ),
     });
 
+    // Escape hatch, same lesson as demo-1's Unknown category: without it a
+    // cornered model invents a refusal shape ({"error": ...}) and the
+    // schema-aligned parser coerces it into whichever tool has one string
+    // field. Giving "nothing fits" a type of its own keeps every answer
+    // honest — and the decline is a parse, not a retry-then-fail.
+    let no_tool_t = reflect.class.new("NoTool", {
+        "reason": reflect.Type.of<string>().meta(
+            description = "use this when none of the other schemas can satisfy the request; explain briefly",
+        ),
+    });
+
     let member_types: reflect.Type[] = [];
     if (enabled.includes("calculator")) { member_types.push(calc_t.as_type()); }
     if (enabled.includes("unit_converter")) { member_types.push(convert_t.as_type()); }
@@ -71,13 +82,8 @@ function route_and_dispatch(enabled: ToolId[], request: string) -> ToolPick thro
         };
     }
 
-    // A one-tool toolbox has nothing to disambiguate; skip the union and
-    // route straight to that tool's class.
-    let action_t = if (member_types.length() == 1) {
-        member_types[0]
-    } else {
-        reflect.union.new(member_types).as_type()
-    };
+    member_types.push(no_tool_t.as_type());
+    let action_t = reflect.union.new(member_types).as_type();
 
     let prompt_preview = pick_action$render_prompt<unreflect(action_t)>(request).text();
     let action = pick_action<unreflect(action_t)>(request);
