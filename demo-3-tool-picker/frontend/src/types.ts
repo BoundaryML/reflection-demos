@@ -7,4 +7,5 @@ export interface ChatMessage {
   status?: ChatStatus;
   tool?: ToolId;
   result?: unknown;
+  promptPreview?: string;
 }

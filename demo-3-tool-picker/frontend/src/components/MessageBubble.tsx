@@ -26,6 +26,12 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
         {message.status === "matched" && message.tool && message.result ? (
           <ResultCard tool={message.tool} result={message.result} />
         ) : null}
+        {message.promptPreview ? (
+          <details className="prompt-preview">
+            <summary>what the model saw this turn</summary>
+            <pre>{message.promptPreview}</pre>
+          </details>
+        ) : null}
       </div>
     </div>
   );

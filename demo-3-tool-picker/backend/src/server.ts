@@ -131,7 +131,14 @@ app.post("/api/chat", async (req, res) => {
 
     const args = JSON.parse(pick.args_json) as Record<string, unknown>;
     const { reply, result } = runTool(pick.tool, args);
-    res.json({ status: "matched", reply, tool: pick.tool, args, result });
+    res.json({
+      status: "matched",
+      reply,
+      tool: pick.tool,
+      args,
+      result,
+      promptPreview: pick.prompt_preview,
+    });
   } catch (err) {
     const refusal = declinedForLackOfTool(err);
     if (refusal !== null) {

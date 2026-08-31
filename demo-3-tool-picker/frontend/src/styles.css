@@ -454,3 +454,34 @@ body {
   font-size: 0.8rem;
   color: var(--text-dim);
 }
+
+/* ---- Prompt preview ---- */
+
+.prompt-preview {
+  margin-top: 10px;
+  font-size: 0.78rem;
+}
+
+.prompt-preview summary {
+  color: var(--text-dim);
+  cursor: pointer;
+  user-select: none;
+}
+
+.prompt-preview summary:hover {
+  color: var(--text);
+}
+
+.prompt-preview pre {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  max-height: 260px;
+  overflow: auto;
+  white-space: pre-wrap;
+}

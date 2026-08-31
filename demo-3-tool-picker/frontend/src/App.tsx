@@ -51,6 +51,7 @@ export default function App() {
         status: res.status,
         tool: res.tool,
         result: res.result,
+        promptPreview: res.promptPreview,
       };
       setMessages((prev) => [...prev, assistantMessage]);
       if (res.tool === "note_saver" && res.status === "matched") {
