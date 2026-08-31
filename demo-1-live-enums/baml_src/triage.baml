@@ -25,16 +25,16 @@ function ClassifyTicket(ticket_text: string, categories: CategoryInput[]) -> str
   // 1. Mint a runtime enum VALUE from the rows. Variant names are `CAT_<id>`
   //    (always a valid identifier); the alias carries the display name, which
   //    is what the model actually reads and writes.
-  let variants: (string | reflect.enum.Value)[] = []
+  let variants: (string | reflect.enum.Value)[] = [];
   for (let c in categories) {
-    variants.push(reflect.enum.value("CAT_" + c.id.to_string(), alias = c.name, description = c.description))
+    variants.push(reflect.enum.value("CAT_" + c.id.to_string(), alias = c.name, description = c.description));
   }
-  let category_t = reflect.enum.new("Category", variants)
+  let category_t = reflect.enum.new("Category", variants);
 
   // 2. Bind that value to a type NAME...
-  type C = unreflect(category_t.as_type())
+  type C = unreflect(category_t.as_type());
 
   // 3. ...and make an ordinary generic LLM call over it.
-  let picked = Classify<C>(ticket_text)
+  let picked = Classify<C>(ticket_text);
   reflect.enum.get_value(picked)
 }
