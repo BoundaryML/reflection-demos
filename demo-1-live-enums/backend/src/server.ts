@@ -12,7 +12,7 @@ import {
   setTicketClassification,
   updateCategory,
 } from "./db.js";
-import { classifyTicket, isMockMode } from "./bamlClient.js";
+import { classifyTicket } from "./bamlClient.js";
 
 const app = express();
 app.use(cors());
@@ -25,7 +25,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.get("/api/config", (_req, res) => {
-  res.json({ mode: isMockMode() ? "mock" : "live", model: "claude-haiku-4-5" });
+  res.json({ mode: "live", model: "claude-haiku-4-5" });
 });
 
 app.get("/api/categories", (_req, res) => {
@@ -119,9 +119,9 @@ app.post("/api/tickets/:id/classify", async (req, res) => {
   }
   const categories = listCategories();
   try {
-    const { category, mode } = await classifyTicket(`${ticket.subject}\n\n${ticket.body}`, categories);
+    const category = await classifyTicket(`${ticket.subject}\n\n${ticket.body}`, categories);
     const updated = setTicketClassification(id, category);
-    res.json({ ticket: updated, mode });
+    res.json({ ticket: updated, mode: "live" });
   } catch (err) {
     res.status(502).json({ error: (err as Error).message ?? "classification failed" });
   }
@@ -140,7 +140,7 @@ app.post("/api/tickets/classify-all", async (_req, res) => {
   const results = await Promise.all(
     tickets.map(async (ticket) => {
       try {
-        const { category } = await classifyTicket(`${ticket.subject}\n\n${ticket.body}`, categories);
+        const category = await classifyTicket(`${ticket.subject}\n\n${ticket.body}`, categories);
         return setTicketClassification(ticket.id, category) ?? ticket;
       } catch (err) {
         failed.push({ id: ticket.id, error: (err as Error).message });
@@ -148,9 +148,9 @@ app.post("/api/tickets/classify-all", async (_req, res) => {
       }
     }),
   );
-  res.json({ tickets: results, mode: isMockMode() ? "mock" : "live", failed });
+  res.json({ tickets: results, mode: "live", failed });
 });
 
 app.listen(PORT, () => {
-  console.log(`live-triage backend listening on http://localhost:${PORT} (${isMockMode() ? "MOCK" : "LIVE"} mode)`);
+  console.log(`live-triage backend listening on http://localhost:${PORT}`);
 });

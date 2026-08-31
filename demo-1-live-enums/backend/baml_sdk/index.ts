@@ -27,11 +27,7 @@ export * as reflect from "./reflect/index.js";
 export * as vendor from "./vendor/index.js";
 
 /**
- * One row from the team's editable category list. `id` is the row's
- * database id — used to build a stable, always-valid enum variant name,
- * since `name` is free text a person typed into a form (spaces, "&", ...)
- * and enum variant names must be identifiers. `name` is what the model
- * actually reads and writes, via the variant's alias.
+ * One row from the team's editable category list.
  */
 export class CategoryInput$stream {
   id!: number | null;
@@ -47,11 +43,7 @@ export class CategoryInput$stream {
 }
 
 /**
- * One row from the team's editable category list. `id` is the row's
- * database id — used to build a stable, always-valid enum variant name,
- * since `name` is free text a person typed into a form (spaces, "&", ...)
- * and enum variant names must be identifiers. `name` is what the model
- * actually reads and writes, via the variant's alias.
+ * One row from the team's editable category list.
  */
 export class CategoryInput {
   id!: number;
@@ -67,8 +59,7 @@ export class CategoryInput {
 }
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -78,8 +69,7 @@ export class CategoryInput {
 export const Classify = defineFunction("user.Classify", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -89,8 +79,7 @@ export const Classify = defineFunction("user.Classify", "sync", ["ticket_text"],
 export const Classify_async = defineFunction("user.Classify", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -100,8 +89,7 @@ export const Classify_async = defineFunction("user.Classify", "async", ["ticket_
 export const Classify$build_request = defineFunction("user.Classify$build_request", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => baml.http.Request;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -111,38 +99,33 @@ export const Classify$build_request = defineFunction("user.Classify$build_reques
 export const Classify$build_request_async = defineFunction("user.Classify$build_request", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<baml.http.Request>;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws LlmClient
  */
 export const Classify$parse = defineFunction("user.Classify$parse", "sync", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => T;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws LlmClient
  */
 export const Classify$parse_async = defineFunction("user.Classify$parse", "async", ["json"], undefined, { typeParams: ["T"] }) as <T>(json: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<T>;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws CompilationError
  */
 export const Classify$render_prompt = defineFunction("user.Classify$render_prompt", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.Prompt;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws CompilationError
  */
 export const Classify$render_prompt_async = defineFunction("user.Classify$render_prompt", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.Prompt>;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -152,8 +135,7 @@ export const Classify$render_prompt_async = defineFunction("user.Classify$render
 export const Classify$stream = defineFunction("user.Classify$stream", "sync", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => ai.stream.Stream<T | null, T>;
 
 /**
- * Classify a support ticket into `T`. This function never sees a concrete
- * category — the caller supplies one, freshly minted, per call.
+ * Classify a ticket into `T`. The caller supplies the type — freshly minted, per call.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -163,29 +145,6 @@ export const Classify$stream = defineFunction("user.Classify$stream", "sync", ["
 export const Classify$stream_async = defineFunction("user.Classify$stream", "async", ["ticket_text"], undefined, { typeParams: ["T"] }) as <T>(ticket_text: string, $opts?: { $ctx?: BamlCallContext | undefined; $types?: { T?: BamlType | BamlTypeToken } | undefined } | undefined) => Promise<ai.stream.Stream<T | null, T>>;
 
 /**
- * THE REFLECTION CALL: turn the team's current category rows into a real
- * runtime enum type, right now, from data. The variant name is a synthetic
- * `CAT_<id>` (always a valid identifier); `alias` carries the actual
- * category name onto the wire, so that's what the model reads and writes.
- * @throws CompilationError
- */
-export const BuildCategoryType = defineFunction("user.BuildCategoryType", "sync", ["categories"]) as (categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => BamlType;
-
-/**
- * THE REFLECTION CALL: turn the team's current category rows into a real
- * runtime enum type, right now, from data. The variant name is a synthetic
- * `CAT_<id>` (always a valid identifier); `alias` carries the actual
- * category name onto the wire, so that's what the model reads and writes.
- * @throws CompilationError
- */
-export const BuildCategoryType_async = defineFunction("user.BuildCategoryType", "async", ["categories"]) as (categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<BamlType>;
-
-/**
- * Live path, in three explainable steps: mint the enum from the rows
- * (a runtime VALUE), bind that value to a type NAME with `unreflect`,
- * then call Classify generically over it. Returns the synthetic
- * `CAT_<id>` variant name — the backend maps that back to the category's
- * display name, since it already has the rows.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -195,11 +154,6 @@ export const BuildCategoryType_async = defineFunction("user.BuildCategoryType", 
 export const ClassifyTicket = defineFunction("user.ClassifyTicket", "sync", ["ticket_text", "categories"]) as (ticket_text: string, categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
 
 /**
- * Live path, in three explainable steps: mint the enum from the rows
- * (a runtime VALUE), bind that value to a type NAME with `unreflect`,
- * then call Classify generically over it. Returns the synthetic
- * `CAT_<id>` variant name — the backend maps that back to the category's
- * display name, since it already has the rows.
  * @throws InvalidArgument
  * @throws Timeout
  * @throws UnknownError
@@ -207,25 +161,3 @@ export const ClassifyTicket = defineFunction("user.ClassifyTicket", "sync", ["ti
  * @throws CompilationError
  */
 export const ClassifyTicket_async = defineFunction("user.ClassifyTicket", "async", ["ticket_text", "categories"]) as (ticket_text: string, categories: CategoryInput[], $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;
-
-/**
- * Mock path: same runtime type, but parse a canned completion instead of
- * calling the model. Proves the category list round-trips through real BAML
- * enum parsing even with no API key configured. `raw_completion` is the
- * category's display name (its alias), e.g. `"Bug Report"` — exactly what
- * a real model would also produce.
- * @throws LlmClient
- * @throws CompilationError
- */
-export const ClassifyTicketFromCompletion = defineFunction("user.ClassifyTicketFromCompletion", "sync", ["ticket_text", "categories", "raw_completion"]) as (ticket_text: string, categories: CategoryInput[], raw_completion: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => string;
-
-/**
- * Mock path: same runtime type, but parse a canned completion instead of
- * calling the model. Proves the category list round-trips through real BAML
- * enum parsing even with no API key configured. `raw_completion` is the
- * category's display name (its alias), e.g. `"Bug Report"` — exactly what
- * a real model would also produce.
- * @throws LlmClient
- * @throws CompilationError
- */
-export const ClassifyTicketFromCompletion_async = defineFunction("user.ClassifyTicketFromCompletion", "async", ["ticket_text", "categories", "raw_completion"]) as (ticket_text: string, categories: CategoryInput[], raw_completion: string, $opts?: { $ctx?: BamlCallContext | undefined } | undefined) => Promise<string>;

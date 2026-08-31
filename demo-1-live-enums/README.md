@@ -11,15 +11,23 @@ classifier as a generic type argument. Edit the categories, hit **Run
 Triage**, and the model is reasoning over the new list on the very next
 call — no code change, no redeploy.
 
-The whole trick is `baml_src/triage.baml`, specifically `BuildCategoryType`:
+The whole trick is one function in `baml_src/triage.baml`:
 
 ```baml
-function BuildCategoryType(categories: CategoryInput[]) -> reflect.enum.Type throws reflect.errors.CompilationError {
-  let rows: (string | reflect.enum.Value)[] = []
+function ClassifyTicket(ticket_text: string, categories: CategoryInput[]) -> string {
+  // 1. Mint a runtime enum VALUE from the rows.
+  let variants: (string | reflect.enum.Value)[] = []
   for (let c in categories) {
-    rows.push(reflect.enum.value("CAT_" + c.id.to_string(), alias = c.name, description = c.description))
+    variants.push(reflect.enum.value("CAT_" + c.id.to_string(), alias = c.name, description = c.description))
   }
-  reflect.enum.new("Category", rows)
+  let category_t = reflect.enum.new("Category", variants)
+
+  // 2. Bind that value to a type NAME...
+  type C = unreflect(category_t.as_type())
+
+  // 3. ...and make an ordinary generic LLM call over it.
+  let picked = Classify<C>(ticket_text)
+  reflect.enum.get_value(picked)
 }
 ```
 
@@ -29,18 +37,7 @@ valid identifier, unlike a category name someone typed into a form, e.g.
 the string the model reads and writes; the backend maps `CAT_<id>` back to
 the display name afterward, since it already has the category rows.)
 
-...and `ClassifyTicket`, which binds the generic `Classify<T>` function to
-that freshly-minted type with `unreflect`:
-
-```baml
-function ClassifyTicket(ticket_text: string, categories: CategoryInput[]) -> string {
-  let category_t = BuildCategoryType(categories)
-  let picked = Classify<unreflect(category_t.as_type())>(ticket_text)
-  reflect.enum.get_value(picked)
-}
-```
-
-Open `baml_src/triage.baml` in an editor during the demo — it's five short
+Open `baml_src/triage.baml` in an editor during the demo — three short
 declarations, and that's the entire feature.
 
 ## Running it
@@ -63,33 +60,14 @@ won't load (see [Toolchain skew](#toolchain-skew)).
 Or from the repo root: `pnpm install && pnpm dev` runs every demo, this one
 included.
 
-### Live mode vs. mock mode
+### Live only
 
-- Set `ANTHROPIC_API_KEY` in the environment and the backend calls
-  `claude-haiku-4-5` for real. `Classify<T>` uses the inline client
-  shorthand — `client: "anthropic/claude-haiku-4-5"` — rather than a
-  top-level `client X = anthropic.AnthropicClient.new(...)` declaration;
-  it's a style choice, both work.
-- With no key — or `MOCK_LLM=1` set explicitly — the backend guesses a
-  category with a small keyword scorer (`backend/src/mockClassify.ts`) that
-  reads the *live* category names/descriptions, then feeds that guess (the
-  category's display name, e.g. `"Bug Report"` — exactly what a real model
-  would produce, since that's the variant's alias) through
-  `Classify$parse<unreflect(...)>` (`ClassifyTicketFromCompletion` in
-  `triage.baml`). Mock mode still exercises the real BAML enum parser
-  against the real runtime type — it only skips the network call. Verified
-  end to end: a classify call through the generated SDK correctly parses
-  `"Bug Report"` and `"Shipping & Delivery"` (both invalid as bare
-  identifiers) back to their category via the `CAT_<id>` / alias split
-  above, and a category *added during the demo* is picked on the very next
-  run.
-
-The mock scorer is tf-idf over each category's own name and description
-(plus a small topical synonym table), not a switch on category names — so
-renaming "Bug Report" to "Technical Issue" keeps its tickets, because the
-meaning lives in the description the scorer reads at request time.
-
-The mode badge in the top-right corner of the UI shows which one is active.
+This demo calls `claude-haiku-4-5` for real — `ANTHROPIC_API_KEY` must be
+in the environment (e.g. `infisical run -- pnpm dev`). There is no mock
+mode: the code is deliberately minimal so the whole demo fits on one
+screen. `Classify<T>` uses the inline client shorthand
+(`client: "anthropic/claude-haiku-4-5"`) rather than a top-level client
+declaration; it's a style choice, both work.
 
 ### Resetting the demo
 
@@ -103,11 +81,9 @@ category live and re-running triage.
 
 ## What's in here
 
-- `baml_src/triage.baml` — `CategoryInput` (`id`, `name`, `description`),
-  the generic `Classify<T>` function (with its inline client),
-  `BuildCategoryType` (the reflection call), and the two entry points the
-  backend calls (`ClassifyTicket` for live, `ClassifyTicketFromCompletion`
-  for mock).
+- `baml_src/triage.baml` — three declarations: `CategoryInput`
+  (`id`, `name`, `description`), the generic `Classify<T>` function (with
+  its inline client), and `ClassifyTicket` — mint, bind, call.
 - `backend/` — Express + better-sqlite3. Seeds 3 tickets and 2 starter
   categories (Billing, Bug Report) on first run; the third ticket (a dark
   mode request) deliberately fits neither category.
@@ -135,27 +111,20 @@ category live and re-running triage.
    it, and add whatever category it deserves. Rename "Bug Report" to
    "Technical Issue" and re-run: its tickets follow the meaning, not the
    name.
-6. **Land it.** Open `baml_src/triage.baml`. "This is the entire feature.
-   `BuildCategoryType` turns whatever rows are in the database into a real
-   enum type, right now, and `Classify` is generic over it. The category
-   list is data. The type system caught up to it." (The "Reset demo"
-   button puts everything back for the next audience.)
+6. **Land it.** Open `baml_src/triage.baml`. "This is the entire feature —
+   one function. Mint an enum from whatever rows are in the database,
+   bind it to a type name with `unreflect`, and `Classify` is generic over
+   it. The category list is data. The type system caught up to it." (The
+   "Reset demo" button puts everything back for the next audience.)
 
-## Status (2026-08-29)
+## Status (2026-08-31)
 
-**Both modes are presenter-ready**, verified against the pinned canary commit
-(repo-root `BAML_COMMIT`, originally verified on `a50430fba`) with the
-`baml-cli` and `@boundaryml/baml-bridge` addon rebuilt as a matching pair.
-
-- Mock mode: all seed tickets classify; renaming a category, adding one, and
-  composing new tickets are all picked up on the next run.
-- Live mode (`claude-haiku-4-5`): same results. The model correctly places
-  tickets into a category *renamed* mid-demo ("Bug Report" → "Technical
-  Issue") and into one *added* mid-demo — names that exist nowhere in
-  `baml_src/`.
-
-The two modes agree ticket for ticket on the seed data, so the story you tell
-offline is the story the model tells live.
+**Presenter-ready (live only)**, verified against the pinned canary commit
+(repo-root `BAML_COMMIT`) with the `baml-cli` and `@boundaryml/baml-bridge`
+addon rebuilt as a matching pair. The model (`claude-haiku-4-5`) correctly
+places tickets into a category *renamed* mid-demo ("Bug Report" →
+"Technical Issue") and into one *added* mid-demo — names that exist nowhere
+in `baml_src/`.
 
 ## Troubleshooting
 
@@ -164,10 +133,10 @@ offline is the story the model tells live.
   `scripts/baml-dev`). If it's missing, run `./scripts/setup-baml.sh` from
   the repo root — check first whether another agent owns that checkout's
   build lock.
-- **Classification fails but the rest of the app works.** That's by design:
-  the backend lazy-loads the generated SDK on the first classify request, so
-  a broken toolchain never takes down ticket/category CRUD. `Run Triage`
-  reports the failure in the error banner rather than silently doing nothing.
+- **The backend fails at startup.** The generated SDK (and with it the
+  native bridge) is imported at module load, so a broken toolchain build
+  stops the process immediately with the real error — see
+  [Toolchain skew](#toolchain-skew) below.
 
 ### Toolchain skew
 
@@ -190,14 +159,12 @@ pair, and the client regenerated afterwards.
   Unexpected variant tag: 8
   ```
 - **`internal error: entered unreachable code: reflected enum
-  user.$dyn.0.Category must be loaded`** (a 502 from `/api/tickets/:id/classify`,
-  while mock mode keeps working) — an addon older than the reflection fix
+  user.$dyn.0.Category must be loaded`** (a 502 from `/api/tickets/:id/classify`)
+  — an addon older than the reflection fix
   ["runtime type definitions through dispatch" (#4501)][4501]. Every real LLM
   call routes the output type through `ai.Agent.Runner<Out>.run`, i.e. through
   interface dispatch; before that fix a *reflected* output type lost its
-  definitions on the way. Mock mode is unaffected because `Classify$parse`
-  never crosses that boundary — which is exactly the shape of the bug to look
-  for: live broken, mock fine.
+  definitions on the way.
 
 Rebuild with `pnpm build:debug` in `bridge_typescript`, then `pnpm run
 baml:generate` here. Generation drops a `.gitignore` containing `*` into
