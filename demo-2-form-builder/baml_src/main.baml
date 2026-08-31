@@ -24,16 +24,13 @@ function form_type(saved: SavedField[]) -> reflect.class.Type {
     let builder = reflect.class.builder("DesignedForm");
     for (let field in saved) {
         let ty = match (field.kind) {
-            "dropdown" => {
-                let members: reflect.Type[] = [];
-                for (let option in field.options) {
-                    members.push(reflect.literal.new(option).as_type());
-                }
-                reflect.union.new(members).as_type()
-            },
-            "bulleted_list" => reflect.Type.of<string>().array().as_type(),
             "number" => reflect.Type.of<int>(),
             "text" => reflect.Type.of<string>(),
+            "bulleted_list" => reflect.Type.of<string>().array().as_type(),
+            "dropdown" => {
+                let members = field.options.map((option) => { reflect.literal.new(option).as_type() });
+                reflect.union.new(members).as_type()
+            },
         };
         let description = if (field.kind == "bulleted_list") {
             `use short phrases; ${field.description}`
