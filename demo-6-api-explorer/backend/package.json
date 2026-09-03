@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@boundaryml/baml-bridge": "0.18.1-nightly.20260828.a",
-    "express": "^4.21.2"
+    "express": "^5.2.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
